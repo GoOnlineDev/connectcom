@@ -1,0 +1,183 @@
+connectCom
+
+🧩 Core Concept
+ConnectCom is a community-based ecommerce platform where individuals and businesses can register to create their own online shops. Each shop is showcased on the homepage and on a centralized "Shops" page, allowing users to discover a variety of product-based or service-based businesses.
+
+🛍️ Key Features
+1. User Registration & Shop Creation
+Simple user onboarding (email/phone + OTP or password)
+
+Shop owner dashboard
+
+Choose shop type: Product or Service
+
+Upload:
+
+Shop name and logo
+
+Contact information
+
+Operating hours
+
+Physical location (if any)
+
+Short description
+
+2. Homepage & Shops Page
+Feature newly created or trending shops on the homepage
+
+Categorize shops (Fashion, Food, Tech, Services, etc.)
+
+Filter and search shops on the Shops page
+
+3. Shop Display & Experience
+Each shop has a customized page that looks like a real store:
+
+Shelves displaying items (visually styled layout)
+
+Aisle-like navigation
+
+Hover effects for product/service details
+
+4. Product-Based Shops
+Upload products with:
+
+Image
+
+Description
+
+Price
+
+Quantity available
+
+Tags/categories
+
+5. Service-Based Shops
+Upload services with:
+
+Description
+
+Duration
+
+Pricing
+
+Booking/contact info
+
+6. Search & Discovery
+Users can search by:
+
+Shop name
+
+Category (Product/Service)
+
+Location
+
+Tags (e.g., "Haircut", "Bakery", "Phone Repair")
+
+7. Mobile-Friendly & Responsive Design
+Especially optimized for low-bandwidth or mobile-only users (very relevant in Uganda and similar markets)
+
+Progressive Web App (PWA) for better mobile performance
+
+8. Admin Dashboard
+Approve/review new shops
+
+Feature shops on homepage
+
+Handle user reports/complaints
+
+Analytics dashboard (visits, transactions, shop popularity)
+
+🧱 Design Concept (UI/UX)
+🖼️ Shop Page Layout:
+Visual shelf system: Rows of items like physical shelves
+
+Left side panel: Shop logo, contact, hours, map location
+
+Center: Items on "shelves"
+
+Right side panel: Quick message/contact/shop info
+
+📱 Mobile View:
+Horizontal scroll for "shelves"
+
+Sticky action buttons (Contact | WhatsApp | Directions)
+
+
+Extra:
+Google Maps API for locations
+
+Stripe or local payment options integration (e.g. Flutterwave, MTN Mobile Money)
+
+Clerk for user authentication
+
+Convex database
+
+uploadthing
+
+💡 Monetization Ideas
+Featured shop promotions
+
+Ads or banners for popular shops
+
+Premium shop themes or analytics
+
+Transaction fees for direct purchases or bookings
+
+
+#### Schema Structures
+
+Here are the proposed database schema structures based on the ConnectCom concept:
+
+##### User Schema
+
+-   `clerkUserId`: String (Required) - Unique ID from Clerk.
+-   `role`: String (Required) - "admin", "customer", or "vendor".
+-   `shopIds`: Array of Strings (Optional) - IDs of shops owned by the vendor.
+-   `createdAt`: DateTime (Required)
+-   `updatedAt`: DateTime (Required)
+
+##### Shop Schema
+
+-   `shopId`: String (Required) - Unique identifier for the shop.
+-   `ownerId`: String (Required) - `clerkUserId` of the owning vendor.
+-   `shopName`: String (Required)
+-   `shopLogoUrl`: String (Optional)
+-   `contactInfo`: Object (Optional) - e.g., `{ email, phone, website }`
+-   `operatingHours`: Object or String (Optional)
+-   `physicalLocation`: Object or String (Optional)
+-   `description`: String (Optional)
+-   `shopType`: String (Required) - "product_shop" or "service_shop".
+-   `categories`: Array of Strings (Optional)
+-   `productIds`: Array of Strings (Optional) - Relevant for "product_shop".
+-   `serviceIds`: Array of Strings (Optional) - Relevant for "service_shop".
+-   `status`: String (Default: "pending_approval")
+-   `shopLayoutConfig`: Object (Optional)
+-   `createdAt`: DateTime (Required)
+-   `updatedAt`: DateTime (Required)
+
+##### Product Schema
+
+-   `productId`: String (Required) - Unique identifier for the product.
+-   `shopId`: String (Required) - ID of the shop selling this product.
+-   `name`: String (Required)
+-   `description`: String (Optional)
+-   `imageUrls`: Array of Strings (Optional)
+-   `price`: Number (Required)
+-   `quantityAvailable`: Integer (Optional)
+-   `tags`: Array of Strings (Optional)
+-   `createdAt`: DateTime (Required)
+-   `updatedAt`: DateTime (Required)
+
+##### Service Schema
+
+-   `serviceId`: String (Required) - Unique identifier for the service.
+-   `shopId`: String (Required) - ID of the shop offering this service.
+-   `name`: String (Required)
+-   `description`: String (Optional)
+-   `duration`: String or Number (Optional)
+-   `pricing`: String or Object (Optional)
+-   `bookingInfo`: String or Object (Optional)
+-   `createdAt`: DateTime (Required)
+-   `updatedAt`: DateTime (Required)
+
