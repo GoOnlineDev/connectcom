@@ -3,7 +3,36 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import Link from "next/link";
+
+// Type definition for shop object from admin query
+type AdminShop = {
+  _id: Id<"shops">;
+  _creationTime: number;
+  ownerId: string;
+  shopName: string;
+  shopLogoUrl?: string;
+  contactInfo?: {
+    email?: string;
+    phone?: string;
+    website?: string;
+  };
+  operatingHours?: any;
+  physicalLocation?: any;
+  description?: string;
+  shopType: string;
+  categories?: string[];
+  productIds?: Id<"products">[];
+  serviceIds?: Id<"services">[];
+  shelfIds?: Id<"shelves">[];
+  status: string;
+  adminNotes?: string;
+  reviewedAt?: number;
+  shopLayoutConfig?: any;
+  createdAt: number;
+  updatedAt: number;
+};
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Store, 
@@ -30,13 +59,13 @@ export default function ShopApprovalPage() {
   const [processingShops, setProcessingShops] = useState<Record<string, boolean>>({});
   
   // Get all shops
-  const shops = useQuery(api.admin.getShops);
+  const shops = useQuery(api.admin.getShops, {});
   
   // Update shop status mutation
   const updateShopStatus = useMutation(api.admin.updateShopStatus);
   
   // Handle shop approval
-  const handleApprove = async (shopId: string) => {
+  const handleApprove = async (shopId: Id<"shops">) => {
     setProcessingShops(prev => ({ ...prev, [shopId]: true }));
     try {
       await updateShopStatus({
@@ -62,7 +91,7 @@ export default function ShopApprovalPage() {
   };
   
   // Handle shop rejection
-  const handleReject = async (shopId: string) => {
+  const handleReject = async (shopId: Id<"shops">) => {
     if (!adminNotes[shopId] || adminNotes[shopId].trim() === "") {
       toast({
         title: "Note Required",
@@ -114,9 +143,9 @@ export default function ShopApprovalPage() {
   }
   
   // Filter shops by status
-  const pendingShops = shops.filter(shop => shop.status === "pending_approval");
-  const approvedShops = shops.filter(shop => shop.status === "active");
-  const rejectedShops = shops.filter(shop => shop.status === "rejected");
+  const pendingShops = shops?.filter((shop: AdminShop) => shop.status === "pending_approval") || [];
+  const approvedShops = shops?.filter((shop: AdminShop) => shop.status === "active") || [];
+  const rejectedShops = shops?.filter((shop: AdminShop) => shop.status === "rejected") || [];
   
   return (
     <div>
@@ -144,7 +173,7 @@ export default function ShopApprovalPage() {
         <TabsContent value="pending" className="mt-6">
           {pendingShops.length > 0 ? (
             <div className="space-y-6">
-              {pendingShops.map(shop => (
+              {pendingShops.map((shop: AdminShop) => (
                 <Card key={shop._id} className="overflow-hidden">
                   <CardHeader className="bg-amber-50 border-b pb-4">
                     <div className="flex items-center justify-between">
@@ -267,7 +296,7 @@ export default function ShopApprovalPage() {
         <TabsContent value="approved" className="mt-6">
           {approvedShops.length > 0 ? (
             <div className="space-y-4">
-              {approvedShops.map(shop => (
+              {approvedShops.map((shop: AdminShop) => (
                 <Card key={shop._id} className="overflow-hidden">
                   <CardHeader className="bg-green-50 border-b pb-4">
                     <div className="flex items-center justify-between">
@@ -331,7 +360,7 @@ export default function ShopApprovalPage() {
         <TabsContent value="rejected" className="mt-6">
           {rejectedShops.length > 0 ? (
             <div className="space-y-4">
-              {rejectedShops.map(shop => (
+              {rejectedShops.map((shop: AdminShop) => (
                 <Card key={shop._id} className="overflow-hidden">
                   <CardHeader className="bg-red-50 border-b pb-4">
                     <div className="flex items-center justify-between">

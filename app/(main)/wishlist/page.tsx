@@ -33,8 +33,8 @@ export default function WishlistPage() {
   const [activeFilter, setActiveFilter] = useState<'all' | 'product' | 'service'>('all');
 
   // Fetch wishlist data
-  const allWishlistItems = useQuery(api.wishlists.getUserWishlist);
-  const wishlistCount = useQuery(api.wishlists.getWishlistCount);
+  const allWishlistItems = useQuery(api.wishlists.getUserWishlist, {});
+  const wishlistCount = useQuery(api.wishlists.getWishlistCount, {});
 
   // Mutations
   const removeFromWishlist = useMutation(api.wishlists.removeFromWishlist);
