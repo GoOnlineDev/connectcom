@@ -15,10 +15,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { UploadDropzone } from "@/utils/uploadthing";
 
 // Define interface for shop data structure
 interface ShopData {
   shopName: string;
+  shopImageUrl: string; // Added shopImageUrl
   shopType: string;
   description: string;
   categories: string[];
@@ -45,6 +47,7 @@ export default function ShopOnboardingPage() {
   // Shop details state with proper typing
   const [shopData, setShopData] = useState<ShopData>({
     shopName: "",
+    shopImageUrl: "", // Added shopImageUrl to initial state
     shopType: "product_shop", // Default to product shop
     description: "",
     categories: [],
@@ -116,6 +119,7 @@ export default function ShopOnboardingPage() {
       await createShop({
         ownerId: clerkUserId as string, // This should be the Clerk User ID
         shopName: shopData.shopName,
+        shopImageUrl: shopData.shopImageUrl, // Pass shopImageUrl
         shopType: shopData.shopType,
         description: shopData.description,
         categories: shopData.categories,
@@ -164,6 +168,35 @@ export default function ShopOnboardingPage() {
                 required
               />
             </div>
+
+            {/* Shop Image Upload Dropzone */}
+            <div>
+              <Label className="text-gray-700">Upload Shop Image</Label>
+              <UploadDropzone
+                endpoint="shopImageUploader"
+                onClientUploadComplete={(res) => {
+                  if (res && res[0]?.serverData?.imageUrl) {
+                    setShopData((prev) => ({ ...prev, shopImageUrl: res[0].serverData.imageUrl }));
+                  }
+                }}
+                onUploadError={(error) => {
+                  setError(error.message || "Image upload failed");
+                }}
+                appearance={{
+                  button: "bg-[#8000020] text-white hover:bg-[#8000020]/90",
+                }}
+              />
+              {shopData.shopImageUrl && (
+                <div className="mt-2">
+                  <Label className="text-gray-700">Preview:</Label>
+                  <img
+                    src={shopData.shopImageUrl}
+                    alt="Shop Preview"
+                    className="mt-1 rounded-md border border-gray-200 max-h-40"
+                  />
+                </div>
+              )}
+            </div>
             
             <div>
               <Label className="text-gray-700">Shop Type *</Label>
@@ -192,7 +225,7 @@ export default function ShopOnboardingPage() {
             <div className="flex justify-end mt-8 pt-4 border-t border-gray-100">
               <Button 
                 onClick={() => setStep(2)} 
-                className="bg-burgundy hover:bg-burgundy-dark text-white px-6 py-2 text-base font-medium shadow-md"
+                className="bg-burgundy hover:bg-burgundy-dark text-black px-6 py-2 text-base font-medium shadow-md"
                 size="lg"
               >
                 Next: Shop Description →

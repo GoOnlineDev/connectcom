@@ -12,15 +12,37 @@ export default withUt({
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        burgundy: {
-          DEFAULT: "#8B1C31", // A rich burgundy color
-          dark: "#6A1525",    // Darker shade for hover states
-          light: "#AD354B",   // Lighter shade for accents
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
-        beige: {
-          DEFAULT: "#F5F0E9", // A soft beige for backgrounds
-          dark: "#E8DFD3",    // Darker beige for hover states
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
       },
     },
   },

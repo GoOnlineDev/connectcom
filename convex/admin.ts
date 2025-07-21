@@ -107,6 +107,7 @@ export const getShops = query({
     _creationTime: v.number(),
     ownerId: v.string(),
     shopName: v.string(),
+    shopImageUrl: v.optional(v.string()),
     shopLogoUrl: v.optional(v.string()),
     contactInfo: v.optional(v.object({
       email: v.optional(v.string()),

@@ -74,6 +74,32 @@ export const ourFileRouter = {
         fileSize: file.size
       };
     }),
+
+  // Shop image uploader for shop main image
+  shopImageUploader: f({
+    image: {
+      /**
+       * For uploading a single shop main image
+       */
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(async ({ req }) => {
+      const user = await auth(req);
+      if (!user) throw new UploadThingError("Unauthorized");
+      return { userId: user.id };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Shop image upload complete for userId:", metadata.userId);
+      console.log("Shop image file url", file.url);
+      return {
+        uploadedBy: metadata.userId,
+        imageUrl: file.url,
+        fileName: file.name,
+        fileSize: file.size
+      };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

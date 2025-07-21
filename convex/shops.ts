@@ -8,6 +8,7 @@ export const createShop = mutation({
     shopName: v.string(),
     shopType: v.string(), // "product_shop" or "service_shop"
     shopLogoUrl: v.optional(v.string()),
+    shopImageUrl: v.optional(v.string()),
     contactInfo: v.optional(v.object({
       email: v.optional(v.string()),
       phone: v.optional(v.string()),
@@ -30,6 +31,7 @@ export const createShop = mutation({
       shopName: args.shopName,
       shopType: args.shopType,
       shopLogoUrl: args.shopLogoUrl,
+      shopImageUrl: args.shopImageUrl,
       contactInfo: args.contactInfo,
       operatingHours: args.operatingHours,
       physicalLocation: args.physicalLocation,
@@ -70,6 +72,7 @@ export const getShopById = query({
     _creationTime: v.number(),
     ownerId: v.string(),
     shopName: v.string(),
+    shopImageUrl: v.optional(v.string()),
     shopLogoUrl: v.optional(v.string()),
     contactInfo: v.optional(v.object({
       email: v.optional(v.string()),
@@ -106,6 +109,7 @@ export const getShopsByOwner = query({
     _creationTime: v.number(),
     ownerId: v.string(),
     shopName: v.string(),
+    shopImageUrl: v.optional(v.string()),
     shopLogoUrl: v.optional(v.string()),
     contactInfo: v.optional(v.object({
       email: v.optional(v.string()),
@@ -145,6 +149,7 @@ export const getAllApprovedShops = query({
     _creationTime: v.number(),
     ownerId: v.string(),
     shopName: v.string(),
+    shopImageUrl: v.optional(v.string()),
     shopLogoUrl: v.optional(v.string()),
     contactInfo: v.optional(v.object({
       email: v.optional(v.string()),
@@ -188,6 +193,7 @@ export const getShopWithItems = query({
       _creationTime: v.number(),
       ownerId: v.string(),
       shopName: v.string(),
+      shopImageUrl: v.optional(v.string()),
       shopLogoUrl: v.optional(v.string()),
       contactInfo: v.optional(v.object({
         email: v.optional(v.string()),
@@ -296,6 +302,7 @@ export const searchShops = query({
     _creationTime: v.number(),
     ownerId: v.string(),
     shopName: v.string(),
+    shopImageUrl: v.optional(v.string()),
     shopLogoUrl: v.optional(v.string()),
     contactInfo: v.optional(v.object({
       email: v.optional(v.string()),
@@ -358,6 +365,7 @@ export const getFeaturedShops = query({
     _creationTime: v.number(),
     ownerId: v.string(),
     shopName: v.string(),
+    shopImageUrl: v.optional(v.string()),
     shopLogoUrl: v.optional(v.string()),
     contactInfo: v.optional(v.object({
       email: v.optional(v.string()),

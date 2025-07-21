@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -20,6 +20,19 @@ export default function ShopsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
+
+  // Fetch featured shops for the hero carousel
+  const featuredShops = useQuery(api.shops.getFeaturedShops, { limit: 6 });
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  // Carousel auto-loop effect
+  useEffect(() => {
+    if (!featuredShops || featuredShops.length === 0) return;
+    const interval = setInterval(() => {
+      setCarouselIndex((prev) => (prev + 1) % featuredShops.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [featuredShops]);
 
   // Fetch shops with search filters
   const shops = useQuery(api.shops.searchShops, {
@@ -41,31 +54,80 @@ export default function ShopsPage() {
 
   return (
     <div className="min-h-screen bg-beige">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-burgundy to-burgundy-dark text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Discover Local Shops
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">
-            Explore a diverse community of local businesses offering products and services near you
-          </p>
-          
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy/60 w-5 h-5" />
-              <Input
-                type="text"
-                placeholder="Search shops, products, or services..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-3 text-lg rounded-full border-0 bg-white text-burgundy placeholder:text-burgundy/60"
-              />
+      {/* Hero Carousel Section */}
+      {featuredShops && featuredShops.length > 0 && (
+        <div className="relative w-full h-72 md:h-96 bg-gradient-to-br from-burgundy/80 to-burgundy-dark overflow-hidden mb-10">
+          {/* Carousel Slide */}
+          {featuredShops.map((shop, idx) => (
+            <div
+              key={shop._id}
+              className={`absolute inset-0 transition-opacity duration-700 ${idx === carouselIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+            >
+              {shop.shopImageUrl ? (
+                <img
+                  src={shop.shopImageUrl}
+                  alt={shop.shopName}
+                  className="w-full h-full object-cover object-center"
+                />
+              ) : shop.shopLogoUrl ? (
+                <img
+                  src={shop.shopLogoUrl}
+                  alt={shop.shopName}
+                  className="w-full h-full object-cover object-center"
+                />
+              ) : (
+                <div className="flex items-center justify-center w-full h-full bg-burgundy/30">
+                  <Store className="w-24 h-24 text-white/40" />
+                </div>
+              )}
+              {/* Overlay for text readability */}
+              <div className="absolute inset-0 bg-black/40" />
+              {/* Shop Info Overlay */}
+              <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 text-center w-full px-4">
+                <h2 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-2">{shop.shopName}</h2>
+                {shop.categories && shop.categories.length > 0 && (
+                  <div className="flex flex-wrap gap-2 justify-center mb-4">
+                    {shop.categories.map((category) => (
+                      <Badge key={category} variant="outline" className="text-xs border-white/40 text-white bg-black/30">
+                        {category}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                <Link href={`/shops/${shop._id}`}>
+                  <Button className="bg-white text-burgundy font-semibold px-6 py-2 rounded-full shadow hover:bg-burgundy hover:text-white transition">
+                    View Shop
+                  </Button>
+                </Link>
+              </div>
+              {/* Search Bar Overlay */}
+              <form onSubmit={handleSearch} className="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-full max-w-xl px-4 z-20">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy/60 w-5 h-5" />
+                  <Input
+                    type="text"
+                    placeholder="Search shops, products, or services..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-3 text-lg rounded-full border-0 bg-white/90 text-burgundy placeholder:text-burgundy/60 shadow"
+                  />
+                </div>
+              </form>
             </div>
-          </form>
+          ))}
+          {/* Carousel Navigation Dots */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+            {featuredShops.map((_, idx) => (
+              <button
+                key={idx}
+                className={`w-3 h-3 rounded-full border-2 ${idx === carouselIndex ? 'bg-white border-white' : 'bg-burgundy/40 border-white/40'}`}
+                onClick={() => setCarouselIndex(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="container mx-auto px-4 py-8">
         {/* Filters */}
@@ -155,30 +217,38 @@ export default function ShopsPage() {
                   <Card className="h-full hover:shadow-lg transition-shadow">
                     {/* Shop Logo */}
                     <div className="relative h-48 bg-gradient-to-br from-beige to-beige-dark rounded-t-lg">
-                      {shop.shopLogoUrl ? (
+                      {shop.shopImageUrl ? (
+                        <img
+                          src={shop.shopImageUrl}
+                          alt={shop.shopName}
+                          className="w-full h-full object-cover rounded-t-lg"
+                        />
+                      ) : shop.shopLogoUrl ? (
                         <img
                           src={shop.shopLogoUrl}
                           alt={shop.shopName}
                           className="w-full h-full object-cover rounded-t-lg"
                         />
-                                              ) : (
-                          <div className="flex items-center justify-center h-full">
-                            <Store className="w-16 h-16 text-burgundy/40" />
-                          </div>
-                        )}
-                      
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <Store className="w-16 h-16 text-burgundy/40" />
+                        </div>
+                      )}
                       {/* Shop Type Badge */}
                       <div className="absolute top-3 right-3">
                         <Badge variant={shop.shopType === 'product_shop' ? 'default' : 'secondary'}>
                           {shop.shopType === 'product_shop' ? (
-                            <><ShoppingBag className="w-3 h-3 mr-1" /> Products</>
+                            <>
+                              <ShoppingBag className="w-3 h-3 mr-1" /> Products
+                            </>
                           ) : (
-                            <><Store className="w-3 h-3 mr-1" /> Services</>
+                            <>
+                              <Store className="w-3 h-3 mr-1" /> Services
+                            </>
                           )}
                         </Badge>
                       </div>
                     </div>
-
                     <CardHeader className="pb-3">
                       <CardTitle className="text-lg font-bold text-burgundy line-clamp-1">
                         {shop.shopName}
@@ -189,7 +259,6 @@ export default function ShopsPage() {
                         </CardDescription>
                       )}
                     </CardHeader>
-
                     <CardContent className="pt-0">
                       {/* Categories */}
                       {shop.categories && shop.categories.length > 0 && (
@@ -206,7 +275,6 @@ export default function ShopsPage() {
                           )}
                         </div>
                       )}
-
                       {/* Contact Info */}
                       <div className="space-y-2 text-sm text-burgundy/80">
                         {shop.contactInfo?.phone && (
@@ -215,7 +283,6 @@ export default function ShopsPage() {
                             <span className="truncate">{shop.contactInfo.phone}</span>
                           </div>
                         )}
-                        
                         {shop.physicalLocation && (
                           <div className="flex items-center gap-2">
                             <MapPin className="w-4 h-4" />
@@ -227,7 +294,6 @@ export default function ShopsPage() {
                             </span>
                           </div>
                         )}
-
                         {shop.operatingHours && (
                           <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />

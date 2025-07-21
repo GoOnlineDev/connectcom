@@ -48,6 +48,8 @@ export default defineSchema({
   shops: defineTable({
     ownerId: v.string(), 
     shopName: v.string(),
+    // Main image for the shop, required for user-facing display
+    shopImageUrl: v.optional(v.string()), // This is the main image users see for the shop
     shopLogoUrl: v.optional(v.string()),
     contactInfo: v.optional(v.object({
       email: v.optional(v.string()),

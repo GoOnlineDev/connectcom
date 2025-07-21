@@ -354,8 +354,37 @@ export default function ShopPage({ params }: ShopPageProps) {
         </div>
       </div>
 
-      {/* Shop Header */}
-      <div className="bg-white shadow-sm">
+      {/* Shop Hero Section */}
+      <div className="relative w-full bg-white shadow-sm">
+        {/* Banner Image */}
+        <div className="w-full h-64 md:h-80 bg-gradient-to-br from-beige to-beige-dark relative flex items-center justify-center overflow-hidden">
+          {shopData.shopImageUrl ? (
+            <img
+              src={shopData.shopImageUrl}
+              alt={shopData.shopName}
+              className="w-full h-full object-cover object-center"
+            />
+          ) : (
+            <div className="flex items-center justify-center w-full h-full">
+              <Store className="w-24 h-24 text-burgundy/30" />
+            </div>
+          )}
+          {/* Overlay for darkening image for text readability */}
+          <div className="absolute inset-0 bg-black/20" />
+          {/* Shop Title Overlay */}
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-2">{shopData.shopName}</h1>
+            {shopData.categories && shopData.categories.length > 0 && (
+              <div className="flex flex-wrap gap-2 justify-center">
+                {shopData.categories.map((category) => (
+                  <Badge key={category} variant="outline" className="text-xs border-white/40 text-white bg-black/30">
+                    {category}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
         <div className="container mx-auto px-4 py-8">
 
 
