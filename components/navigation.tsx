@@ -32,7 +32,7 @@ const Navigation = () => {
 
   return (
     <nav className={`fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-7xl z-50 transition-all duration-300 rounded-full ${
-      isScrolled ? 'bg-background/80 backdrop-blur-md shadow-lg' : 'bg-transparent'
+      isScrolled ? 'bg-white/90 backdrop-blur-md shadow-lg border border-burgundy-100' : 'bg-transparent'
     }`}>
       <div className="px-6 py-3">
         <div className="flex justify-between items-center">
@@ -46,43 +46,43 @@ const Navigation = () => {
                 height={40}
                 className="mr-2 animate-scale"
               />
-              <span className="font-bold text-xl text-primary md:block hidden">ConnectCom</span>
+              <span className="font-bold text-xl text-burgundy-900 md:block hidden">ConnectCom</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            <Link href="/" className="px-4 py-2 text-muted-foreground hover:text-primary rounded-full transition-colors">
+            <Link href="/" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
               Home
             </Link>
-            <Link href="/shops" className="px-4 py-2 text-muted-foreground hover:text-primary rounded-full transition-colors">
+            <Link href="/shops" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
               Shops
             </Link>
-            <Link href="/categories" className="px-4 py-2 text-muted-foreground hover:text-primary rounded-full transition-colors">
+            <Link href="/categories" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
               Categories
             </Link>
-            <Link href="/about" className="px-4 py-2 text-muted-foreground hover:text-primary rounded-full transition-colors">
+            <Link href="/about" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
               About
             </Link>
-            <Link href="/contact" className="px-4 py-2 text-muted-foreground hover:text-primary rounded-full transition-colors">
+            <Link href="/contact" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
               Contact Us
             </Link>
           </div>
 
           {/* Auth Buttons / User Profile */}
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/cart" className="relative p-2 text-muted-foreground hover:text-primary">
+            <Link href="/cart" className="relative p-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <span className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+              <span className="absolute top-0 right-0 bg-burgundy-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
             </Link>
             <Authenticated>
               <CustomUserButton />
             </Authenticated>
             <Unauthenticated>
               <SignInButton mode="modal">
-                <button className="px-6 py-2 text-primary border border-primary hover:bg-primary/5 transition-colors rounded-full">
+                <button className="px-6 py-2 text-burgundy-700 border border-burgundy-600 hover:bg-burgundy-50 hover:text-burgundy-900 transition-colors rounded-full">
                   Sign In
                 </button>
               </SignInButton>
@@ -91,14 +91,14 @@ const Navigation = () => {
 
           {/* Mobile elements */}
           <div className="md:hidden flex items-center">
-            <Link href="/cart" className="relative mr-1 text-muted-foreground">
+            <Link href="/cart" className="relative mr-1 text-burgundy-700 hover:text-burgundy-900">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </Link>
             <Unauthenticated>
               <SignInButton mode="modal">
-                <button className="mx-1 px-3 py-1 text-primary border border-primary text-sm rounded-full text-xs">
+                <button className="mx-1 px-3 py-1 text-burgundy-700 border border-burgundy-600 text-sm rounded-full text-xs hover:bg-burgundy-50">
                   Sign In
                 </button>
               </SignInButton>
@@ -108,7 +108,7 @@ const Navigation = () => {
             </Authenticated>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="ml-1 p-1 rounded-full text-muted-foreground"
+              className="ml-1 p-1 rounded-full text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
             >
               <svg
                 className="h-6 w-6"
@@ -130,21 +130,21 @@ const Navigation = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-background/90 backdrop-blur-sm rounded-b-3xl shadow-lg animate-slide-down">
+        <div className="md:hidden bg-white/95 backdrop-blur-sm rounded-b-3xl shadow-lg animate-slide-down border border-burgundy-100">
           <div className="px-4 pt-2 pb-4 space-y-1">
-            <Link href="/" className="block px-3 py-2 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary">
+            <Link href="/" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
               Home
             </Link>
-            <Link href="/shops" className="block px-3 py-2 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary">
+            <Link href="/shops" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
               Shops
             </Link>
-            <Link href="/categories" className="block px-3 py-2 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary">
+            <Link href="/categories" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
               Categories
             </Link>
-            <Link href="/about" className="block px-3 py-2 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary">
+            <Link href="/about" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
               About
             </Link>
-            <Link href="/contact" className="block px-3 py-2 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary">
+            <Link href="/contact" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
               Contact Us
             </Link>
           </div>

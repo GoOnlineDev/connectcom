@@ -41,7 +41,7 @@ export default function DashboardNavbar() {
   }, []);
 
   return (
-    <nav className="bg-white border-b border-burgundy/20 sticky top-0 z-50">
+    <nav className="bg-white border-b border-burgundy-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Brand */}
@@ -56,12 +56,12 @@ export default function DashboardNavbar() {
                 className="mr-2 animate-scale"
               />
               </div>
-              <span className="text-xl font-bold text-burgundy">ConnectCom</span>
+              <span className="text-xl font-bold text-burgundy-900">ConnectCom</span>
             </Link>
             
             {/* Dashboard Label */}
-            <div className="ml-6 pl-6 border-l border-burgundy/20">
-              <Badge variant="outline" className="border-burgundy/30 text-burgundy">
+            <div className="ml-6 pl-6 border-l border-burgundy-200">
+              <Badge variant="outline" className="border-burgundy-300 text-burgundy-700 bg-burgundy-50">
                 {isAdmin ? 'Admin Dashboard' : isVendor ? 'Vendor Dashboard' : 'Dashboard'}
               </Badge>
             </div>
@@ -75,7 +75,7 @@ export default function DashboardNavbar() {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-burgundy hover:text-burgundy-dark hover:bg-burgundy/10"
+                  className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
                 >
                   <Home className="w-4 h-4 mr-2" />
                   Home
@@ -86,7 +86,7 @@ export default function DashboardNavbar() {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-burgundy hover:text-burgundy-dark hover:bg-burgundy/10"
+                  className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
                 >
                   <ShoppingBag className="w-4 h-4 mr-2" />
                   Shops
@@ -100,7 +100,7 @@ export default function DashboardNavbar() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="text-burgundy hover:text-burgundy-dark hover:bg-burgundy/10"
+                      className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
                     >
                       <Users className="w-4 h-4 mr-2" />
                       Users
@@ -111,7 +111,7 @@ export default function DashboardNavbar() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="text-burgundy hover:text-burgundy-dark hover:bg-burgundy/10"
+                      className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
                     >
                       <Store className="w-4 h-4 mr-2" />
                       Shop Approvals
@@ -126,7 +126,7 @@ export default function DashboardNavbar() {
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="text-burgundy hover:text-burgundy-dark hover:bg-burgundy/10"
+                    className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
                   >
                     <Store className="w-4 h-4 mr-2" />
                     My Shops
@@ -136,12 +136,12 @@ export default function DashboardNavbar() {
             </div>
 
             {/* User Actions */}
-            <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-burgundy/20">
+            <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-burgundy-200">
               {/* Notifications */}
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-burgundy hover:text-burgundy-dark hover:bg-burgundy/10 relative"
+                className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 relative"
               >
                 <Bell className="w-4 h-4" />
                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -152,7 +152,7 @@ export default function DashboardNavbar() {
                 {mounted ? (
                   <CustomUserButton />
                 ) : (
-                  <div className="w-8 h-8 bg-burgundy/20 rounded-full animate-pulse"></div>
+                  <div className="w-8 h-8 bg-burgundy-200 rounded-full animate-pulse"></div>
                 )}
               </div>
             </div>
@@ -163,7 +163,7 @@ export default function DashboardNavbar() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="text-burgundy hover:text-burgundy-dark hover:bg-burgundy/10"
+              className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
             >
               <Bell className="w-4 h-4" />
             </Button>
@@ -173,13 +173,13 @@ export default function DashboardNavbar() {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-burgundy hover:text-burgundy-dark hover:bg-burgundy/10"
+                  className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
                 >
                   <Menu className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="text-burgundy">Navigation</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-burgundy-900">Navigation</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 
                 <DropdownMenuItem asChild>
@@ -199,7 +199,7 @@ export default function DashboardNavbar() {
                 {isAdmin && (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuLabel className="text-burgundy">Admin</DropdownMenuLabel>
+                    <DropdownMenuLabel className="text-burgundy-900">Admin</DropdownMenuLabel>
                     <DropdownMenuItem asChild>
                       <Link href="/admin/users" className="flex items-center">
                         <Users className="w-4 h-4 mr-2" />
@@ -207,7 +207,7 @@ export default function DashboardNavbar() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/admin/shops/approve" className="flex items-center">
+                      <Link href="/vendor/shops" className="flex items-center">
                         <Store className="w-4 h-4 mr-2" />
                         Shop Approvals
                       </Link>
@@ -218,7 +218,7 @@ export default function DashboardNavbar() {
                 {isVendor && (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuLabel className="text-burgundy">Vendor</DropdownMenuLabel>
+                    <DropdownMenuLabel className="text-burgundy-900">Vendor</DropdownMenuLabel>
                     <DropdownMenuItem asChild>
                       <Link href="/vendor/shops" className="flex items-center">
                         <Store className="w-4 h-4 mr-2" />
@@ -233,7 +233,7 @@ export default function DashboardNavbar() {
             {mounted ? (
               <CustomUserButton />
             ) : (
-              <div className="w-8 h-8 bg-burgundy/20 rounded-full animate-pulse"></div>
+              <div className="w-8 h-8 bg-burgundy-200 rounded-full animate-pulse"></div>
             )}
           </div>
         </div>

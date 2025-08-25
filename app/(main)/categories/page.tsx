@@ -58,9 +58,9 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-beige">
+    <div className="min-h-screen bg-beige-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-burgundy to-burgundy-dark text-white py-16">
+      <div className="bg-gradient-to-r from-burgundy-800 to-burgundy-950 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Shop by Category
@@ -72,13 +72,13 @@ export default function CategoriesPage() {
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy/60 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 w-5 h-5" />
               <Input
                 type="text"
                 placeholder="Search categories..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-3 text-lg rounded-full border-0 bg-white text-burgundy placeholder:text-burgundy/60"
+                className="pl-10 pr-4 py-3 text-lg rounded-full border-0 bg-white text-burgundy-900 placeholder:text-burgundy-600"
               />
             </div>
           </div>
@@ -87,21 +87,21 @@ export default function CategoriesPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Stats */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 border border-beige-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold text-burgundy">{filteredCategories.length}</div>
-              <div className="text-burgundy/70">Categories Available</div>
+              <div className="text-3xl font-bold text-burgundy-900">{filteredCategories.length}</div>
+              <div className="text-burgundy-700">Categories Available</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-burgundy">{getTotalShopsCount()}</div>
-              <div className="text-burgundy/70">Total Shops</div>
+              <div className="text-3xl font-bold text-burgundy-900">{getTotalShopsCount()}</div>
+              <div className="text-burgundy-700">Total Shops</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-burgundy">
+              <div className="text-3xl font-bold text-burgundy-900">
                 {filteredCategories.reduce((sum, cat) => sum + getCategoryShopCount(cat.name), 0)}
               </div>
-              <div className="text-burgundy/70">Shops in Selected Categories</div>
+              <div className="text-burgundy-700">Shops in Selected Categories</div>
             </div>
           </div>
         </div>
@@ -109,9 +109,9 @@ export default function CategoriesPage() {
         {/* Categories Grid */}
         {filteredCategories.length === 0 ? (
           <div className="text-center py-12">
-            <Package className="mx-auto h-16 w-16 text-burgundy/40 mb-4" />
-            <h3 className="text-xl font-semibold text-burgundy mb-2">No categories found</h3>
-            <p className="text-burgundy/80">
+            <Package className="mx-auto h-16 w-16 text-burgundy-400 mb-4" />
+            <h3 className="text-xl font-semibold text-burgundy-900 mb-2">No categories found</h3>
+            <p className="text-burgundy-700">
               Try adjusting your search to find the categories you're looking for.
             </p>
           </div>
@@ -127,7 +127,7 @@ export default function CategoriesPage() {
                   href={`/shops?category=${encodeURIComponent(category.name)}`}
                   className="block transform transition-transform hover:scale-105"
                 >
-                  <Card className="h-full hover:shadow-lg transition-shadow border-burgundy/20 overflow-hidden">
+                  <Card className="h-full hover:shadow-lg transition-shadow border border-burgundy-200 overflow-hidden">
                     {/* Category Header with Gradient */}
                     <div className={`relative h-32 bg-gradient-to-br ${category.color} flex items-center justify-center`}>
                       <Icon className="w-12 h-12 text-white" />
@@ -141,17 +141,17 @@ export default function CategoriesPage() {
                     </div>
 
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-lg font-bold text-burgundy">
+                      <CardTitle className="text-lg font-bold text-burgundy-900">
                         {category.name}
                       </CardTitle>
-                      <CardDescription className="text-burgundy/70">
+                      <CardDescription className="text-burgundy-700">
                         {category.description}
                       </CardDescription>
                     </CardHeader>
 
                     <CardContent className="pt-0">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-sm text-burgundy/80">
+                        <div className="flex items-center gap-2 text-sm text-burgundy-700">
                           <Store className="w-4 h-4" />
                           <span>{shopCount} {shopCount === 1 ? 'shop' : 'shops'}</span>
                         </div>
@@ -159,7 +159,7 @@ export default function CategoriesPage() {
                         {shopCount > 0 && (
                           <Badge 
                             variant="outline" 
-                            className="border-burgundy/30 text-burgundy hover:bg-burgundy/10"
+                            className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
                           >
                             Browse →
                           </Badge>
@@ -167,7 +167,7 @@ export default function CategoriesPage() {
                       </div>
 
                       {shopCount === 0 && (
-                        <div className="mt-3 text-xs text-burgundy/60 bg-burgundy/5 rounded-lg p-2">
+                        <div className="mt-3 text-xs text-burgundy-600 bg-burgundy-50 rounded-lg p-2">
                           No shops available in this category yet
                         </div>
                       )}
@@ -181,16 +181,16 @@ export default function CategoriesPage() {
 
         {/* Call to Action */}
         <div className="mt-16 text-center">
-          <Card className="border-burgundy/20 bg-gradient-to-r from-burgundy/5 to-burgundy/10 max-w-md mx-auto">
+          <Card className="border border-burgundy-200 bg-gradient-to-r from-burgundy-50 to-burgundy-100 max-w-md mx-auto">
             <CardHeader>
-              <CardTitle className="text-burgundy">Can't find what you're looking for?</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-burgundy-900">Can't find what you're looking for?</CardTitle>
+              <CardDescription className="text-burgundy-700">
                 Browse all available shops or search for specific products and services.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <Link href="/shops" className="block">
-                <div className="w-full bg-burgundy hover:bg-burgundy-dark text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                <div className="w-full bg-burgundy-600 hover:bg-burgundy-700 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
                   <ShoppingBag className="w-4 h-4" />
                   Browse All Shops
                 </div>

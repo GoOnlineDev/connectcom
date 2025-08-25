@@ -134,10 +134,10 @@ export default function WishlistPage() {
   // Loading state
   if (allWishlistItems === undefined || wishlistCount === undefined) {
     return (
-      <div className="min-h-screen bg-beige flex items-center justify-center">
+      <div className="min-h-screen bg-beige-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-burgundy mx-auto"></div>
-          <p className="mt-4 text-burgundy/80">Loading your wishlist...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-burgundy-600 mx-auto"></div>
+          <p className="mt-4 text-burgundy-700">Loading your wishlist...</p>
         </div>
       </div>
     );
@@ -146,13 +146,13 @@ export default function WishlistPage() {
   // Empty wishlist state
   if (!allWishlistItems || allWishlistItems.length === 0) {
     return (
-      <div className="min-h-screen bg-beige">
+      <div className="min-h-screen bg-beige-50">
         {/* Header */}
-        <div className="bg-white border-b border-burgundy/10">
+        <div className="bg-white border-b border-burgundy-100">
           <div className="container mx-auto px-4 py-4">
             <Link 
               href="/shops" 
-              className="inline-flex items-center gap-2 text-burgundy hover:text-burgundy-dark transition-colors"
+              className="inline-flex items-center gap-2 text-burgundy-700 hover:text-burgundy-800 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Browse Shops
@@ -162,15 +162,15 @@ export default function WishlistPage() {
 
         <div className="container mx-auto px-4 py-16">
           <div className="text-center max-w-md mx-auto">
-            <div className="bg-white rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 shadow-sm">
-              <Heart className="w-12 h-12 text-burgundy/40" />
+            <div className="bg-white rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 shadow-sm border border-beige-200">
+              <Heart className="w-12 h-12 text-burgundy-400" />
             </div>
-            <h1 className="text-3xl font-bold text-burgundy mb-4">Your Wishlist is Empty</h1>
-            <p className="text-burgundy/80 mb-8">
+            <h1 className="text-3xl font-bold text-burgundy-900 mb-4">Your Wishlist is Empty</h1>
+            <p className="text-burgundy-700 mb-8">
               Save items you love to your wishlist and come back to them later.
             </p>
             <div className="space-y-3">
-              <Button asChild className="w-full bg-burgundy hover:bg-burgundy-dark">
+              <Button asChild className="w-full bg-burgundy-600 hover:bg-burgundy-700 text-white">
                 <Link href="/shops">
                   <ShoppingBag className="w-4 h-4 mr-2" />
                   Browse Shops
@@ -179,7 +179,7 @@ export default function WishlistPage() {
               <Button 
                 asChild 
                 variant="outline" 
-                className="w-full border-burgundy text-burgundy hover:bg-burgundy/10"
+                className="w-full border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
               >
                 <Link href="/cart">
                   <ShoppingCart className="w-4 h-4 mr-2" />
@@ -198,14 +198,14 @@ export default function WishlistPage() {
   const serviceCount = allWishlistItems.filter(item => item.itemType === 'service').length;
 
   return (
-    <div className="min-h-screen bg-beige">
+    <div className="min-h-screen bg-beige-50">
       {/* Header */}
-      <div className="bg-white border-b border-burgundy/10">
+      <div className="bg-white border-b border-burgundy-100">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link 
               href="/shops" 
-              className="inline-flex items-center gap-2 text-burgundy hover:text-burgundy-dark transition-colors"
+              className="inline-flex items-center gap-2 text-burgundy-700 hover:text-burgundy-800 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Browse Shops
@@ -229,9 +229,9 @@ export default function WishlistPage() {
         {/* Page Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <Heart className="w-6 h-6 text-burgundy" />
-            <h1 className="text-2xl font-bold text-burgundy">My Wishlist</h1>
-            <Badge className="bg-burgundy text-white">
+            <Heart className="w-6 h-6 text-burgundy-700" />
+            <h1 className="text-2xl font-bold text-burgundy-900">My Wishlist</h1>
+            <Badge className="bg-burgundy-600 text-white">
               {wishlistCount} {wishlistCount === 1 ? 'item' : 'items'}
             </Badge>
           </div>
@@ -242,7 +242,7 @@ export default function WishlistPage() {
               variant={viewMode === 'grid' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setViewMode('grid')}
-              className={viewMode === 'grid' ? 'bg-burgundy hover:bg-burgundy-dark' : 'border-burgundy text-burgundy hover:bg-burgundy/10'}
+              className={viewMode === 'grid' ? 'bg-burgundy-600 hover:bg-burgundy-700 text-white' : 'border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50'}
             >
               <Grid3X3 className="w-4 h-4" />
             </Button>
@@ -250,7 +250,7 @@ export default function WishlistPage() {
               variant={viewMode === 'list' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setViewMode('list')}
-              className={viewMode === 'list' ? 'bg-burgundy hover:bg-burgundy-dark' : 'border-burgundy text-burgundy hover:bg-burgundy/10'}
+              className={viewMode === 'list' ? 'bg-burgundy-600 hover:bg-burgundy-700 text-white' : 'border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50'}
             >
               <List className="w-4 h-4" />
             </Button>
@@ -278,25 +278,25 @@ export default function WishlistPage() {
         {/* Wishlist Items */}
         {wishlistItems.length === 0 ? (
           <div className="text-center py-12">
-            <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-sm">
+            <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-sm border border-beige-200">
               {activeFilter === 'product' ? (
-                <Package className="w-8 h-8 text-burgundy/40" />
+                <Package className="w-8 h-8 text-burgundy-400" />
               ) : activeFilter === 'service' ? (
-                <Store className="w-8 h-8 text-burgundy/40" />
+                <Store className="w-8 h-8 text-burgundy-400" />
               ) : (
-                <Heart className="w-8 h-8 text-burgundy/40" />
+                <Heart className="w-8 h-8 text-burgundy-400" />
               )}
             </div>
-            <h3 className="text-lg font-semibold text-burgundy mb-2">
+            <h3 className="text-lg font-semibold text-burgundy-900 mb-2">
               No {activeFilter === 'all' ? '' : activeFilter + 's'} in your wishlist
             </h3>
-            <p className="text-burgundy/70 mb-4">
+            <p className="text-burgundy-700 mb-4">
               {activeFilter === 'all' 
                 ? 'Your filtered wishlist is empty'
                 : `You haven't saved any ${activeFilter}s to your wishlist yet`
               }
             </p>
-            <Button asChild className="bg-burgundy hover:bg-burgundy-dark">
+            <Button asChild className="bg-burgundy-600 hover:bg-burgundy-700 text-white">
               <Link href="/shops">
                 Browse {activeFilter === 'all' ? 'Shops' : activeFilter === 'product' ? 'Products' : 'Services'}
               </Link>
@@ -311,7 +311,7 @@ export default function WishlistPage() {
             {wishlistItems.map((item) => (
               <Card 
                 key={item._id} 
-                className={`border-burgundy/20 hover:shadow-md transition-shadow ${
+                className={`border border-burgundy-200 hover:shadow-md transition-shadow ${
                   viewMode === 'list' ? 'flex-row' : ''
                 }`}
               >
@@ -319,7 +319,7 @@ export default function WishlistPage() {
                   // Grid View
                   <>
                     {/* Item Image */}
-                    <div className="relative h-48 bg-gradient-to-br from-beige to-beige-dark rounded-t-lg">
+                    <div className="relative h-48 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg border border-beige-300">
                       {item.itemType === "product" && item.itemDetails.imageUrls && item.itemDetails.imageUrls.length > 0 ? (
                         <img
                           src={item.itemDetails.imageUrls[0]}
@@ -329,9 +329,9 @@ export default function WishlistPage() {
                       ) : (
                         <div className="flex items-center justify-center h-full">
                           {item.itemType === "product" ? (
-                            <Package className="w-12 h-12 text-burgundy/40" />
+                            <Package className="w-12 h-12 text-burgundy-400" />
                           ) : (
-                            <Store className="w-12 h-12 text-burgundy/40" />
+                            <Store className="w-12 h-12 text-burgundy-400" />
                           )}
                         </div>
                       )}
@@ -339,7 +339,7 @@ export default function WishlistPage() {
                       {/* Price Badge */}
                       {item.itemType === "product" && (
                         <div className="absolute top-3 right-3">
-                          <Badge className="bg-burgundy text-white hover:bg-burgundy-dark">
+                          <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700">
                             {formatPrice(item.itemDetails.price)}
                           </Badge>
                         </div>
@@ -357,10 +357,10 @@ export default function WishlistPage() {
                     </div>
 
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-lg font-bold text-burgundy line-clamp-1">
+                      <CardTitle className="text-lg font-bold text-burgundy-900 line-clamp-1">
                         {item.itemDetails.name}
                       </CardTitle>
-                      <CardDescription className="line-clamp-2">
+                      <CardDescription className="line-clamp-2 text-burgundy-700">
                         {item.itemDetails.description || 'No description available'}
                       </CardDescription>
                     </CardHeader>
@@ -368,7 +368,7 @@ export default function WishlistPage() {
                     <CardContent className="pt-0">
                       {/* Shop Info */}
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-gradient-to-br from-beige to-beige-dark rounded flex items-center justify-center">
+                        <div className="w-6 h-6 bg-gradient-to-br from-beige-100 to-beige-200 rounded flex items-center justify-center border border-beige-300">
                           {item.shopDetails.shopLogoUrl ? (
                             <img
                               src={item.shopDetails.shopLogoUrl}
@@ -376,10 +376,10 @@ export default function WishlistPage() {
                               className="w-full h-full object-cover rounded"
                             />
                           ) : (
-                            <Store className="w-3 h-3 text-burgundy/40" />
+                            <Store className="w-3 h-3 text-burgundy-400" />
                           )}
                         </div>
-                        <span className="text-sm text-burgundy/70 truncate">
+                        <span className="text-sm text-burgundy-700 truncate">
                           {item.shopDetails.shopName}
                         </span>
                       </div>
@@ -387,11 +387,11 @@ export default function WishlistPage() {
                       {/* Service Pricing */}
                       {item.itemType === "service" && (
                         <div className="mb-4">
-                          <p className="text-sm text-burgundy/80">
+                          <p className="text-sm text-burgundy-700">
                             {item.itemDetails.pricing || "Contact for pricing"}
                           </p>
                           {item.itemDetails.duration && (
-                            <p className="text-xs text-burgundy/60">
+                            <p className="text-xs text-burgundy-600">
                               Duration: {item.itemDetails.duration}
                             </p>
                           )}
@@ -402,7 +402,7 @@ export default function WishlistPage() {
                       <div className="flex gap-2">
                         <Button
                           onClick={() => handleAddToCart(item)}
-                          className="flex-1 bg-burgundy hover:bg-burgundy-dark"
+                          className="flex-1 bg-burgundy-600 hover:bg-burgundy-700 text-white"
                           size="sm"
                         >
                           <ShoppingCart className="w-4 h-4 mr-2" />
@@ -411,7 +411,7 @@ export default function WishlistPage() {
                         <Button
                           asChild
                           variant="outline"
-                          className="border-burgundy text-burgundy hover:bg-burgundy/10"
+                          className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
                           size="sm"
                         >
                           <Link href={`/shops/${item.shopId}`}>
@@ -425,7 +425,7 @@ export default function WishlistPage() {
                   // List View
                   <div className="flex gap-4 p-4">
                     {/* Item Image */}
-                    <div className="w-24 h-24 bg-gradient-to-br from-beige to-beige-dark rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-24 h-24 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center flex-shrink-0 border border-beige-300">
                       {item.itemType === "product" && item.itemDetails.imageUrls && item.itemDetails.imageUrls.length > 0 ? (
                         <img
                           src={item.itemDetails.imageUrls[0]}
@@ -433,7 +433,7 @@ export default function WishlistPage() {
                           className="w-full h-full object-cover rounded-lg"
                         />
                       ) : (
-                        <div className="text-burgundy/40">
+                        <div className="text-burgundy-400">
                           {item.itemType === "product" ? (
                             <Package className="w-8 h-8" />
                           ) : (
@@ -447,17 +447,17 @@ export default function WishlistPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-burgundy truncate">
+                          <h3 className="font-semibold text-burgundy-900 truncate">
                             {item.itemDetails.name}
                           </h3>
-                          <p className="text-sm text-burgundy/70 line-clamp-2 mt-1">
+                          <p className="text-sm text-burgundy-700 line-clamp-2 mt-1">
                             {item.itemDetails.description || 'No description available'}
                           </p>
 
                           {/* Shop Info */}
                           <div className="flex items-center gap-2 mt-2">
-                            <Store className="w-3 h-3 text-burgundy/40" />
-                            <span className="text-xs text-burgundy/60 truncate">
+                            <Store className="w-3 h-3 text-burgundy-400" />
+                            <span className="text-xs text-burgundy-600 truncate">
                               {item.shopDetails.shopName}
                             </span>
                           </div>
@@ -465,11 +465,11 @@ export default function WishlistPage() {
                           {/* Price/Pricing */}
                           <div className="mt-2">
                             {item.itemType === "product" ? (
-                              <div className="text-lg font-bold text-burgundy">
+                              <div className="text-lg font-bold text-burgundy-900">
                                 {formatPrice(item.itemDetails.price)}
                               </div>
                             ) : (
-                              <div className="text-sm text-burgundy/80">
+                              <div className="text-sm text-burgundy-700">
                                 {item.itemDetails.pricing || "Contact for pricing"}
                               </div>
                             )}
@@ -489,7 +489,7 @@ export default function WishlistPage() {
                           <Button
                             size="sm"
                             onClick={() => handleAddToCart(item)}
-                            className="bg-burgundy hover:bg-burgundy-dark"
+                            className="bg-burgundy-600 hover:bg-burgundy-700 text-white"
                           >
                             <Plus className="w-4 h-4" />
                           </Button>
@@ -506,12 +506,12 @@ export default function WishlistPage() {
         {/* Quick Actions */}
         {wishlistItems.length > 0 && (
           <div className="mt-12 text-center">
-            <Card className="border-burgundy/20 bg-gradient-to-r from-burgundy/5 to-burgundy/10 max-w-md mx-auto">
+            <Card className="border border-burgundy-200 bg-gradient-to-r from-burgundy-50 to-burgundy-100 max-w-md mx-auto">
               <CardHeader>
-                <CardTitle className="text-burgundy">Quick Actions</CardTitle>
+                <CardTitle className="text-burgundy-900">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button asChild className="w-full bg-burgundy hover:bg-burgundy-dark">
+                <Button asChild className="w-full bg-burgundy-600 hover:bg-burgundy-700 text-white">
                   <Link href="/cart">
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     View Cart
@@ -520,7 +520,7 @@ export default function WishlistPage() {
                 <Button 
                   asChild 
                   variant="outline" 
-                  className="w-full border-burgundy text-burgundy hover:bg-burgundy/10"
+                  className="w-full border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
                 >
                   <Link href="/shops">
                     <ShoppingBag className="w-4 h-4 mr-2" />

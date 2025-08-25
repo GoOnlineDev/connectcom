@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+@theme {
+  /* Burgundy Color Palette */
+  --color-burgundy-50: #fdf2f2;
+  --color-burgundy-100: #fce7e7;
+  --color-burgundy-200: #f9d4d4;
+  --color-burgundy-300: #f5b8b8;
+  --color-burgundy-400: #ef8f8f;
+  --color-burgundy-500: #e55c5c;
+  --color-burgundy-600: #d63333;
+  --color-burgundy-700: #b91c1c;
+  --color-burgundy-800: #9a1a1a;
+  --color-burgundy-900: #7f1d1d;
+  --color-burgundy-950: #450a0a;
+  
+  /* Burgundy Dark Variants */
+  --color-burgundy-dark: #7f1d1d;
+  --color-burgundy-darker: #450a0a;
+  
+  /* Beige Color Palette */
+  --color-beige-50: #fdfbf7;
+  --color-beige-100: #faf6ed;
+  --color-beige-200: #f4ecd8;
+  --color-beige-300: #ecdfb8;
+  --color-beige-400: #e1cd8f;
+  --color-beige-500: #d4b866;
+  --color-beige-600: #c4a34d;
+  --color-beige-700: #a88a3f;
+  --color-beige-800: #8a6f37;
+  --color-beige-900: #735c32;
+  --color-beige-950: #3f2f1a;
+  
+  /* Beige Dark Variants */
+  --color-beige-dark: #8a6f37;
+  --color-beige-darker: #3f2f1a;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -10,42 +46,42 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --primary: 0 0% 20.8%; /* Burgundy-900 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%; /* Beige-100 */
+    --secondary-foreground: 0 0% 20.8%; /* Burgundy-900 */
+    --muted: 0 0% 96.1%; /* Beige-100 */
+    --muted-foreground: 0 0% 46.9%;
+    --accent: 0 0% 96.1%; /* Beige-100 */
+    --accent-foreground: 0 0% 20.8%; /* Burgundy-900 */
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 91.4%; /* Beige-200 */
+    --input: 0 0% 91.4%; /* Beige-200 */
+    --ring: 0 0% 20.8%; /* Burgundy-900 */
     --radius: 0.5rem;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --foreground: 0 0% 98%;
     --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card-foreground: 0 0% 98%;
     --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 20.8%; /* Burgundy-900 */
+    --secondary: 0 0% 17.5%; /* Burgundy-950 */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 17.5%; /* Burgundy-950 */
+    --muted-foreground: 0 0% 65.1%;
+    --accent: 0 0% 17.5%; /* Burgundy-950 */
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 215 20.2% 65.1%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 17.5%; /* Burgundy-950 */
+    --input: 0 0% 17.5%; /* Burgundy-950 */
+    --ring: 0 0% 65.1%;
   }
 }
 

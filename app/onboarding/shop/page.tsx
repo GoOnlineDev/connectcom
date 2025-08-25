@@ -151,27 +151,27 @@ export default function ShopOnboardingPage() {
       case 1: // Basic Info
         return (
           <div className="space-y-6">
-            <div className="mb-6">
-              <h3 className="text-lg font-medium text-burgundy mb-2">Step 1: Basic Information</h3>
-              <p className="text-sm text-gray-500">Let's start with the essential details about your shop.</p>
+            <div className="mb-8 text-center">
+              <h3 className="text-xl font-semibold text-burgundy-900 mb-3">Step 1: Basic Information</h3>
+              <p className="text-burgundy-700">Let's start with the essential details about your shop.</p>
             </div>
             
             <div>
-              <Label htmlFor="shopName" className="text-gray-700">Shop Name *</Label>
+              <Label htmlFor="shopName" className="text-burgundy-900 font-medium">Shop Name *</Label>
               <Input 
                 id="shopName" 
                 name="shopName" 
                 value={shopData.shopName} 
                 onChange={handleInputChange} 
                 placeholder="Enter your shop name"
-                className="mt-1 bg-white"
+                className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
                 required
               />
             </div>
 
             {/* Shop Image Upload Dropzone */}
             <div>
-              <Label className="text-gray-700">Upload Shop Image</Label>
+              <Label className="text-burgundy-900 font-medium">Upload Shop Image</Label>
               <UploadDropzone
                 endpoint="shopImageUploader"
                 onClientUploadComplete={(res) => {
@@ -183,49 +183,51 @@ export default function ShopOnboardingPage() {
                   setError(error.message || "Image upload failed");
                 }}
                 appearance={{
-                  button: "bg-[#8000020] text-white hover:bg-[#8000020]/90",
+                  button: "bg-burgundy-600 text-white hover:bg-burgundy-700 border-burgundy-600",
+                  allowedContent: "text-burgundy-700",
+                  label: "text-burgundy-900",
                 }}
               />
               {shopData.shopImageUrl && (
-                <div className="mt-2">
-                  <Label className="text-gray-700">Preview:</Label>
+                <div className="mt-3">
+                  <Label className="text-burgundy-700 text-sm">Preview:</Label>
                   <img
                     src={shopData.shopImageUrl}
                     alt="Shop Preview"
-                    className="mt-1 rounded-md border border-gray-200 max-h-40"
+                    className="mt-2 rounded-lg border-2 border-burgundy-200 max-h-40 mx-auto"
                   />
                 </div>
               )}
             </div>
             
             <div>
-              <Label className="text-gray-700">Shop Type *</Label>
+              <Label className="text-burgundy-900 font-medium">Shop Type *</Label>
               <RadioGroup 
                 defaultValue={shopData.shopType} 
                 onValueChange={handleShopTypeChange}
-                className="flex flex-col space-y-2 mt-2"
+                className="flex flex-col space-y-3 mt-2"
               >
-                <div className="flex items-center space-x-3 p-3 rounded-md border border-gray-200 bg-white hover:bg-gray-50">
-                  <RadioGroupItem value="product_shop" id="product_shop" />
-                  <Label htmlFor="product_shop" className="font-medium">
-                    <span className="block text-gray-700">Product Shop</span>
-                    <span className="block text-sm text-gray-500 mt-1">Sell physical items that you ship to customers</span>
+                <div className="flex items-center space-x-3 p-4 rounded-lg border-2 border-burgundy-200 bg-white hover:bg-burgundy-50 hover:border-burgundy-300 transition-colors">
+                  <RadioGroupItem value="product_shop" id="product_shop" className="text-burgundy-600" />
+                  <Label htmlFor="product_shop" className="font-medium cursor-pointer">
+                    <span className="block text-burgundy-900">Product Shop</span>
+                    <span className="block text-sm text-burgundy-700 mt-1">Sell physical items that you ship to customers</span>
                   </Label>
                 </div>
-                <div className="flex items-center space-x-3 p-3 rounded-md border border-gray-200 bg-white hover:bg-gray-50">
-                  <RadioGroupItem value="service_shop" id="service_shop" />
-                  <Label htmlFor="service_shop" className="font-medium">
-                    <span className="block text-gray-700">Service Shop</span>
-                    <span className="block text-sm text-gray-500 mt-1">Offer services, appointments, or bookable time slots</span>
+                <div className="flex items-center space-x-3 p-4 rounded-lg border-2 border-burgundy-200 bg-white hover:bg-burgundy-50 hover:border-burgundy-300 transition-colors">
+                  <RadioGroupItem value="service_shop" id="service_shop" className="text-burgundy-600" />
+                  <Label htmlFor="service_shop" className="font-medium cursor-pointer">
+                    <span className="block text-burgundy-900">Service Shop</span>
+                    <span className="block text-sm text-burgundy-700 mt-1">Offer services, appointments, or bookable time slots</span>
                   </Label>
                 </div>
               </RadioGroup>
             </div>
             
-            <div className="flex justify-end mt-8 pt-4 border-t border-gray-100">
+            <div className="flex justify-center mt-10 pt-6 border-t border-burgundy-200">
               <Button 
                 onClick={() => setStep(2)} 
-                className="bg-burgundy hover:bg-burgundy-dark text-black px-6 py-2 text-base font-medium shadow-md"
+                className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-8 py-3 text-lg font-semibold shadow-lg transition-all duration-200 hover:scale-105"
                 size="lg"
               >
                 Next: Shop Description →
@@ -237,29 +239,29 @@ export default function ShopOnboardingPage() {
       case 2: // Description & Category
         return (
           <div className="space-y-6">
-            <div className="mb-6">
-              <h3 className="text-lg font-medium text-burgundy mb-2">Step 2: Description & Category</h3>
-              <p className="text-sm text-gray-500">Tell customers about your shop and what you offer.</p>
+            <div className="mb-8 text-center">
+              <h3 className="text-xl font-semibold text-burgundy-900 mb-3">Step 2: Description & Category</h3>
+              <p className="text-burgundy-700">Tell customers about your shop and what you offer.</p>
             </div>
             
             <div>
-              <Label htmlFor="description" className="text-gray-700">Shop Description *</Label>
+              <Label htmlFor="description" className="text-burgundy-900 font-medium">Shop Description *</Label>
               <Textarea 
                 id="description" 
                 name="description" 
                 value={shopData.description} 
                 onChange={handleInputChange} 
                 placeholder="Tell us about your shop and what you offer"
-                className="mt-1 bg-white min-h-[120px]"
+                className="mt-2 bg-white min-h-[120px] border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
                 rows={4}
                 required
               />
             </div>
             
             <div>
-              <Label htmlFor="category" className="text-gray-700">Primary Category *</Label>
+              <Label htmlFor="category" className="text-burgundy-900 font-medium">Primary Category *</Label>
               <Select onValueChange={handleCategoryChange}>
-                <SelectTrigger className="mt-1 bg-white">
+                <SelectTrigger className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -274,21 +276,21 @@ export default function ShopOnboardingPage() {
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-gray-500 mt-1">Choose the category that best describes your shop.</p>
+              <p className="text-xs text-burgundy-600 mt-2">Choose the category that best describes your shop.</p>
             </div>
             
-            <div className="flex justify-between mt-8 pt-4 border-t border-gray-100">
+            <div className="flex justify-between mt-10 pt-6 border-t border-burgundy-200">
               <Button 
                 variant="outline" 
                 onClick={() => setStep(1)}
-                className="border-2 border-burgundy text-burgundy hover:bg-burgundy/5 px-6 py-2 text-base font-medium"
+                className="border-2 border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50 px-6 py-2 text-base font-medium"
                 size="lg"
               >
                 ← Back
               </Button>
               <Button 
                 onClick={() => setStep(3)} 
-                className="bg-burgundy hover:bg-burgundy-dark text-white px-6 py-2 text-base font-medium shadow-md"
+                className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-2 text-base font-medium shadow-md"
                 size="lg"
               >
                 Next: Contact Information →
@@ -300,61 +302,61 @@ export default function ShopOnboardingPage() {
       case 3: // Contact Info
         return (
           <div className="space-y-6">
-            <div className="mb-6">
-              <h3 className="text-lg font-medium text-burgundy mb-2">Step 3: Contact Information</h3>
-              <p className="text-sm text-gray-500">Add ways for customers to get in touch with you.</p>
+            <div className="mb-8 text-center">
+              <h3 className="text-xl font-semibold text-burgundy-900 mb-3">Step 3: Contact Information</h3>
+              <p className="text-burgundy-700">Add ways for customers to get in touch with you.</p>
             </div>
             
             <div>
-              <Label htmlFor="contactEmail" className="text-gray-700">Contact Email *</Label>
+              <Label htmlFor="contactEmail" className="text-burgundy-900 font-medium">Contact Email *</Label>
               <Input 
                 id="contactEmail" 
                 name="contactInfo.email" 
                 value={shopData.contactInfo.email} 
                 onChange={handleInputChange} 
                 placeholder="email@example.com"
-                className="mt-1 bg-white"
+                className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
                 type="email"
                 required
               />
             </div>
             
             <div>
-              <Label htmlFor="contactPhone" className="text-gray-700">Contact Phone</Label>
+              <Label htmlFor="contactPhone" className="text-burgundy-900 font-medium">Contact Phone</Label>
               <Input 
                 id="contactPhone" 
                 name="contactInfo.phone" 
                 value={shopData.contactInfo.phone} 
                 onChange={handleInputChange} 
                 placeholder="+1234567890"
-                className="mt-1 bg-white"
+                className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
             
             <div>
-              <Label htmlFor="website" className="text-gray-700">Website (if any)</Label>
+              <Label htmlFor="website" className="text-burgundy-900 font-medium">Website (if any)</Label>
               <Input 
                 id="website" 
                 name="contactInfo.website" 
                 value={shopData.contactInfo.website} 
                 onChange={handleInputChange} 
                 placeholder="https://yourwebsite.com"
-                className="mt-1 bg-white"
+                className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
             
-            <div className="flex justify-between mt-8 pt-4 border-t border-gray-100">
+            <div className="flex justify-between mt-10 pt-6 border-t border-burgundy-200">
               <Button 
                 variant="outline" 
                 onClick={() => setStep(2)}
-                className="border-2 border-burgundy text-burgundy hover:bg-burgundy/5 px-6 py-2 text-base font-medium"
+                className="border-2 border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50 px-6 py-2 text-base font-medium"
                 size="lg"
               >
                 ← Back
               </Button>
               <Button 
                 onClick={() => setStep(4)} 
-                className="bg-burgundy hover:bg-burgundy-dark text-white px-6 py-2 text-base font-medium shadow-md"
+                className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-2 text-base font-medium shadow-md"
                 size="lg"
               >
                 Next: Final Details →
@@ -366,49 +368,49 @@ export default function ShopOnboardingPage() {
       case 4: // Location & Hours
         return (
           <div className="space-y-6">
-            <div className="mb-6">
-              <h3 className="text-lg font-medium text-burgundy mb-2">Step 4: Location & Hours</h3>
-              <p className="text-sm text-gray-500">Add your location and business hours (if applicable).</p>
+            <div className="mb-8 text-center">
+              <h3 className="text-xl font-semibold text-burgundy-900 mb-3">Step 4: Location & Hours</h3>
+              <p className="text-burgundy-700">Add your location and business hours (if applicable).</p>
             </div>
             
             <div>
-              <Label htmlFor="physicalLocation" className="text-gray-700">Physical Location (if applicable)</Label>
+              <Label htmlFor="physicalLocation" className="text-burgundy-900 font-medium">Physical Location (if applicable)</Label>
               <Input 
                 id="physicalLocation" 
                 name="physicalLocation" 
                 value={shopData.physicalLocation} 
                 onChange={handleInputChange} 
                 placeholder="123 Main St, City, Country"
-                className="mt-1 bg-white"
+                className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
-              <p className="text-xs text-gray-500 mt-1">Leave blank if you don't have a physical location.</p>
+              <p className="text-xs text-burgundy-600 mt-2">Leave blank if you don't have a physical location.</p>
             </div>
             
             <div>
-              <Label htmlFor="operatingHours" className="text-gray-700">Operating Hours</Label>
+              <Label htmlFor="operatingHours" className="text-burgundy-900 font-medium">Operating Hours</Label>
               <Input 
                 id="operatingHours" 
                 name="operatingHours" 
                 value={shopData.operatingHours} 
                 onChange={handleInputChange} 
                 placeholder="Mon-Fri: 9AM-5PM, Sat: 10AM-3PM"
-                className="mt-1 bg-white"
+                className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
-              <p className="text-xs text-gray-500 mt-1">When are you available to serve customers?</p>
+              <p className="text-xs text-burgundy-600 mt-2">When are you available to serve customers?</p>
             </div>
             
-            <div className="flex justify-between mt-8 pt-4 border-t border-gray-100">
+            <div className="flex justify-between mt-10 pt-6 border-t border-burgundy-200">
               <Button 
                 variant="outline" 
                 onClick={() => setStep(3)}
-                className="border-2 border-burgundy text-burgundy hover:bg-burgundy/5 px-6 py-2 text-base font-medium"
+                className="border-2 border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50 px-6 py-2 text-base font-medium"
                 size="lg"
               >
                 ← Back
               </Button>
               <Button 
                 type="submit" 
-                className="bg-burgundy hover:bg-burgundy-dark text-white px-6 py-2 text-base font-medium shadow-md"
+                className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-2 text-base font-medium shadow-md"
                 size="lg"
                 disabled={isSubmitting}
               >
@@ -426,22 +428,22 @@ export default function ShopOnboardingPage() {
   // Progress steps indicator
   const renderProgressSteps = () => {
     return (
-      <div className="flex items-center justify-center mb-8">
+      <div className="flex items-center justify-center mb-10">
         {[1, 2, 3, 4].map((stepNumber) => (
           <div key={stepNumber} className="flex items-center">
             <div 
-              className={`w-8 h-8 rounded-full flex items-center justify-center font-medium text-sm 
+              className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all duration-300
                 ${step === stepNumber 
-                  ? 'bg-burgundy text-white' 
+                  ? 'bg-burgundy-600 text-white shadow-lg scale-110' 
                   : step > stepNumber 
-                    ? 'bg-burgundy/20 text-burgundy' 
+                    ? 'bg-burgundy-200 text-burgundy-700' 
                     : 'bg-gray-200 text-gray-500'}`}
             >
               {stepNumber}
             </div>
             {stepNumber < 4 && (
               <div 
-                className={`w-10 h-1 ${step > stepNumber ? 'bg-burgundy/40' : 'bg-gray-200'}`}
+                className={`w-12 h-1 transition-all duration-300 ${step > stepNumber ? 'bg-burgundy-400' : 'bg-gray-200'}`}
               ></div>
             )}
           </div>
@@ -451,12 +453,12 @@ export default function ShopOnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-beige py-12 px-4">
-      <div className="max-w-xl mx-auto">
-        <Card className="shadow-lg bg-white/90 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-2xl text-burgundy text-center">Register Your Shop</CardTitle>
-            <CardDescription className="text-center">
+    <div className="min-h-screen bg-beige-50 py-12 px-4">
+      <div className="max-w-2xl mx-auto">
+        <Card className="shadow-lg bg-white/95 backdrop-blur-sm border-burgundy-200">
+          <CardHeader className="text-center pb-8">
+            <CardTitle className="text-3xl text-burgundy-900 font-bold">Register Your Shop</CardTitle>
+            <CardDescription className="text-lg text-burgundy-700 mt-2">
               Join ConnectCom and start selling your products or services online.
             </CardDescription>
           </CardHeader>
@@ -479,9 +481,9 @@ export default function ShopOnboardingPage() {
             </form>
           </CardContent>
           
-          <CardFooter className="flex justify-center text-sm text-gray-500">
+          <CardFooter className="flex justify-center text-sm text-burgundy-600 border-t border-burgundy-100 pt-6">
             <p>
-              By creating a shop, you agree to our Terms of Service and Privacy Policy.
+              By creating a shop, you agree to our <span className="text-burgundy-800 hover:underline cursor-pointer">Terms of Service</span> and <span className="text-burgundy-800 hover:underline cursor-pointer">Privacy Policy</span>.
             </p>
           </CardFooter>
         </Card>
