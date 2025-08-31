@@ -4,16 +4,19 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SignInButton, useAuth } from "@clerk/nextjs";
-import { Authenticated, Unauthenticated, useMutation } from "convex/react";
-import { api } from "../convex/_generated/api";
+import { usePathname } from 'next/navigation';
+import { Authenticated, Unauthenticated } from "convex/react";
+import { useCurrentUser, useCart } from '@/hooks/useData';
 import CustomUserButton from './user-button';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const { isSignedIn } = useAuth();
-  const createOrGetUser = useMutation(api.users.createOrGetUser);
+  const { data: currentUser, isLoading: userLoading } = useCurrentUser();
+  const { data: cart, isLoading: cartLoading } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,11 +27,19 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (isSignedIn) {
-      createOrGetUser();
-    }
-  }, [isSignedIn, createOrGetUser]);
+  // Calculate cart count
+  const cartCount = cart?.length || 0;
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
+  };
+
+  const baseLinkClasses = "px-4 py-2 rounded-full transition-colors";
+  const desktopLinkClasses = (href: string) =>
+    `${baseLinkClasses} ${isActive(href) ? 'bg-burgundy-100 text-burgundy-900' : 'text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50'}`;
+  const mobileLinkClasses = (href: string) =>
+    `block px-3 py-2 rounded-full ${isActive(href) ? 'bg-burgundy-100 text-burgundy-900' : 'text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900'}`;
 
   return (
     <nav className={`fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-7xl z-50 transition-all duration-300 rounded-full ${
@@ -52,19 +63,19 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            <Link href="/" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
+            <Link href="/" className={desktopLinkClasses('/')}>
               Home
             </Link>
-            <Link href="/shops" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
+            <Link href="/shops" className={desktopLinkClasses('/shops')}>
               Shops
             </Link>
-            <Link href="/categories" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
+            <Link href="/categories" className={desktopLinkClasses('/categories')}>
               Categories
             </Link>
-            <Link href="/about" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
+            <Link href="/about" className={desktopLinkClasses('/about')}>
               About
             </Link>
-            <Link href="/contact" className="px-4 py-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
+            <Link href="/contact" className={desktopLinkClasses('/contact')}>
               Contact Us
             </Link>
           </div>
@@ -75,7 +86,11 @@ const Navigation = () => {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <span className="absolute top-0 right-0 bg-burgundy-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 bg-burgundy-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartCount > 99 ? '99+' : cartCount}
+                </span>
+              )}
             </Link>
             <Authenticated>
               <CustomUserButton />
@@ -95,6 +110,11 @@ const Navigation = () => {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 bg-burgundy-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartCount > 99 ? '99+' : cartCount}
+                </span>
+              )}
             </Link>
             <Unauthenticated>
               <SignInButton mode="modal">
@@ -132,19 +152,19 @@ const Navigation = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white/95 backdrop-blur-sm rounded-b-3xl shadow-lg animate-slide-down border border-burgundy-100">
           <div className="px-4 pt-2 pb-4 space-y-1">
-            <Link href="/" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
+            <Link href="/" className={mobileLinkClasses('/')}>
               Home
             </Link>
-            <Link href="/shops" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
+            <Link href="/shops" className={mobileLinkClasses('/shops')}>
               Shops
             </Link>
-            <Link href="/categories" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
+            <Link href="/categories" className={mobileLinkClasses('/categories')}>
               Categories
             </Link>
-            <Link href="/about" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
+            <Link href="/about" className={mobileLinkClasses('/about')}>
               About
             </Link>
-            <Link href="/contact" className="block px-3 py-2 rounded-full text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900">
+            <Link href="/contact" className={mobileLinkClasses('/contact')}>
               Contact Us
             </Link>
           </div>

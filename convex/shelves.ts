@@ -327,4 +327,27 @@ export const reorderShelves = mutation({
       success: true,
     };
   },
+});
+
+// Get shelf by ID
+export const getShelfById = query({
+  args: {
+    shelfId: v.id("shelves"),
+  },
+  returns: v.union(v.null(), v.object({
+    _id: v.id("shelves"),
+    _creationTime: v.number(),
+    shopId: v.id("shops"),
+    shelfName: v.string(),
+    shelfDescription: v.optional(v.string()),
+    shelfOrder: v.number(),
+    productIds: v.optional(v.array(v.id("products"))),
+    serviceIds: v.optional(v.array(v.id("services"))),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })),
+  handler: async (ctx, args) => {
+    const shelf = await ctx.db.get(args.shelfId);
+    return shelf;
+  },
 }); 

@@ -183,7 +183,7 @@ export default function ShopOnboardingPage() {
                   setError(error.message || "Image upload failed");
                 }}
                 appearance={{
-                  button: "bg-burgundy-600 text-white hover:bg-burgundy-700 border-burgundy-600",
+                  button: "bg-burgundy-900 text-white hover:bg-burgundy-700 border-burgundy-600",
                   allowedContent: "text-burgundy-700",
                   label: "text-burgundy-900",
                 }}

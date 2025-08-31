@@ -1,99 +1,137 @@
-import Image from 'next/image';
-import Link from 'next/link';
+'use client';
 
-const featuredShops = [
-  {
-    id: 1,
-    name: "Artisan Crafts",
-    description: "Handmade crafts and artisan products",
-    image: "/shops/artisan-crafts.jpg",
-    slug: "artisan-crafts",
-    rating: 4.8,
-    reviewCount: 124,
-    tags: ["Handmade", "Art"]
-  },
-  {
-    id: 2,
-    name: "Tech Haven",
-    description: "Latest gadgets and tech accessories",
-    image: "/shops/tech-haven.jpg",
-    slug: "tech-haven",
-    rating: 4.6,
-    reviewCount: 89,
-    tags: ["Electronics", "Gadgets"]
-  },
-  {
-    id: 3,
-    name: "Fashion Forward",
-    description: "Trending fashion and accessories",
-    image: "/shops/fashion-forward.jpg",
-    slug: "fashion-forward",
-    rating: 4.9,
-    reviewCount: 210,
-    tags: ["Fashion", "Accessories"]
-  },
-  {
-    id: 4,
-    name: "Home Elegance",
-    description: "Premium home decor and furnishings",
-    image: "/shops/home-elegance.jpg",
-    slug: "home-elegance",
-    rating: 4.7,
-    reviewCount: 156,
-    tags: ["Home Decor", "Furniture"]
-  }
-];
+import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Store, ShoppingBag } from 'lucide-react';
+import { useFeaturedShops } from '@/hooks/useData';
 
 export default function FeaturedShops() {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-      {featuredShops.map((shop, index) => (
-        <Link 
-          href={`/shops/${shop.slug}`} 
-          key={shop.id}
-          className="group bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px] animate-fade-in"
-          style={{ animationDelay: `${index * 0.1}s` }}
-        >
-          <div className="relative h-40 sm:h-44 lg:h-48 overflow-hidden">
-            <Image
-              src={shop.image}
-              alt={shop.name}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div className="absolute top-3 left-3 flex gap-1.5">
-              {shop.tags.map((tag, i) => (
-                <span key={i} className="text-xs px-2 py-0.5 bg-white/90 text-burgundy rounded-full shadow-sm">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-          
-          <div className="p-4">
-            <div className="flex justify-between items-start mb-1">
-              <h3 className="text-lg font-semibold text-burgundy group-hover:text-burgundy-light transition-colors">{shop.name}</h3>
-              <div className="flex items-center bg-beige rounded-full px-2 py-0.5">
-                <svg className="w-3.5 h-3.5 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <span className="text-xs font-medium text-burgundy/90">{shop.rating}</span>
+  const { data: featuredShops, isLoading } = useFeaturedShops(6);
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div key={index} className="bg-white rounded-lg shadow-sm border border-beige-200">
+            <Skeleton className="h-48 w-full rounded-t-lg" />
+            <div className="p-4">
+              <Skeleton className="h-6 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-full mb-2" />
+              <Skeleton className="h-4 w-2/3 mb-3" />
+              <div className="flex justify-between">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-6 w-20" />
               </div>
             </div>
-            
-            <p className="text-burgundy/70 text-sm mb-3 line-clamp-2">{shop.description}</p>
-            
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-burgundy/60">{shop.reviewCount} reviews</span>
-              <span className="text-xs font-medium text-burgundy bg-beige-dark px-2 py-1 rounded-md inline-flex items-center group-hover:bg-burgundy/10 transition-colors">
-                View Shop
-                <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
-            </div>
           </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!featuredShops || featuredShops.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <Store className="mx-auto h-16 w-16 text-burgundy-400 mb-4" />
+        <h3 className="text-xl font-semibold text-burgundy-900 mb-2">No featured shops yet</h3>
+        <p className="text-burgundy-700">
+          Check back soon for featured shops and services!
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {featuredShops.map((shop: any) => (
+        <Link 
+          key={shop._id} 
+          href={`/shops/${shop._id}`}
+          className="block transform transition-transform hover:scale-105"
+        >
+          <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">
+            {/* Shop Image */}
+            <div className="relative h-48 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg">
+              {shop.shopImageUrl ? (
+                <img
+                  src={shop.shopImageUrl}
+                  alt={shop.shopName}
+                  className="w-full h-full object-cover rounded-t-lg"
+                />
+              ) : shop.shopLogoUrl ? (
+                <img
+                  src={shop.shopLogoUrl}
+                  alt={shop.shopName}
+                  className="w-full h-full object-cover rounded-t-lg"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <Store className="w-16 h-16 text-burgundy-400" />
+                </div>
+              )}
+              {/* Shop Type Badge */}
+              <div className="absolute top-3 right-3">
+                <Badge variant={shop.shopType === 'product_shop' ? 'default' : 'secondary'} className="bg-burgundy-600 text-white">
+                  {shop.shopType === 'product_shop' ? (
+                    <>
+                      <ShoppingBag className="w-3 h-3 mr-1" /> Products
+                    </>
+                  ) : (
+                    <>
+                      <Store className="w-3 h-3 mr-1" /> Services
+                    </>
+                  )}
+                </Badge>
+              </div>
+            </div>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-bold text-burgundy-900 line-clamp-1">
+                {shop.shopName}
+              </CardTitle>
+              {shop.description && (
+                <CardDescription className="line-clamp-2 text-burgundy-700">
+                  {shop.description}
+                </CardDescription>
+              )}
+            </CardHeader>
+            <CardContent className="pt-0">
+              {/* Categories */}
+              {shop.categories && shop.categories.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {shop.categories.slice(0, 2).map((cat: string) => (
+                    <Badge key={cat} variant="outline" className="text-xs border-burgundy-300 text-burgundy-700">
+                      {cat}
+                    </Badge>
+                  ))}
+                  {shop.categories.length > 2 && (
+                    <Badge variant="outline" className="text-xs border-burgundy-300 text-burgundy-700">
+                      +{shop.categories.length - 2} more
+                    </Badge>
+                  )}
+                </div>
+              )}
+              {/* Contact Info */}
+              <div className="space-y-2 text-sm text-burgundy-700">
+                {shop.contactInfo?.phone && (
+                  <div className="flex items-center gap-2">
+                    <span className="truncate">{shop.contactInfo.phone}</span>
+                  </div>
+                )}
+                {shop.physicalLocation && (
+                  <div className="flex items-center gap-2">
+                    <span className="truncate">
+                      {typeof shop.physicalLocation === 'string' 
+                        ? shop.physicalLocation 
+                        : 'Physical Location Available'
+                      }
+                    </span>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </Link>
       ))}
     </div>

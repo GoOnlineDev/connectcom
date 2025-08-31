@@ -399,3 +399,194 @@ export const getFeaturedShops = query({
     return featuredShops;
   },
 }); 
+
+// Get shops by category for homepage with optimized filtering
+export const getShopsByCategory = query({
+  args: {
+    category: v.string(),
+    limit: v.optional(v.number()),
+  },
+  returns: v.array(v.object({
+    _id: v.id("shops"),
+    _creationTime: v.number(),
+    ownerId: v.string(),
+    shopName: v.string(),
+    shopImageUrl: v.optional(v.string()),
+    shopLogoUrl: v.optional(v.string()),
+    contactInfo: v.optional(v.object({
+      email: v.optional(v.string()),
+      phone: v.optional(v.string()),
+      website: v.optional(v.string()),
+    })),
+    operatingHours: v.optional(v.any()),
+    physicalLocation: v.optional(v.any()),
+    description: v.optional(v.string()),
+    shopType: v.string(),
+    categories: v.optional(v.array(v.string())),
+    productIds: v.optional(v.array(v.id("products"))),
+    serviceIds: v.optional(v.array(v.id("services"))),
+    shelfIds: v.optional(v.array(v.id("shelves"))),
+    status: v.string(),
+    adminNotes: v.optional(v.string()),
+    reviewedAt: v.optional(v.number()),
+    shopLayoutConfig: v.optional(v.any()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })),
+  handler: async (ctx, args) => {
+    const limit = args.limit || 50;
+    
+    // Get all active shops and filter by category (since categories is an array)
+    const shops = await ctx.db
+      .query("shops")
+      .withIndex("by_status", (q) => q.eq("status", "active"))
+      .collect();
+
+    // Filter by category
+    const categoryShops = shops.filter(shop => 
+      shop.categories?.includes(args.category)
+    );
+
+    return categoryShops.slice(0, limit);
+  },
+}); 
+
+// Get homepage statistics with parallel execution
+export const getHomepageStats = query({
+  args: {},
+  returns: v.object({
+    totalShops: v.number(),
+    totalProducts: v.number(),
+    totalServices: v.number(),
+    totalUsers: v.number(),
+    activeShops: v.number(),
+    featuredShops: v.number(),
+    recentShops: v.number(),
+    topCategories: v.array(v.object({
+      category: v.string(),
+      count: v.number(),
+    })),
+  }),
+  handler: async (ctx) => {
+    const [
+      totalShops,
+      activeShops,
+      totalProducts,
+      totalServices,
+      totalUsers,
+      featuredShops,
+      recentShops,
+    ] = await Promise.all([
+      ctx.db.query("shops").collect(),
+      ctx.db.query("shops").withIndex("by_status", (q) => q.eq("status", "active")).collect(),
+      ctx.db.query("products").collect(),
+      ctx.db.query("services").collect(),
+      ctx.db.query("users").collect(),
+      ctx.db
+        .query("shops")
+        .withIndex("by_status", (q) => q.eq("status", "active"))
+        .order("desc")
+        .take(6),
+      ctx.db
+        .query("shops")
+        .withIndex("by_status", (q) => q.eq("status", "active"))
+        .order("desc")
+        .take(8),
+    ]);
+
+    const categoryCounts = new Map<string, number>();
+    activeShops.forEach((shop) => {
+      if (shop.categories) {
+        shop.categories.forEach((category) => {
+          categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+        });
+      }
+    });
+
+    const topCategories = Array.from(categoryCounts.entries())
+      .map(([category, count]) => ({ category, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    return {
+      totalShops: totalShops.length,
+      totalProducts: totalProducts.length,
+      totalServices: totalServices.length,
+      totalUsers: totalUsers.length,
+      activeShops: activeShops.length,
+      featuredShops: featuredShops.length,
+      recentShops: recentShops.length,
+      topCategories,
+    };
+  },
+});
+
+// Get all unique categories from active shops
+export const getAllShopCategories = query({
+  args: {},
+  returns: v.array(v.string()),
+  handler: async (ctx) => {
+    const activeShops = await ctx.db
+      .query("shops")
+      .withIndex("by_status", (q) => q.eq("status", "active"))
+      .collect();
+
+    const allCategories = new Set<string>();
+    activeShops.forEach((shop) => {
+      if (shop.categories) {
+        shop.categories.forEach((category) => {
+          allCategories.add(category);
+        });
+      }
+    });
+
+    return Array.from(allCategories).sort();
+  },
+});
+
+// Get recent shops for homepage (newest active shops)
+export const getRecentShops = query({
+  args: {
+    limit: v.optional(v.number()),
+  },
+  returns: v.array(
+    v.object({
+      _id: v.id("shops"),
+      _creationTime: v.number(),
+      ownerId: v.string(),
+      shopName: v.string(),
+      shopImageUrl: v.optional(v.string()),
+      shopLogoUrl: v.optional(v.string()),
+      contactInfo: v.optional(
+        v.object({
+          email: v.optional(v.string()),
+          phone: v.optional(v.string()),
+          website: v.optional(v.string()),
+        }),
+      ),
+      operatingHours: v.optional(v.any()),
+      physicalLocation: v.optional(v.any()),
+      description: v.optional(v.string()),
+      shopType: v.string(),
+      categories: v.optional(v.array(v.string())),
+      productIds: v.optional(v.array(v.id("products"))),
+      serviceIds: v.optional(v.array(v.id("services"))),
+      shelfIds: v.optional(v.array(v.id("shelves"))),
+      status: v.string(),
+      adminNotes: v.optional(v.string()),
+      reviewedAt: v.optional(v.number()),
+      shopLayoutConfig: v.optional(v.any()),
+      createdAt: v.number(),
+      updatedAt: v.number(),
+    }),
+  ),
+  handler: async (ctx, args) => {
+    const limit = args.limit || 8;
+    const recentShops = await ctx.db
+      .query("shops")
+      .withIndex("by_status_and_created", (q) => q.eq("status", "active"))
+      .order("desc")
+      .take(limit);
+    return recentShops;
+  },
+});

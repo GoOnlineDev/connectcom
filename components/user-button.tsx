@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useUser, useClerk } from '@clerk/nextjs';
-import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
+import { useCurrentUser, useWishlistCount } from '@/hooks/useData';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +27,8 @@ import {
   Shield,
   ChevronDown,
   Bell,
-  HelpCircle
+  HelpCircle,
+  Heart
 } from 'lucide-react';
 
 interface UserButtonProps {
@@ -45,14 +45,15 @@ interface QuickLink {
 export default function CustomUserButton({ className }: UserButtonProps) {
   const { user } = useUser();
   const { signOut } = useClerk();
-  const currentUser = useQuery(api.users.getCurrentUser);
+  const { data: currentUser, isLoading: userLoading } = useCurrentUser();
+  const { data: wishlistCount, isLoading: wishlistLoading } = useWishlistCount();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted || !user || !currentUser) {
+  if (!mounted || !user || userLoading || !currentUser) {
     return (
       <div className="w-8 h-8 bg-burgundy-200 rounded-full animate-pulse"></div>
     );
@@ -119,6 +120,12 @@ export default function CustomUserButton({ className }: UserButtonProps) {
           href: '/shops',
           icon: Store,
         },
+        {
+          label: 'Wishlist',
+          href: '/wishlist',
+          icon: Heart,
+          badge: wishlistCount || 0,
+        },
       ];
     }
 
@@ -127,6 +134,12 @@ export default function CustomUserButton({ className }: UserButtonProps) {
         label: 'Dashboard',
         href: '/dashboard',
         icon: Home,
+      },
+      {
+        label: 'Wishlist',
+        href: '/wishlist',
+        icon: Heart,
+        badge: wishlistCount || 0,
       },
     ];
   };
@@ -224,7 +237,7 @@ export default function CustomUserButton({ className }: UserButtonProps) {
               <Link href={link.href} className="flex items-center px-2 py-2 rounded-md hover:bg-burgundy-50">
                 <link.icon className="w-4 h-4 mr-3 text-burgundy-700" />
                 <span className="flex-1 text-sm text-burgundy-900">{link.label}</span>
-                {link.badge && (
+                {link.badge && typeof link.badge === 'number' && link.badge > 0 && (
                   <Badge variant="secondary" className="ml-2 h-5 text-xs bg-burgundy-600 text-white">
                     {link.badge}
                   </Badge>

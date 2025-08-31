@@ -197,3 +197,37 @@ export const updateUserSubscription = mutation({
     };
   },
 });
+
+// Get user by ID
+export const getUserById = query({
+  args: {
+    userId: v.string(),
+  },
+  returns: v.union(v.null(), v.object({
+    _id: v.id("users"),
+    _creationTime: v.number(),
+    clerkId: v.string(),
+    email: v.string(),
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
+    role: v.string(),
+    phoneNumber: v.optional(v.string()),
+    location: v.optional(v.string()),
+    shopIds: v.optional(v.array(v.id("shops"))),
+    subscriptionPackage: v.string(),
+    subscriptionStartDate: v.optional(v.number()),
+    subscriptionEndDate: v.optional(v.number()),
+    subscriptionStatus: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })),
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", args.userId))
+      .unique();
+    
+    return user;
+  },
+});

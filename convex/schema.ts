@@ -22,7 +22,9 @@ export default defineSchema({
   })
   .index("by_clerkId", ["clerkId"])
   .index("by_subscriptionPackage", ["subscriptionPackage"])
-  .index("by_subscriptionStatus", ["subscriptionStatus"]),
+  .index("by_subscriptionStatus", ["subscriptionStatus"])
+  .index("by_role", ["role"])
+  .index("by_created_at", ["createdAt"]),
 
   // Subscription packages definition table
   subscriptionPackages: defineTable({
@@ -83,7 +85,16 @@ export default defineSchema({
   // Index to find shops by type
   .index("by_shopType", ["shopType"])
   // Index for status
-  .index("by_status", ["status"]),
+  .index("by_status", ["status"])
+  // Index for category filtering (for active shops)
+  .index("by_status_and_category", ["status", "categories"])
+  // Index for shop type and status combination
+  .index("by_status_and_shopType", ["status", "shopType"])
+  // NEW INDEXES for performance optimization
+  .index("by_status_and_name", ["status", "shopName"])
+  .index("by_created_at", ["createdAt"])
+  .index("by_owner_and_status", ["ownerId", "status"])
+  .index("by_status_and_created", ["status", "createdAt"]),
 
   // Shelves table to organize products/services
   shelves: defineTable({
@@ -99,7 +110,8 @@ export default defineSchema({
     updatedAt: v.number(),
   })
   .index("by_shopId", ["shopId"])
-  .index("by_shopId_and_order", ["shopId", "shelfOrder"]),
+  .index("by_shopId_and_order", ["shopId", "shelfOrder"])
+  .index("by_created_at", ["createdAt"]),
 
 
   products: defineTable({
@@ -124,7 +136,11 @@ export default defineSchema({
   .index("by_shopId", ["shopId"])
   // Index to find products by shelf
   .index("by_shelfId", ["shelfId"])
-  .index("by_shelfId_and_order", ["shelfId", "shelfOrder"]),
+  .index("by_shelfId_and_order", ["shelfId", "shelfOrder"])
+  // NEW INDEXES for performance optimization
+  .index("by_created_at", ["createdAt"])
+  .index("by_price", ["price"])
+  .index("by_shopId_and_created", ["shopId", "createdAt"]),
 
 
   services: defineTable({
@@ -147,7 +163,10 @@ export default defineSchema({
   .index("by_shopId", ["shopId"])
   // Index to find services by shelf
   .index("by_shelfId", ["shelfId"])
-  .index("by_shelfId_and_order", ["shelfId", "shelfOrder"]),
+  .index("by_shelfId_and_order", ["shelfId", "shelfOrder"])
+  // NEW INDEXES for performance optimization
+  .index("by_created_at", ["createdAt"])
+  .index("by_shopId_and_created", ["shopId", "createdAt"]),
 
   // Wishlist table
   wishlists: defineTable({
@@ -160,7 +179,11 @@ export default defineSchema({
   })
   .index("by_userId", ["userId"])
   .index("by_userId_and_itemType", ["userId", "itemType"])
-  .index("by_userId_and_itemId", ["userId", "itemId"]),
+  .index("by_userId_and_itemId", ["userId", "itemId"])
+  // NEW INDEXES for performance optimization
+  .index("by_userId_and_created", ["userId", "createdAt"])
+  .index("by_shopId", ["shopId"])
+  .index("by_created_at", ["createdAt"]),
 
   // Cart table
   carts: defineTable({
@@ -182,6 +205,11 @@ export default defineSchema({
   .index("by_userId", ["userId"])
   .index("by_userId_and_itemType", ["userId", "itemType"])
   .index("by_userId_and_itemId", ["userId", "itemId"])
-  .index("by_shopId", ["shopId"]),
+  .index("by_shopId", ["shopId"])
+  // NEW INDEXES for performance optimization
+  .index("by_userId_and_created", ["userId", "createdAt"])
+  .index("by_shopId_and_userId", ["shopId", "userId"])
+  .index("by_created_at", ["createdAt"])
+  .index("by_updated_at", ["updatedAt"]),
 
 }); 

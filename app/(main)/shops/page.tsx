@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
+import { useFeaturedShops, useCategories, useSearchShops } from '@/hooks/useData';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -11,35 +10,33 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, MapPin, Clock, Phone, Store, ShoppingBag } from 'lucide-react';
 
-const SHOP_CATEGORIES = [
-  'Fashion', 'Food & Beverage', 'Technology', 'Health & Beauty', 
-  'Home & Garden', 'Sports & Recreation', 'Education', 'Professional Services'
-];
-
 export default function ShopsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
 
   // Fetch featured shops for the hero carousel
-  const featuredShops = useQuery(api.shops.getFeaturedShops, { limit: 6 });
+  const featuredShops = useFeaturedShops(6);
   const [carouselIndex, setCarouselIndex] = useState(0);
+
+  // Fetch all categories for the filter dropdown
+  const allCategories = useCategories();
 
   // Carousel auto-loop effect
   useEffect(() => {
-    if (!featuredShops || featuredShops.length === 0) return;
+    if (!featuredShops.data || featuredShops.data.length === 0) return;
     const interval = setInterval(() => {
-      setCarouselIndex((prev) => (prev + 1) % featuredShops.length);
+      setCarouselIndex((prev) => (prev + 1) % featuredShops.data!.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, [featuredShops]);
+  }, [featuredShops.data]);
 
   // Fetch shops with search filters
-  const shops = useQuery(api.shops.searchShops, {
-    searchTerm: searchTerm || undefined,
-    category: selectedCategory === 'all' ? undefined : selectedCategory || undefined,
-    shopType: selectedType === 'all' ? undefined : selectedType || undefined,
-  });
+  const shops = useSearchShops(
+    searchTerm || undefined,
+    selectedCategory === 'all' ? undefined : selectedCategory || undefined,
+    selectedType === 'all' ? undefined : selectedType || undefined,
+  );
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,10 +52,10 @@ export default function ShopsPage() {
   return (
     <div className="min-h-screen bg-beige-50">
       {/* Hero Carousel Section */}
-      {featuredShops && featuredShops.length > 0 && (
+      {featuredShops.data && featuredShops.data.length > 0 && (
         <div className="relative w-full h-72 md:h-96 bg-gradient-to-br from-burgundy-800 to-burgundy-950 overflow-hidden mb-10">
           {/* Carousel Slide */}
-          {featuredShops.map((shop, idx) => (
+          {featuredShops.data.map((shop: any, idx: number) => (
             <div
               key={shop._id}
               className={`absolute inset-0 transition-opacity duration-700 ${idx === carouselIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
@@ -87,7 +84,7 @@ export default function ShopsPage() {
                 <h2 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-2">{shop.shopName}</h2>
                 {shop.categories && shop.categories.length > 0 && (
                   <div className="flex flex-wrap gap-2 justify-center mb-4">
-                    {shop.categories.map((category) => (
+                    {shop.categories.map((category: string) => (
                       <Badge key={category} variant="outline" className="text-xs border-white/40 text-white bg-black/30">
                         {category}
                       </Badge>
@@ -117,7 +114,7 @@ export default function ShopsPage() {
           ))}
           {/* Carousel Navigation Dots */}
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-            {featuredShops.map((_, idx) => (
+            {featuredShops.data.map((_: unknown, idx: number) => (
               <button
                 key={idx}
                 className={`w-3 h-3 rounded-full border-2 ${idx === carouselIndex ? 'bg-white border-white' : 'bg-burgundy-400 border-white/40'}`}
@@ -143,7 +140,7 @@ export default function ShopsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  {SHOP_CATEGORIES.map((category) => (
+                  {allCategories.data?.map((category: string) => (
                     <SelectItem key={category} value={category}>
                       {category}
                     </SelectItem>
@@ -177,7 +174,7 @@ export default function ShopsPage() {
         </div>
 
         {/* Loading State */}
-        {shops === undefined && (
+        {shops.isLoading && (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-burgundy-600 mx-auto"></div>
             <p className="mt-4 text-burgundy-700">Loading shops...</p>
@@ -185,7 +182,7 @@ export default function ShopsPage() {
         )}
 
         {/* Empty State */}
-        {shops && shops.length === 0 && (
+        {!shops.isLoading && shops.data && shops.data.length === 0 && (
           <div className="text-center py-12">
             <Store className="mx-auto h-16 w-16 text-burgundy-400 mb-4" />
             <h3 className="text-xl font-semibold text-burgundy-900 mb-2">No shops found</h3>
@@ -199,16 +196,21 @@ export default function ShopsPage() {
         )}
 
         {/* Shops Grid */}
-        {shops && shops.length > 0 && (
+        {shops.data && shops.data.length > 0 && (
           <>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-burgundy-900">
-                {shops.length} Shop{shops.length !== 1 ? 's' : ''} Found
+                {shops.data.length} Shop{shops.data.length !== 1 ? 's' : ''} Found
               </h2>
+              {(searchTerm || selectedCategory !== 'all' || selectedType !== 'all') && (
+                <p className="text-burgundy-700 text-sm">
+                  Filtered results
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {shops.map((shop) => (
+              {shops.data.map((shop: any) => (
                 <Link 
                   key={shop._id} 
                   href={`/shops/${shop._id}`}
@@ -263,7 +265,7 @@ export default function ShopsPage() {
                       {/* Categories */}
                       {shop.categories && shop.categories.length > 0 && (
                         <div className="flex flex-wrap gap-1 mb-3">
-                          {shop.categories.slice(0, 2).map((category) => (
+                          {shop.categories.slice(0, 2).map((category: string) => (
                             <Badge key={category} variant="outline" className="text-xs border-burgundy-300 text-burgundy-700">
                               {category}
                             </Badge>

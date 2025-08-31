@@ -4,8 +4,11 @@ import { SignInButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
+import { useHomepageStats } from '@/hooks/useData';
 
 export default function HeroSection() {
+  const { data: stats, isLoading } = useHomepageStats();
+
   return (
     <section className="relative py-16 md:py-24 lg:py-28 px-4 overflow-hidden">
       {/* Background gradient overlay */}
@@ -41,7 +44,7 @@ export default function HeroSection() {
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Trusted by 10,000+ shops</span>
+                <span>Trusted by {stats ? `${stats.activeShops}+` : isLoading ? '...' : '100+'} shops</span>
               </div>
               <div className="flex items-center">
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -50,12 +53,30 @@ export default function HeroSection() {
                 <span>Secure payments</span>
               </div>
             </div>
+
+            {/* Live stats */}
+            {stats && (
+              <div className="grid grid-cols-3 gap-4 pt-4 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-burgundy-900">{stats.totalProducts.toLocaleString()}</div>
+                  <div className="text-xs text-burgundy-700">Products</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-burgundy-900">{stats.totalServices.toLocaleString()}</div>
+                  <div className="text-xs text-burgundy-700">Services</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-burgundy-900">{stats.totalUsers.toLocaleString()}</div>
+                  <div className="text-xs text-burgundy-700">Users</div>
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="w-full md:w-1/2 animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <div className="relative h-[300px] sm:h-[350px] md:h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
               <Image
-                src="/hero-image.jpg"
+                src="/presentation 2-06.png"
                 alt="ConnectCom Marketplace"
                 fill
                 className="object-cover transition-transform hover:scale-105 duration-700"
