@@ -99,7 +99,42 @@ export default function AdminShopsPage() {
   // Handle status change
   const handleStatusChange = async (shopId: Id<"shops">, status: string, shopName: string) => {
     try {
+      // Find the shop to get owner details
+      const shop = shops?.find((s: any) => s._id === shopId);
+      if (!shop) {
+        throw new Error("Shop not found");
+      }
+
+      const previousStatus = shop.status;
+      
+      // Update shop status in database
       await updateShopStatus({ shopId, status });
+      
+      // Send email notification to shop owner
+      try {
+        const emailResponse = await fetch('/api/send-email/shop-status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            shopName: shopName,
+            shopOwnerEmail: shop.contactInfo?.email || '',
+            shopOwnerName: shop.ownerId, // We might need to fetch user details
+            newStatus: status,
+            previousStatus: previousStatus,
+            adminNotes: '', // No admin notes in this flow
+          }),
+        });
+
+        if (!emailResponse.ok) {
+          console.error('Failed to send status change email to shop owner');
+        }
+      } catch (emailError) {
+        console.error('Error sending status change email:', emailError);
+        // Don't block the status change if email fails
+      }
+      
       toast({
         title: "Status Updated",
         description: `${shopName} status changed to ${status}.`,

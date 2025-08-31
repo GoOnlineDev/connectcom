@@ -2,7 +2,7 @@
 
 import { useState, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,7 @@ interface ShopData {
 export default function ShopOnboardingPage() {
   const router = useRouter();
   const { userId: clerkUserId, isSignedIn } = useAuth();
+  const { user } = useUser();
   const createShop = useMutation(api.shops.createShop);
   const updateUserRole = useMutation(api.users.updateUserRole);
   const createOrGetUser = useMutation(api.users.createOrGetUser);
@@ -134,6 +135,32 @@ export default function ShopOnboardingPage() {
         userId: convexUserId,
         newRole: "vendor"
       });
+
+      // Send email notification to admin about new shop registration
+      try {
+        const emailResponse = await fetch('/api/send-email/shop-registration', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            shopName: shopData.shopName,
+            shopType: shopData.shopType,
+            ownerEmail: user?.emailAddresses?.[0]?.emailAddress || '',
+            ownerName: user?.fullName || user?.firstName || 'Shop Owner',
+            categories: shopData.categories,
+            description: shopData.description,
+            contactInfo: shopData.contactInfo,
+          }),
+        });
+
+        if (!emailResponse.ok) {
+          console.error('Failed to send registration email to admin');
+        }
+      } catch (emailError) {
+        console.error('Error sending registration email:', emailError);
+        // Don't block the registration process if email fails
+      }
       
       // Redirect to success page or dashboard
       router.push("/onboarding/success");

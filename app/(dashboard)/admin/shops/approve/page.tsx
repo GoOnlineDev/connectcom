@@ -68,11 +68,45 @@ export default function ShopApprovalPage() {
   const handleApprove = async (shopId: Id<"shops">) => {
     setProcessingShops(prev => ({ ...prev, [shopId]: true }));
     try {
+      // Find the shop to get owner details
+      const shop = shops?.find((s: any) => s._id === shopId);
+      if (!shop) {
+        throw new Error("Shop not found");
+      }
+
+      const previousStatus = shop.status;
+      
       await updateShopStatus({
         shopId,
         status: "active",
         adminNotes: adminNotes[shopId]
       });
+
+      // Send email notification to shop owner
+      try {
+        const emailResponse = await fetch('/api/send-email/shop-status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            shopName: shop.shopName,
+            shopOwnerEmail: shop.contactInfo?.email || '',
+            shopOwnerName: shop.ownerId, // We might need to fetch user details
+            newStatus: "active",
+            previousStatus: previousStatus,
+            adminNotes: adminNotes[shopId] || '',
+          }),
+        });
+
+        if (!emailResponse.ok) {
+          console.error('Failed to send approval email to shop owner');
+        }
+      } catch (emailError) {
+        console.error('Error sending approval email:', emailError);
+        // Don't block the approval process if email fails
+      }
+
       toast({
         title: "Shop Approved",
         description: "The shop has been approved successfully.",
@@ -103,11 +137,45 @@ export default function ShopApprovalPage() {
     
     setProcessingShops(prev => ({ ...prev, [shopId]: true }));
     try {
+      // Find the shop to get owner details
+      const shop = shops?.find((s: any) => s._id === shopId);
+      if (!shop) {
+        throw new Error("Shop not found");
+      }
+
+      const previousStatus = shop.status;
+      
       await updateShopStatus({
         shopId,
         status: "rejected",
         adminNotes: adminNotes[shopId]
       });
+
+      // Send email notification to shop owner
+      try {
+        const emailResponse = await fetch('/api/send-email/shop-status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            shopName: shop.shopName,
+            shopOwnerEmail: shop.contactInfo?.email || '',
+            shopOwnerName: shop.ownerId, // We might need to fetch user details
+            newStatus: "rejected",
+            previousStatus: previousStatus,
+            adminNotes: adminNotes[shopId] || '',
+          }),
+        });
+
+        if (!emailResponse.ok) {
+          console.error('Failed to send rejection email to shop owner');
+        }
+      } catch (emailError) {
+        console.error('Error sending rejection email:', emailError);
+        // Don't block the rejection process if email fails
+      }
+
       toast({
         title: "Shop Rejected",
         description: "The shop has been rejected.",
