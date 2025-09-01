@@ -2,8 +2,9 @@
 
 import { useHomepageStats } from '@/hooks/useData';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useEffect } from 'react';
 
-export default function HomepageStats() {
+export default function AboutUsStats() {
   const { data: stats, isLoading } = useHomepageStats();
 
   if (isLoading || !stats) {

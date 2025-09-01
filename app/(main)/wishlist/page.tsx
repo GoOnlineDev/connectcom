@@ -402,7 +402,7 @@ export default function WishlistPage() {
                       <div className="flex gap-2">
                         <Button
                           onClick={() => handleAddToCart(item)}
-                          className="flex-1 bg-burgundy-600 hover:bg-burgundy-700 text-white"
+                          className="flex-1"
                           size="sm"
                         >
                           <ShoppingCart className="w-4 h-4 mr-2" />

@@ -295,6 +295,81 @@ export const useAnalytics = () => {
   return useData(SWR_KEYS.ANALYTICS);
 };
 
+// Review data hooks - Shop Reviews
+export const useShopReviews = (shopId?: Id<"shops">, limit?: number) => {
+  return useData(
+    shopId ? SWR_KEYS.SHOP_REVIEWS(shopId) : null,
+    shopId ? api.reviews.getShopReviews : null,
+    shopId ? { shopId, limit } : null
+  );
+};
+
+export const useShopReviewStats = (shopId?: Id<"shops">) => {
+  return useData(
+    shopId ? SWR_KEYS.SHOP_REVIEW_STATS(shopId) : null,
+    shopId ? api.reviews.getShopReviewStats : null,
+    shopId ? { shopId } : null
+  );
+};
+
+export const useUserShopReview = (shopId?: Id<"shops">) => {
+  return useData(
+    shopId ? SWR_KEYS.USER_SHOP_REVIEW(shopId) : null,
+    shopId ? api.reviews.getUserShopReview : null,
+    shopId ? { shopId } : null
+  );
+};
+
+// Review data hooks - Product Reviews
+export const useProductReviews = (productId?: Id<"products">, limit?: number) => {
+  return useData(
+    productId ? SWR_KEYS.PRODUCT_REVIEWS(productId) : null,
+    productId ? api.reviews.getProductReviews : null,
+    productId ? { productId, limit } : null
+  );
+};
+
+export const useProductReviewStats = (productId?: Id<"products">) => {
+  return useData(
+    productId ? SWR_KEYS.PRODUCT_REVIEW_STATS(productId) : null,
+    productId ? api.reviews.getProductReviewStats : null,
+    productId ? { productId } : null
+  );
+};
+
+export const useUserProductReview = (productId?: Id<"products">) => {
+  return useData(
+    productId ? SWR_KEYS.USER_PRODUCT_REVIEW(productId) : null,
+    productId ? api.reviews.getUserProductReview : null,
+    productId ? { productId } : null
+  );
+};
+
+// Review data hooks - Service Reviews
+export const useServiceReviews = (serviceId?: Id<"services">, limit?: number) => {
+  return useData(
+    serviceId ? SWR_KEYS.SERVICE_REVIEWS(serviceId) : null,
+    serviceId ? api.reviews.getServiceReviews : null,
+    serviceId ? { serviceId, limit } : null
+  );
+};
+
+export const useServiceReviewStats = (serviceId?: Id<"services">) => {
+  return useData(
+    serviceId ? SWR_KEYS.SERVICE_REVIEW_STATS(serviceId) : null,
+    serviceId ? api.reviews.getServiceReviewStats : null,
+    serviceId ? { serviceId } : null
+  );
+};
+
+export const useUserServiceReview = (serviceId?: Id<"services">) => {
+  return useData(
+    serviceId ? SWR_KEYS.USER_SERVICE_REVIEW(serviceId) : null,
+    serviceId ? api.reviews.getUserServiceReview : null,
+    serviceId ? { serviceId } : null
+  );
+};
+
 // Custom hook for shop with items (products/services)
 export const useShopWithItems = (shopId?: Id<"shops">) => {
   const shop = useShop(shopId);
@@ -317,5 +392,59 @@ export const useShopWithItems = (shopId?: Id<"shops">) => {
     },
     isLoading: shop.isLoading || products.isLoading || services.isLoading,
     error: shop.error || products.error || services.error,
+  };
+};
+
+// Custom hook for product with reviews
+export const useProductWithReviews = (productId?: Id<"products">) => {
+  const product = useProduct(productId);
+  const reviews = useProductReviews(productId, 10);
+  const reviewStats = useProductReviewStats(productId);
+  const userReview = useUserProductReview(productId);
+  
+  if (!product.data) {
+    return {
+      data: null,
+      isLoading: product.isLoading,
+      error: product.error,
+    };
+  }
+
+  return {
+    data: {
+      ...product.data,
+      reviews: reviews.data || [],
+      reviewStats: reviewStats.data,
+      userReview: userReview.data,
+    },
+    isLoading: product.isLoading || reviews.isLoading || reviewStats.isLoading,
+    error: product.error || reviews.error || reviewStats.error,
+  };
+};
+
+// Custom hook for service with reviews
+export const useServiceWithReviews = (serviceId?: Id<"services">) => {
+  const service = useService(serviceId);
+  const reviews = useServiceReviews(serviceId, 10);
+  const reviewStats = useServiceReviewStats(serviceId);
+  const userReview = useUserServiceReview(serviceId);
+  
+  if (!service.data) {
+    return {
+      data: null,
+      isLoading: service.isLoading,
+      error: service.error,
+    };
+  }
+
+  return {
+    data: {
+      ...service.data,
+      reviews: reviews.data || [],
+      reviewStats: reviewStats.data,
+      userReview: userReview.data,
+    },
+    isLoading: service.isLoading || reviews.isLoading || reviewStats.isLoading,
+    error: service.error || reviews.error || reviewStats.error,
   };
 };

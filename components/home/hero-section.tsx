@@ -28,12 +28,12 @@ export default function HeroSection() {
             
             <div className="flex flex-wrap gap-3 md:gap-4 pt-2 animate-fade-in" style={{ animationDelay: "0.2s" }}>
               <Link href="/shops" className="w-full sm:w-auto">
-                <Button className="bg-burgundy hover:bg-burgundy-dark text-white w-full sm:w-auto animate-scale">
+                <Button className="w-full sm:w-auto animate-scale">
                   Start Shopping
                 </Button>
               </Link>
               <Link href="/onboarding/shop" className="w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto border-burgundy text-burgundy hover:bg-burgundy/10">
+                <Button variant="outline" className="w-full sm:w-auto">
                   Register Your Shop
                 </Button>
               </Link>
@@ -76,7 +76,7 @@ export default function HeroSection() {
           <div className="w-full md:w-1/2 animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <div className="relative h-[300px] sm:h-[350px] md:h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
               <Image
-                src="/presentation 2-06.png"
+                src="/connectcom.png"
                 alt="ConnectCom Marketplace"
                 fill
                 className="object-cover transition-transform hover:scale-105 duration-700"

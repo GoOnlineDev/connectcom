@@ -6,7 +6,7 @@ export const createShop = mutation({
   args: {
     ownerId: v.string(), // Clerk User ID of the owner
     shopName: v.string(),
-    shopType: v.string(), // "product_shop" or "service_shop"
+    shopType: v.union(v.literal("product_shop"), v.literal("service_shop")), // "product_shop" or "service_shop"
     shopLogoUrl: v.optional(v.string()),
     shopImageUrl: v.optional(v.string()),
     contactInfo: v.optional(v.object({

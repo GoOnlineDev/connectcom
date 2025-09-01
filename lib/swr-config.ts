@@ -89,6 +89,19 @@ export const SWR_KEYS = {
   
   // Analytics data
   ANALYTICS: 'analytics',
+  
+  // Review data
+  SHOP_REVIEWS: (shopId: string) => `shop-reviews-${shopId}`,
+  SHOP_REVIEW_STATS: (shopId: string) => `shop-review-stats-${shopId}`,
+  USER_SHOP_REVIEW: (shopId: string) => `user-shop-review-${shopId}`,
+  
+  PRODUCT_REVIEWS: (productId: string) => `product-reviews-${productId}`,
+  PRODUCT_REVIEW_STATS: (productId: string) => `product-review-stats-${productId}`,
+  USER_PRODUCT_REVIEW: (productId: string) => `user-product-review-${productId}`,
+  
+  SERVICE_REVIEWS: (serviceId: string) => `service-reviews-${serviceId}`,
+  SERVICE_REVIEW_STATS: (serviceId: string) => `service-review-stats-${serviceId}`,
+  USER_SERVICE_REVIEW: (serviceId: string) => `user-service-review-${serviceId}`,
 } as const;
 
 // Type for SWR keys

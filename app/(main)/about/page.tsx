@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import AboutUsStats from '@/components/home/homepage-stats'; // Renamed to AboutUsStats
 
 export default function AboutPage() {
   return (
@@ -22,6 +23,14 @@ export default function AboutPage() {
               style={{ objectPosition: 'center' }}
             />
           </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 px-4 bg-beige-50">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold mb-12 text-center text-burgundy-900">Our Impact</h2>
+          <AboutUsStats />
         </div>
       </section>
 

@@ -419,17 +419,16 @@ export default function CartPage() {
                             <div className="flex items-center gap-2">
                               <Button
                                 size="sm"
-                                variant="outline"
+                                className="p-2"
                                 onClick={() => handleMoveToWishlist(item._id)}
-                                className="p-2 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
                               >
                                 <Heart className="w-4 h-4" />
                               </Button>
                               <Button
                                 size="sm"
                                 variant="outline"
+                                className="p-2"
                                 onClick={() => handleRemoveItem(item._id)}
-                                className="p-2 border-red-200 text-red-600 hover:bg-red-50"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </Button>

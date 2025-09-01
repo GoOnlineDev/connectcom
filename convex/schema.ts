@@ -96,6 +96,48 @@ export default defineSchema({
   .index("by_owner_and_status", ["ownerId", "status"])
   .index("by_status_and_created", ["status", "createdAt"]),
 
+  // Reviews table for shops (stars)
+  shopReviews: defineTable({
+    shopId: v.id("shops"), // The shop being reviewed
+    userId: v.string(), // The user who left the review (Clerk user ID)
+    stars: v.number(), // Number of stars (e.g., 1-5)
+    comment: v.optional(v.string()), // Optional review comment
+    createdAt: v.number(), // Timestamp of review creation
+    updatedAt: v.optional(v.number()), // Timestamp of last update
+  })
+  .index("by_shopId", ["shopId"])
+  .index("by_userId", ["userId"])
+  .index("by_shopId_and_userId", ["shopId", "userId"])
+  .index("by_created_at", ["createdAt"]),
+
+  // Reviews table for products (stars)
+  productReviews: defineTable({
+    productId: v.id("products"), // The product being reviewed
+    userId: v.string(), // The user who left the review (Clerk user ID)
+    stars: v.number(), // Number of stars (e.g., 1-5)
+    comment: v.optional(v.string()), // Optional review comment
+    createdAt: v.number(), // Timestamp of review creation
+    updatedAt: v.optional(v.number()), // Timestamp of last update
+  })
+  .index("by_productId", ["productId"])
+  .index("by_userId", ["userId"])
+  .index("by_productId_and_userId", ["productId", "userId"])
+  .index("by_created_at", ["createdAt"]),
+
+  // Reviews table for services (stars)
+  serviceReviews: defineTable({
+    serviceId: v.id("services"), // The service being reviewed
+    userId: v.string(), // The user who left the review (Clerk user ID)
+    stars: v.number(), // Number of stars (e.g., 1-5)
+    comment: v.optional(v.string()), // Optional review comment
+    createdAt: v.number(), // Timestamp of review creation
+    updatedAt: v.optional(v.number()), // Timestamp of last update
+  })
+  .index("by_serviceId", ["serviceId"])
+  .index("by_userId", ["userId"])
+  .index("by_serviceId_and_userId", ["serviceId", "userId"])
+  .index("by_created_at", ["createdAt"]),
+
   // Shelves table to organize products/services
   shelves: defineTable({
     shopId: v.id("shops"), // Link to the shop

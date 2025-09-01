@@ -149,26 +149,32 @@ export const getUserWishlist = query({
     itemDetails: v.union(
       v.object({
         _id: v.id("products"),
-        _creationTime: v.number(),
+        _creationTime: v.float64(),
+        createdAt: v.float64(), // Added missing field
+        updatedAt: v.float64(),
         shopId: v.id("shops"),
+        shelfId: v.id("shelves"), // Added missing field
+        shelfOrder: v.number(), // Added missing field
         name: v.string(),
         description: v.optional(v.string()),
         imageUrls: v.optional(v.array(v.string())),
         price: v.number(),
         quantityAvailable: v.optional(v.number()),
         tags: v.optional(v.array(v.string())),
-        updatedAt: v.number(),
       }),
       v.object({
         _id: v.id("services"),
-        _creationTime: v.number(),
+        _creationTime: v.float64(),
+        createdAt: v.float64(), // Added missing field
+        updatedAt: v.float64(),
         shopId: v.id("shops"),
+        shelfId: v.id("shelves"), // Added missing field
+        shelfOrder: v.number(), // Added missing field
         name: v.string(),
         description: v.optional(v.string()),
         duration: v.optional(v.any()),
         pricing: v.optional(v.any()),
         bookingInfo: v.optional(v.any()),
-        updatedAt: v.number(),
       })
     ),
     // Shop details

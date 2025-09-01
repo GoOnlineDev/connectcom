@@ -16,6 +16,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/use-toast';
 import { ProductImageUploadButton } from '@/utils/uploadthing';
+import { ItemDetailModal } from '@/components/ui/item-detail-modal';
+import { ProductDetailContent } from '@/components/product-detail-content';
+import { ServiceDetailContent } from '@/components/service-detail-content';
 import { 
   MapPin, 
   Clock, 
@@ -66,6 +69,10 @@ export default function ShopPage({ params }: ShopPageProps) {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [isEditingItem, setIsEditingItem] = useState(false);
   
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState<Id<"products"> | Id<"services"> | null>(null);
+  const [selectedItemType, setSelectedItemType] = useState<"product_shop" | "service_shop" | null>(null);
+  
   const { user } = useUser();
   const { toast } = useToast();
   
@@ -112,6 +119,12 @@ export default function ShopPage({ params }: ShopPageProps) {
   // Check if current user is the owner of this shop
   const isOwner = currentUser && user && shopData.ownerId === user.id;
   const isVendor = currentUser?.role === 'vendor';
+
+  const handleViewItemDetails = (itemId: Id<"products"> | Id<"services">, itemType: "product_shop" | "service_shop") => {
+    setSelectedItemId(itemId);
+    setSelectedItemType(itemType);
+    setIsDetailModalOpen(true);
+  };
 
   const handleCreateShelf = async () => {
     if (!shelfName.trim()) {
@@ -734,11 +747,12 @@ export default function ShopPage({ params }: ShopPageProps) {
                         <ShelfComponent
                           key={shelf._id}
                           shelf={shelf}
-                          shopType={shopData.shopType}
+                          shopType={shopData.shopType as "product_shop" | "service_shop"}
                           isEditMode={!!(isEditMode && isOwner && isVendor)}
                           onDeleteShelf={handleDeleteShelf}
                           onEditItem={handleEditItem}
                           onDeleteItem={handleDeleteItem}
+                          onViewItemDetails={handleViewItemDetails}
                         />
                       ))}
                     </div>
@@ -961,6 +975,29 @@ export default function ShopPage({ params }: ShopPageProps) {
 
       {/* Add bottom padding for mobile action bar */}
       <div className="h-20 lg:hidden"></div>
+
+      {/* Item Detail Modal */}
+      <ItemDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        title={selectedItemType === 'product_shop' ? 'Product Details' : 'Service Details'}
+        description="View more information about this item"
+      >
+        {selectedItemId && selectedItemType === 'product_shop' && (
+          <ProductDetailContent
+            productId={selectedItemId as Id<"products">}
+            shopId={resolvedParams.id as Id<"shops">}
+            onClose={() => setIsDetailModalOpen(false)}
+          />
+        )}
+        {selectedItemId && selectedItemType === 'service_shop' && (
+          <ServiceDetailContent
+            serviceId={selectedItemId as Id<"services">}
+            shopId={resolvedParams.id as Id<"shops">}
+            onClose={() => setIsDetailModalOpen(false)}
+          />
+        )}
+      </ItemDetailModal>
     </div>
   );
 }
@@ -973,14 +1010,15 @@ interface ShelfComponentProps {
     shelfDescription?: string;
     shelfOrder: number;
   };
-  shopType: string;
+  shopType: "product_shop" | "service_shop";
   isEditMode: boolean;
   onDeleteShelf: (shelfId: Id<"shelves">) => void;
   onEditItem: (item: any, shelfId: Id<"shelves">) => void;
   onDeleteItem: (item: any) => void;
+  onViewItemDetails: (itemId: Id<"products"> | Id<"services">, itemType: "product_shop" | "service_shop") => void;
 }
 
-function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem, onDeleteItem }: ShelfComponentProps) {
+function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem, onDeleteItem, onViewItemDetails }: ShelfComponentProps) {
   const shelfWithItems = useQuery(api.shelves.getShelfWithItems, {
     shelfId: shelf._id
   });
@@ -1049,90 +1087,109 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
             {/* Horizontal scroll container */}
             <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-thin scrollbar-track-burgundy-100 scrollbar-thumb-burgundy-300 hover:scrollbar-thumb-burgundy-500">
               {items.map((item) => (
-                <Card key={item._id} className="flex-shrink-0 w-64 hover:shadow-md transition-shadow border-burgundy-200 relative group">
-                  <div className="h-32 bg-gradient-to-br from-beige-100 to-beige-300 rounded-t-lg relative">
-                    {shopType === 'product_shop' && 'imageUrls' in item && item.imageUrls && item.imageUrls.length > 0 ? (
-                      <img
-                        src={item.imageUrls[0]}
-                        alt={item.name}
-                        className="w-full h-full object-cover rounded-t-lg"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full">
-                        {shopType === 'product_shop' ? (
-                          <ShoppingBag className="w-8 h-8 text-burgundy-400" />
-                        ) : (
-                          <Store className="w-8 h-8 text-burgundy-400" />
-                        )}
-                      </div>
-                    )}
-                    
-                    {shopType === 'product_shop' && 'price' in item && item.price && (
-                      <div className="absolute top-2 right-2">
-                        <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700">
-                          ${(item.price / 100).toFixed(2)}
-                        </Badge>
-                      </div>
-                    )}
+                <button 
+                  key={item._id}
+                  onClick={() => onViewItemDetails(item._id, shopType as "product_shop" | "service_shop")}
+                  className="flex-shrink-0 w-64 focus:outline-none focus:ring-2 focus:ring-burgundy-500 focus:ring-offset-2 rounded-lg"
+                >
+                  <Card className="h-full hover:shadow-md transition-shadow border-burgundy-200 relative group cursor-pointer">
+                    <div className="h-32 bg-gradient-to-br from-beige-100 to-beige-300 rounded-t-lg relative">
+                      {shopType === 'product_shop' && 'imageUrls' in item && item.imageUrls && item.imageUrls.length > 0 ? (
+                        <img
+                          src={item.imageUrls[0]}
+                          alt={item.name}
+                          className="w-full h-full object-cover rounded-t-lg"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          {shopType === 'product_shop' ? (
+                            <ShoppingBag className="w-8 h-8 text-burgundy-400" />
+                          ) : (
+                            <Store className="w-8 h-8 text-burgundy-400" />
+                          )}
+                        </div>
+                      )}
+                      
+                      {shopType === 'product_shop' && 'price' in item && item.price && (
+                        <div className="absolute top-2 right-2">
+                          <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700">
+                            ${(item.price / 100).toFixed(2)}
+                          </Badge>
+                        </div>
+                      )}
 
-                    {/* Edit/Delete buttons - only visible in edit mode */}
-                    {isEditMode && (
-                      <div className="absolute top-2 left-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => onEditItem(item, shelf._id)}
-                          className="h-7 w-7 p-0 bg-white/90 hover:bg-white border-burgundy/30"
-                        >
-                          <Edit3 className="w-3 h-3 text-burgundy" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => onDeleteItem(item)}
-                          className="h-7 w-7 p-0 bg-white/90 hover:bg-red-50 border-red-200"
-                        >
-                          <Trash2 className="w-3 h-3 text-red-600" />
-                        </Button>
-                      </div>
-                    )}
-                  </div>
+                      {/* Edit/Delete buttons - only visible in edit mode */}
+                      {isEditMode && (
+                        <div className="absolute top-2 left-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              onEditItem(item, shelf._id);
+                            }}
+                            className="h-7 w-7 p-0 bg-white/90 hover:bg-white border-burgundy/30"
+                          >
+                            <Edit3 className="w-3 h-3 text-burgundy" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              onDeleteItem(item);
+                            }}
+                            className="h-7 w-7 p-0 bg-white/90 hover:bg-red-50 border-red-200"
+                          >
+                            <Trash2 className="w-3 h-3 text-red-600" />
+                          </Button>
+                        </div>
+                      )}
 
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-semibold line-clamp-2 text-burgundy-900">
-                      {item.name}
-                    </CardTitle>
-                  </CardHeader>
+                      {/* View Details Overlay - only visible when not in edit mode */}
+                      {!isEditMode && (
+                        <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                          <Badge variant="outline" className="bg-white/90 text-burgundy-700 border-burgundy-300">
+                            View Details
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
 
-                  <CardContent className="pt-0">
-                    {item.description && (
-                      <CardDescription className="text-xs line-clamp-3 mb-3 text-burgundy-700">
-                        {item.description}
-                      </CardDescription>
-                    )}
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm font-semibold line-clamp-2 text-burgundy-900">
+                        {item.name}
+                      </CardTitle>
+                    </CardHeader>
 
-                    {shopType === 'product_shop' && (
-                      <div className="space-y-1 text-xs text-burgundy-700">
-                        {'quantityAvailable' in item && item.quantityAvailable !== undefined && (
-                          <div>Stock: {item.quantityAvailable} available</div>
-                        )}
-                      </div>
-                    )}
+                    <CardContent className="pt-0">
+                      {item.description && (
+                        <CardDescription className="text-xs line-clamp-3 mb-3 text-burgundy-700">
+                          {item.description}
+                        </CardDescription>
+                      )}
 
-                    {shopType === 'service_shop' && (
-                      <div className="space-y-1 text-xs text-burgundy-700">
-                        {'duration' in item && item.duration && (
-                          <div>Duration: {item.duration}</div>
-                        )}
-                        {'pricing' in item && item.pricing && (
-                          <div>
-                            Price: {typeof item.pricing === 'string' ? item.pricing : 'Contact for pricing'}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                      {shopType === 'product_shop' && (
+                        <div className="space-y-1 text-xs text-burgundy-700">
+                          {'quantityAvailable' in item && item.quantityAvailable !== undefined && (
+                            <div>Stock: {item.quantityAvailable} available</div>
+                          )}
+                        </div>
+                      )}
+
+                      {shopType === 'service_shop' && (
+                        <div className="space-y-1 text-xs text-burgundy-700">
+                          {'duration' in item && item.duration && (
+                            <div>Duration: {item.duration}</div>
+                          )}
+                          {'pricing' in item && item.pricing && (
+                            <div>
+                              Price: {typeof item.pricing === 'string' ? item.pricing : 'Contact for pricing'}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </button>
               ))}
             </div>
           </div>

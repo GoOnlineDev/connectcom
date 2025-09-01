@@ -1,31 +1,23 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SignInButton, useAuth } from "@clerk/nextjs";
 import { usePathname } from 'next/navigation';
 import { Authenticated, Unauthenticated } from "convex/react";
-import { useCurrentUser, useCart } from '@/hooks/useData';
+import { useCurrentUser, useCart, useWishlistCount } from '@/hooks/useData';
 import CustomUserButton from './user-button';
+import { Button } from './ui/button';
 
 const Navigation = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const { isSignedIn } = useAuth();
   const { data: currentUser, isLoading: userLoading } = useCurrentUser();
   const { data: cart, isLoading: cartLoading } = useCart();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const { data: wishlistCount, isLoading: wishlistLoading } = useWishlistCount();
 
   // Calculate cart count
   const cartCount = cart?.length || 0;
@@ -35,16 +27,18 @@ const Navigation = () => {
     return pathname.startsWith(href);
   };
 
+  const handleMobileLinkClick = () => {
+    setIsMenuOpen(false);
+  };
+
   const baseLinkClasses = "px-4 py-2 rounded-full transition-colors";
   const desktopLinkClasses = (href: string) =>
-    `${baseLinkClasses} ${isActive(href) ? 'bg-burgundy-100 text-burgundy-900' : 'text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50'}`;
+    `${baseLinkClasses} ${isActive(href) ? 'bg-burgundy-900 text-white' : 'text-burgundy-700 hover:text-burgundy-900 hover:bg-beige-50'}`;
   const mobileLinkClasses = (href: string) =>
-    `block px-3 py-2 rounded-full ${isActive(href) ? 'bg-burgundy-100 text-burgundy-900' : 'text-burgundy-700 hover:bg-burgundy-50 hover:text-burgundy-900'}`;
+    `block px-3 py-2 rounded-full ${isActive(href) ? 'bg-burgundy-900 text-white' : 'text-burgundy-700 hover:bg-beige-50 hover:text-burgundy-900'}`;
 
   return (
-    <nav className={`fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-7xl z-50 transition-all duration-300 rounded-full ${
-      isScrolled ? 'bg-white/90 backdrop-blur-md shadow-lg border border-burgundy-100' : 'bg-transparent'
-    }`}>
+    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-7xl z-50 transition-all duration-300 rounded-full bg-white/90 backdrop-blur-md shadow-lg border border-burgundy-100">
       <div className="px-6 py-3">
         <div className="flex justify-between items-center">
           {/* Logo and brand */}
@@ -92,14 +86,24 @@ const Navigation = () => {
                 </span>
               )}
             </Link>
+            <Link href="/wishlist" className="relative p-2 text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 rounded-full transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              {wishlistCount !== undefined && wishlistCount > 0 && (
+                <span className="absolute top-0 right-0 bg-burgundy-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {wishlistCount > 99 ? '99+' : wishlistCount}
+                </span>
+              )}
+            </Link>
             <Authenticated>
               <CustomUserButton />
             </Authenticated>
             <Unauthenticated>
               <SignInButton mode="modal">
-                <button className="px-6 py-2 text-burgundy-700 border border-burgundy-600 hover:bg-burgundy-50 hover:text-burgundy-900 transition-colors rounded-full">
+                <Button className="px-6 py-2 w-auto">
                   Sign In
-                </button>
+                </Button>
               </SignInButton>
             </Unauthenticated>
           </div>
@@ -116,11 +120,21 @@ const Navigation = () => {
                 </span>
               )}
             </Link>
+            <Link href="/wishlist" className="relative mr-1 text-burgundy-700 hover:text-burgundy-900">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              {wishlistCount !== undefined && wishlistCount > 0 && (
+                <span className="absolute top-0 right-0 bg-burgundy-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {wishlistCount > 99 ? '99+' : wishlistCount}
+                </span>
+              )}
+            </Link>
             <Unauthenticated>
               <SignInButton mode="modal">
-                <button className="mx-1 px-3 py-1 text-burgundy-700 border border-burgundy-600 text-sm rounded-full text-xs hover:bg-burgundy-50">
+                <Button className="mx-1 px-3 py-1 text-sm rounded-full text-xs w-auto">
                   Sign In
-                </button>
+                </Button>
               </SignInButton>
             </Unauthenticated>
             <Authenticated>
@@ -152,19 +166,19 @@ const Navigation = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white/95 backdrop-blur-sm rounded-b-3xl shadow-lg animate-slide-down border border-burgundy-100">
           <div className="px-4 pt-2 pb-4 space-y-1">
-            <Link href="/" className={mobileLinkClasses('/')}>
+            <Link href="/" className={mobileLinkClasses('/')} onClick={handleMobileLinkClick}>
               Home
             </Link>
-            <Link href="/shops" className={mobileLinkClasses('/shops')}>
+            <Link href="/shops" className={mobileLinkClasses('/shops')} onClick={handleMobileLinkClick}>
               Shops
             </Link>
-            <Link href="/categories" className={mobileLinkClasses('/categories')}>
+            <Link href="/categories" className={mobileLinkClasses('/categories')} onClick={handleMobileLinkClick}>
               Categories
             </Link>
-            <Link href="/about" className={mobileLinkClasses('/about')}>
+            <Link href="/about" className={mobileLinkClasses('/about')} onClick={handleMobileLinkClick}>
               About
             </Link>
-            <Link href="/contact" className={mobileLinkClasses('/contact')}>
+            <Link href="/contact" className={mobileLinkClasses('/contact')} onClick={handleMobileLinkClick}>
               Contact Us
             </Link>
           </div>
