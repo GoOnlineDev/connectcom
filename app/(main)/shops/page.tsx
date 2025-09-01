@@ -245,11 +245,7 @@ export default function ShopsPage() {
                       <CardTitle className="text-lg font-bold text-burgundy-900 line-clamp-1">
                         {shop.shopName}
                       </CardTitle>
-                      {shop.description && (
-                        <CardDescription className="line-clamp-2 text-burgundy-700">
-                          {shop.description}
-                        </CardDescription>
-                      )}
+                      
                     </CardHeader>
                     <CardContent className="pt-0">
                       {/* Categories */}

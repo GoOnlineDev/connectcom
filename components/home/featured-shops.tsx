@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Store, ShoppingBag } from 'lucide-react';
 import { useFeaturedShops } from '@/hooks/useData';
+import { motion } from "framer-motion";
 
 export default function FeaturedShops() {
   const { data: featuredShops, isLoading } = useFeaturedShops(6);
@@ -44,14 +45,21 @@ export default function FeaturedShops() {
   }
 
   return (
-    <div className="flex space-x-4 overflow-x-auto snap-x snap-mandatory pb-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-x-0 group-hover/container:paused animate-scroll-x sm:animate-none" style={{ animationDuration: '30s', '--scroll-width': featuredShops && featuredShops.length > 0 ? `calc(${featuredShops.length * 80}% - ${featuredShops.length * 16}px)` : '100%' } as React.CSSProperties}>
-      {featuredShops.map((shop: any) => (
-        <Link 
-          key={shop._id} 
-          href={`/shops/${shop._id}`}
-          className="min-w-[80%] md:min-w-[calc(50%-8px)] lg:min-w-0 lg:w-auto snap-center block transform transition-transform hover:scale-105"
+    <div className="flex space-x-4 overflow-x-auto snap-x snap-mandatory pb-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-x-0">
+      {featuredShops.map((shop: any, index: number) => (
+        <motion.div
+          key={shop._id}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          className="min-w-[80%] md:min-w-[calc(50%-8px)] lg:min-w-0 lg:w-auto snap-center block"
         >
-          <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">
+          <Link 
+            href={`/shops/${shop._id}`} 
+            className="block transform transition-transform hover:scale-105"
+          >
+            <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">
             {/* Shop Image */}
             <div className="relative h-48 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg">
               {shop.shopImageUrl ? (
@@ -133,6 +141,7 @@ export default function FeaturedShops() {
             </CardContent>
           </Card>
         </Link>
+      </motion.div>
       ))}
     </div>
   );
