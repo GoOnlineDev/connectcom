@@ -21,7 +21,7 @@ import { UploadDropzone } from "@/utils/uploadthing";
 interface ShopData {
   shopName: string;
   shopImageUrl: string; // Added shopImageUrl
-  shopType: string;
+  shopType: ShopType;
   description: string;
   categories: string[];
   contactInfo: {
@@ -32,6 +32,8 @@ interface ShopData {
   physicalLocation: string;
   operatingHours: string;
 }
+
+type ShopType = "product_shop" | "service_shop";
 
 export default function ShopOnboardingPage() {
   const router = useRouter();
@@ -49,7 +51,7 @@ export default function ShopOnboardingPage() {
   const [shopData, setShopData] = useState<ShopData>({
     shopName: "",
     shopImageUrl: "", // Added shopImageUrl to initial state
-    shopType: "product_shop", // Default to product shop
+    shopType: "product_shop" as ShopType, // Default to product shop
     description: "",
     categories: [],
     contactInfo: {
@@ -88,7 +90,7 @@ export default function ShopOnboardingPage() {
   const handleShopTypeChange = (value: string) => {
     setShopData({
       ...shopData,
-      shopType: value
+      shopType: value as ShopType
     });
   };
 
