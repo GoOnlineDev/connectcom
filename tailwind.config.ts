@@ -76,6 +76,15 @@ export default withUt({
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
       },
+      keyframes: {
+        "scroll-x": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(calc(-100% + var(--scroll-width, 0)))" },
+        },
+      },
+      animation: {
+        "scroll-x": "scroll-x linear infinite",
+      },
     },
   },
   plugins: [],

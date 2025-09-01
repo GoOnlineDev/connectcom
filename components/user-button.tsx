@@ -33,6 +33,7 @@ import {
 
 interface UserButtonProps {
   className?: string;
+  isMobile?: boolean; // Add isMobile prop
 }
 
 interface QuickLink {
@@ -42,7 +43,7 @@ interface QuickLink {
   badge?: string | number;
 }
 
-export default function CustomUserButton({ className }: UserButtonProps) {
+export default function CustomUserButton({ className, isMobile }: UserButtonProps) {
   const { user } = useUser();
   const { signOut } = useClerk();
   const { data: currentUser, isLoading: userLoading } = useCurrentUser();
@@ -186,7 +187,7 @@ export default function CustomUserButton({ className }: UserButtonProps) {
               </div>
             </div>
             
-            <ChevronDown className="w-4 h-4 text-burgundy-700" />
+            {!isMobile && <ChevronDown className="w-4 h-4 text-burgundy-700" />}
           </div>
         </Button>
       </DropdownMenuTrigger>

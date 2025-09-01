@@ -26,14 +26,15 @@ export default function HeroSection() {
               </p>
             </div>
             
-            <div className="flex flex-wrap gap-3 md:gap-4 pt-2 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            {/* Buttons in row direction with padding */}
+            <div className="flex flex-row gap-4 pt-2 animate-fade-in w-full" style={{ animationDelay: "0.2s" }}>
               <Link href="/shops" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto animate-scale">
+                <Button className="w-full sm:w-auto px-6 py-3 animate-scale">
                   Start Shopping
                 </Button>
               </Link>
               <Link href="/onboarding/shop" className="w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto px-6 py-3">
                   Register Your Shop
                 </Button>
               </Link>

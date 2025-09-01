@@ -145,3 +145,16 @@
     opacity: 1;
   }
 }
+
+@keyframes scroll-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% + var(--scroll-width, 0)));
+  }
+}
+
+.animate-scroll-x {
+  animation: scroll-x linear infinite;
+}

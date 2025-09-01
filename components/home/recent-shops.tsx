@@ -39,12 +39,12 @@ export default function RecentShops() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+    <div className="flex space-x-6 overflow-x-auto snap-x snap-mandatory pb-4 lg:grid lg:grid-cols-4 lg:gap-6 lg:space-x-0 group-hover/container:paused animate-scroll-x sm:animate-none" style={{ animationDuration: '30s', '--scroll-width': recentShops && recentShops.length > 0 ? `calc(${recentShops.length * 80}% - ${recentShops.length * 24}px)` : '100%' } as React.CSSProperties}>
       {recentShops.map((shop: any, index: number) => (
         <Link 
           href={`/shops/${shop._id}`} 
           key={shop._id}
-          className="group bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px] animate-fade-in"
+          className="min-w-[80%] md:min-w-[calc(50%-12px)] lg:min-w-0 lg:w-auto snap-center group bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px] animate-fade-in"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
           <div className="relative h-32 overflow-hidden">

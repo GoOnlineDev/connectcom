@@ -44,12 +44,12 @@ export default function FeaturedShops() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="flex space-x-4 overflow-x-auto snap-x snap-mandatory pb-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-x-0 group-hover/container:paused animate-scroll-x sm:animate-none" style={{ animationDuration: '30s', '--scroll-width': featuredShops && featuredShops.length > 0 ? `calc(${featuredShops.length * 80}% - ${featuredShops.length * 16}px)` : '100%' } as React.CSSProperties}>
       {featuredShops.map((shop: any) => (
         <Link 
           key={shop._id} 
           href={`/shops/${shop._id}`}
-          className="block transform transition-transform hover:scale-105"
+          className="min-w-[80%] md:min-w-[calc(50%-8px)] lg:min-w-0 lg:w-auto snap-center block transform transition-transform hover:scale-105"
         >
           <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">
             {/* Shop Image */}

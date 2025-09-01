@@ -53,7 +53,7 @@ export default function ShopsPage() {
     <div className="min-h-screen bg-beige-50">
       {/* Hero Carousel Section */}
       {featuredShops.data && featuredShops.data.length > 0 && (
-        <div className="relative w-full h-72 md:h-96 bg-gradient-to-br from-burgundy-800 to-burgundy-950 overflow-hidden mb-10">
+        <div className="relative w-full h-72 md:h-96 bg-burgundy-900 overflow-hidden mb-8 md:mb-10 lg:mb-12">
           {/* Carousel Slide */}
           {featuredShops.data.map((shop: any, idx: number) => (
             <div
@@ -73,17 +73,19 @@ export default function ShopsPage() {
                   className="w-full h-full object-cover object-center"
                 />
               ) : (
-                <div className="flex items-center justify-center w-full h-full bg-burgundy-800/30">
+                <div className="flex items-center justify-center w-full h-full bg-burgundy-900/30">
                   <Store className="w-24 h-24 text-white/40" />
                 </div>
               )}
               {/* Overlay for text readability */}
               <div className="absolute inset-0 bg-black/40" />
               {/* Shop Info Overlay */}
-              <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 text-center w-full px-4">
-                <h2 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-2">{shop.shopName}</h2>
+              <div className="absolute bottom-16 md:bottom-20 left-1/2 transform -translate-x-1/2 text-center w-full px-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg mb-2">
+                  {shop.shopName}
+                </h2>
                 {shop.categories && shop.categories.length > 0 && (
-                  <div className="flex flex-wrap gap-2 justify-center mb-4">
+                  <div className="flex flex-wrap gap-2 justify-center mb-3">
                     {shop.categories.map((category: string) => (
                       <Badge key={category} variant="outline" className="text-xs border-white/40 text-white bg-black/30">
                         {category}
@@ -92,24 +94,12 @@ export default function ShopsPage() {
                   </div>
                 )}
                 <Link href={`/shops/${shop._id}`}>
-                  <Button className="bg-white text-burgundy-900 font-semibold px-6 py-2 rounded-full shadow hover:bg-beige-100 hover:text-burgundy-800 transition">
+                  <Button className="bg-white text-burgundy-900 font-semibold px-5 py-2 rounded-full shadow hover:bg-beige-100 hover:text-burgundy-800 transition text-sm">
                     View Shop
                   </Button>
                 </Link>
               </div>
-              {/* Search Bar Overlay */}
-              <form onSubmit={handleSearch} className="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-full max-w-xl px-4 z-20">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 w-5 h-5" />
-                  <Input
-                    type="text"
-                    placeholder="Search shops, products, or services..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 pr-4 py-3 text-lg rounded-full border-0 bg-white/90 text-burgundy-900 placeholder:text-burgundy-600 shadow"
-                  />
-                </div>
-              </form>
+              
             </div>
           ))}
           {/* Carousel Navigation Dots */}
@@ -117,7 +107,7 @@ export default function ShopsPage() {
             {featuredShops.data.map((_: unknown, idx: number) => (
               <button
                 key={idx}
-                className={`w-3 h-3 rounded-full border-2 ${idx === carouselIndex ? 'bg-white border-white' : 'bg-burgundy-400 border-white/40'}`}
+                className={`w-2 h-2 rounded-full border-2 ${idx === carouselIndex ? 'bg-white border-white' : 'bg-burgundy-400 border-white/40'}`}
                 onClick={() => setCarouselIndex(idx)}
                 aria-label={`Go to slide ${idx + 1}`}
               />
@@ -126,70 +116,68 @@ export default function ShopsPage() {
         </div>
       )}
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6">
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 border border-beige-200">
-          <div className="flex flex-wrap gap-4 items-center">
-            <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-medium text-burgundy-900 mb-2">
-                Category
-              </label>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="border-beige-300 focus:border-burgundy-500 focus:ring-burgundy-500">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {allCategories.data?.map((category: string) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="bg-white rounded-xl shadow-xl p-5 mb-6 border border-burgundy-200 sm:flex sm:flex-wrap sm:justify-between sm:items-end gap-3">
+          <div className="flex-1 min-w-[180px] mb-3 sm:mb-0">
+            <label className="block text-xs font-medium text-burgundy-900 mb-1">
+              Category
+            </label>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500 bg-white shadow-sm h-9 text-sm">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {allCategories.data?.map((category: string) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-medium text-burgundy-900 mb-2">
-                Shop Type
-              </label>
-              <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="border-beige-300 focus:border-burgundy-500 focus:ring-burgundy-500">
-                  <SelectValue placeholder="All Types" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="product_shop">Product Shops</SelectItem>
-                  <SelectItem value="service_shop">Service Shops</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="flex-1 min-w-[180px] mb-3 sm:mb-0">
+            <label className="block text-xs font-medium text-burgundy-900 mb-1">
+              Shop Type
+            </label>
+            <Select value={selectedType} onValueChange={setSelectedType}>
+              <SelectTrigger className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500 bg-white shadow-sm h-9 text-sm">
+                <SelectValue placeholder="All Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="product_shop">Product Shops</SelectItem>
+                <SelectItem value="service_shop">Service Shops</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="flex gap-2 mt-6">
-              <Button onClick={clearFilters} variant="outline" className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 hover:border-burgundy-400">
-                Clear Filters
-              </Button>
-            </div>
+          <div className="w-full sm:w-auto flex gap-2 mt-2 sm:mt-0">
+            <Button onClick={clearFilters} variant="outline" className="flex-1 sm:flex-none border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 hover:border-burgundy-400 shadow-sm h-9 text-sm">
+              Clear Filters
+            </Button>
           </div>
         </div>
 
         {/* Loading State */}
         {shops.isLoading && (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-burgundy-600 mx-auto"></div>
-            <p className="mt-4 text-burgundy-700">Loading shops...</p>
+          <div className="text-center py-10">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-burgundy-600 mx-auto"></div>
+            <p className="mt-3 text-burgundy-700 text-sm">Loading shops...</p>
           </div>
         )}
 
         {/* Empty State */}
         {!shops.isLoading && shops.data && shops.data.length === 0 && (
-          <div className="text-center py-12">
-            <Store className="mx-auto h-16 w-16 text-burgundy-400 mb-4" />
-            <h3 className="text-xl font-semibold text-burgundy-900 mb-2">No shops found</h3>
-            <p className="text-burgundy-700 mb-4">
+          <div className="text-center py-10">
+            <Store className="mx-auto h-14 w-14 text-burgundy-400 mb-3" />
+            <h3 className="text-lg font-semibold text-burgundy-900 mb-2">No shops found</h3>
+            <p className="text-burgundy-700 text-sm mb-3">
               Try adjusting your search criteria or browse all available shops.
             </p>
-            <Button onClick={clearFilters} className="bg-burgundy-600 hover:bg-burgundy-700 text-white">
+            <Button onClick={clearFilters} className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-4 py-2 text-sm">
               View All Shops
             </Button>
           </div>
@@ -198,18 +186,18 @@ export default function ShopsPage() {
         {/* Shops Grid */}
         {shops.data && shops.data.length > 0 && (
           <>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-burgundy-900">
+            <div className="flex justify-between items-center mb-5">
+              <h2 className="text-xl font-bold text-burgundy-900">
                 {shops.data.length} Shop{shops.data.length !== 1 ? 's' : ''} Found
               </h2>
               {(searchTerm || selectedCategory !== 'all' || selectedType !== 'all') && (
-                <p className="text-burgundy-700 text-sm">
+                <p className="text-burgundy-700 text-xs">
                   Filtered results
                 </p>
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {shops.data.map((shop: any) => (
                 <Link 
                   key={shop._id} 
@@ -218,7 +206,7 @@ export default function ShopsPage() {
                 >
                   <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">
                     {/* Shop Logo */}
-                    <div className="relative h-48 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg">
+                    <div className="relative h-40 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg overflow-hidden">
                       {shop.shopImageUrl ? (
                         <img
                           src={shop.shopImageUrl}
@@ -233,12 +221,14 @@ export default function ShopsPage() {
                         />
                       ) : (
                         <div className="flex items-center justify-center h-full">
-                          <Store className="w-16 h-16 text-burgundy-400" />
+                          <Store className="w-14 h-14 text-burgundy-400" />
                         </div>
                       )}
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                       {/* Shop Type Badge */}
-                      <div className="absolute top-3 right-3">
-                        <Badge variant={shop.shopType === 'product_shop' ? 'default' : 'secondary'} className="bg-burgundy-600 text-white">
+                      <div className="absolute top-2 right-2">
+                        <Badge variant={shop.shopType === 'product_shop' ? 'default' : 'secondary'} className="bg-burgundy-600 text-white text-xs">
                           {shop.shopType === 'product_shop' ? (
                             <>
                               <ShoppingBag className="w-3 h-3 mr-1" /> Products
