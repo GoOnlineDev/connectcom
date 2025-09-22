@@ -86,6 +86,8 @@ export default function WishlistPage() {
           title: "Success",
           description: result.message,
         });
+        // Remove from wishlist after successful addition to cart
+        await removeFromWishlist({ itemId: item.itemId });
       } else {
         toast({
           title: "Error",
@@ -96,7 +98,7 @@ export default function WishlistPage() {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to add item to cart",
+        description: "Failed to add item to cart or remove from wishlist",
         variant: "destructive",
       });
     }
@@ -146,31 +148,32 @@ export default function WishlistPage() {
   // Empty wishlist state
   if (!allWishlistItems || allWishlistItems.length === 0) {
     return (
-      <div className="min-h-screen bg-beige-50">
+      <div className="min-h-screen bg-beige-50 pt-20">
         {/* Header */}
-        <div className="bg-white border-b border-burgundy-100">
-          <div className="container mx-auto px-4 py-4">
+        <div className="fixed top-0 left-0 right-0 bg-white border-b border-burgundy-100 z-40 shadow-sm">
+          <div className="container mx-auto px-4 py-3 sm:py-4">
             <Link 
               href="/shops" 
-              className="inline-flex items-center gap-2 text-burgundy-700 hover:text-burgundy-800 transition-colors"
+              className="inline-flex items-center gap-1.5 text-burgundy-700 hover:text-burgundy-800 transition-colors text-sm sm:text-base"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Browse Shops
+              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Browse Shops</span>
+              <span className="inline sm:hidden">Shop</span>
             </Link>
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-10 sm:py-16">
           <div className="text-center max-w-md mx-auto">
-            <div className="bg-white rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 shadow-sm border border-beige-200">
-              <Heart className="w-12 h-12 text-burgundy-400" />
+            <div className="bg-white rounded-full w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mx-auto mb-5 sm:mb-6 shadow-sm border border-beige-200">
+              <Heart className="w-10 h-10 sm:w-12 sm:h-12 text-burgundy-400" />
             </div>
-            <h1 className="text-3xl font-bold text-burgundy-900 mb-4">Your Wishlist is Empty</h1>
-            <p className="text-burgundy-700 mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-burgundy-900 mb-3 sm:mb-4">Your Wishlist is Empty</h1>
+            <p className="text-sm sm:text-base text-burgundy-700 mb-6 sm:mb-8">
               Save items you love to your wishlist and come back to them later.
             </p>
             <div className="space-y-3">
-              <Button asChild className="w-full bg-burgundy-600 hover:bg-burgundy-700 text-white">
+              <Button asChild className="w-full bg-burgundy-600 hover:bg-burgundy-700 text-white h-10 sm:h-11 text-sm sm:text-base">
                 <Link href="/shops">
                   <ShoppingBag className="w-4 h-4 mr-2" />
                   Browse Shops
@@ -179,7 +182,7 @@ export default function WishlistPage() {
               <Button 
                 asChild 
                 variant="outline" 
-                className="w-full border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                className="w-full border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 h-10 sm:h-11 text-sm sm:text-base"
               >
                 <Link href="/cart">
                   <ShoppingCart className="w-4 h-4 mr-2" />
@@ -198,40 +201,42 @@ export default function WishlistPage() {
   const serviceCount = allWishlistItems.filter(item => item.itemType === 'service').length;
 
   return (
-    <div className="min-h-screen bg-beige-50">
+    <div className="min-h-screen bg-beige-50 pt-20 pb-10">
       {/* Header */}
-      <div className="bg-white border-b border-burgundy-100">
-        <div className="container mx-auto px-4 py-4">
+      <div className="fixed top-0 left-0 right-0 bg-white border-b border-burgundy-100 z-40 shadow-sm">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <Link 
               href="/shops" 
-              className="inline-flex items-center gap-2 text-burgundy-700 hover:text-burgundy-800 transition-colors"
+              className="inline-flex items-center gap-1.5 text-burgundy-700 hover:text-burgundy-800 transition-colors text-sm sm:text-base"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Browse Shops
+              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Browse Shops</span>
+              <span className="inline sm:hidden">Shop</span>
             </Link>
             
             {allWishlistItems.length > 0 && (
               <Button 
                 variant="outline" 
                 onClick={handleClearWishlist}
-                className="border-red-200 text-red-600 hover:bg-red-50"
+                className="border-red-200 text-red-600 hover:bg-red-50 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm h-auto"
               >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Clear Wishlist
+                <Trash2 className="w-3.5 h-3.5 mr-1.5 sm:mr-2" />
+                <span className="hidden sm:inline">Clear Wishlist</span>
+                <span className="inline sm:hidden">Clear</span>
               </Button>
             )}
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4 sm:py-8">
         {/* Page Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <Heart className="w-6 h-6 text-burgundy-700" />
-            <h1 className="text-2xl font-bold text-burgundy-900">My Wishlist</h1>
-            <Badge className="bg-burgundy-600 text-white">
+        <div className="flex flex-col sm:flex-row items-center sm:justify-between mb-6 sm:mb-8 gap-3 sm:gap-0">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-burgundy-700" />
+            <h1 className="text-xl sm:text-2xl font-bold text-burgundy-900">My Wishlist</h1>
+            <Badge className="bg-burgundy-600 text-white text-xs sm:text-sm">
               {wishlistCount} {wishlistCount === 1 ? 'item' : 'items'}
             </Badge>
           </div>
@@ -240,17 +245,17 @@ export default function WishlistPage() {
           <div className="flex items-center gap-2">
             <Button
               variant={viewMode === 'grid' ? 'default' : 'outline'}
-              size="sm"
+              size="icon"
               onClick={() => setViewMode('grid')}
-              className={viewMode === 'grid' ? 'bg-burgundy-600 hover:bg-burgundy-700 text-white' : 'border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50'}
+              className={viewMode === 'grid' ? 'bg-burgundy-600 hover:bg-burgundy-700 text-white w-9 h-9' : 'border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 w-9 h-9'}
             >
               <Grid3X3 className="w-4 h-4" />
             </Button>
             <Button
               variant={viewMode === 'list' ? 'default' : 'outline'}
-              size="sm"
+              size="icon"
               onClick={() => setViewMode('list')}
-              className={viewMode === 'list' ? 'bg-burgundy-600 hover:bg-burgundy-700 text-white' : 'border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50'}
+              className={viewMode === 'list' ? 'bg-burgundy-600 hover:bg-burgundy-700 text-white w-9 h-9' : 'border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 w-9 h-9'}
             >
               <List className="w-4 h-4" />
             </Button>
@@ -258,18 +263,18 @@ export default function WishlistPage() {
         </div>
 
         {/* Filter Tabs */}
-        <Tabs value={activeFilter} onValueChange={(value) => setActiveFilter(value as any)} className="mb-8">
-          <TabsList className="grid grid-cols-3 w-full max-w-md">
-            <TabsTrigger value="all" className="flex items-center gap-2">
-              <Filter className="w-4 h-4" />
+        <Tabs value={activeFilter} onValueChange={(value) => setActiveFilter(value as any)} className="mb-6 sm:mb-8">
+          <TabsList className="grid grid-cols-3 w-full sm:max-w-md mx-auto h-10 sm:h-auto">
+            <TabsTrigger value="all" className="flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+              <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               All ({allWishlistItems.length})
             </TabsTrigger>
-            <TabsTrigger value="product" className="flex items-center gap-2">
-              <Package className="w-4 h-4" />
+            <TabsTrigger value="product" className="flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+              <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               Products ({productCount})
             </TabsTrigger>
-            <TabsTrigger value="service" className="flex items-center gap-2">
-              <Store className="w-4 h-4" />
+            <TabsTrigger value="service" className="flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+              <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               Services ({serviceCount})
             </TabsTrigger>
           </TabsList>
@@ -277,26 +282,26 @@ export default function WishlistPage() {
 
         {/* Wishlist Items */}
         {wishlistItems.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-sm border border-beige-200">
+          <div className="text-center py-10">
+            <div className="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-5 shadow-sm border border-beige-200">
               {activeFilter === 'product' ? (
-                <Package className="w-8 h-8 text-burgundy-400" />
+                <Package className="w-10 h-10 text-burgundy-400" />
               ) : activeFilter === 'service' ? (
-                <Store className="w-8 h-8 text-burgundy-400" />
+                <Store className="w-10 h-10 text-burgundy-400" />
               ) : (
-                <Heart className="w-8 h-8 text-burgundy-400" />
+                <Heart className="w-10 h-10 text-burgundy-400" />
               )}
             </div>
             <h3 className="text-lg font-semibold text-burgundy-900 mb-2">
               No {activeFilter === 'all' ? '' : activeFilter + 's'} in your wishlist
             </h3>
-            <p className="text-burgundy-700 mb-4">
+            <p className="text-burgundy-700 text-sm mb-4">
               {activeFilter === 'all' 
                 ? 'Your filtered wishlist is empty'
                 : `You haven't saved any ${activeFilter}s to your wishlist yet`
               }
             </p>
-            <Button asChild className="bg-burgundy-600 hover:bg-burgundy-700 text-white">
+            <Button asChild className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-4 py-2 text-sm h-10">
               <Link href="/shops">
                 Browse {activeFilter === 'all' ? 'Shops' : activeFilter === 'product' ? 'Products' : 'Services'}
               </Link>
@@ -305,21 +310,21 @@ export default function WishlistPage() {
         ) : (
           <div className={
             viewMode === 'grid' 
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-              : "space-y-4"
+              ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+              : "space-y-3 sm:space-y-4"
           }>
             {wishlistItems.map((item) => (
               <Card 
                 key={item._id} 
                 className={`border border-burgundy-200 hover:shadow-md transition-shadow ${
-                  viewMode === 'list' ? 'flex-row' : ''
+                  viewMode === 'list' ? 'flex-row flex-wrap sm:flex-nowrap' : ''
                 }`}
               >
                 {viewMode === 'grid' ? (
                   // Grid View
                   <>
                     {/* Item Image */}
-                    <div className="relative h-48 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg border border-beige-300">
+                    <div className="relative h-40 sm:h-48 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg border border-beige-300 overflow-hidden">
                       {item.itemType === "product" && item.itemDetails.imageUrls && item.itemDetails.imageUrls.length > 0 ? (
                         <img
                           src={item.itemDetails.imageUrls[0]}
@@ -329,17 +334,19 @@ export default function WishlistPage() {
                       ) : (
                         <div className="flex items-center justify-center h-full">
                           {item.itemType === "product" ? (
-                            <Package className="w-12 h-12 text-burgundy-400" />
+                            <Package className="w-10 h-10 sm:w-12 sm:h-12 text-burgundy-400" />
                           ) : (
-                            <Store className="w-12 h-12 text-burgundy-400" />
+                            <Store className="w-10 h-10 sm:w-12 sm:h-12 text-burgundy-400" />
                           )}
                         </div>
                       )}
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
 
                       {/* Price Badge */}
                       {item.itemType === "product" && (
-                        <div className="absolute top-3 right-3">
-                          <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700">
+                        <div className="absolute top-2 right-2">
+                          <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700 text-xs sm:text-sm px-2 py-0.5 sm:px-2.5 sm:py-1">
                             {formatPrice(item.itemDetails.price)}
                           </Badge>
                         </div>
@@ -347,28 +354,28 @@ export default function WishlistPage() {
 
                       {/* Remove Button */}
                       <Button
-                        size="sm"
+                        size="icon"
                         variant="outline"
                         onClick={() => handleRemoveFromWishlist(item.itemId)}
-                        className="absolute top-3 left-3 p-2 bg-white/90 hover:bg-white border-red-200 text-red-600 hover:bg-red-50"
+                        className="absolute top-2 left-2 w-8 h-8 p-0 bg-white/90 hover:bg-white border-red-200 text-red-600 hover:bg-red-50"
                       >
-                        <Trash2 className="w-3 h-3" />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
 
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-lg font-bold text-burgundy-900 line-clamp-1">
+                    <CardHeader className="pb-2 sm:pb-3">
+                      <CardTitle className="text-base sm:text-lg font-bold text-burgundy-900 line-clamp-1">
                         {item.itemDetails.name}
                       </CardTitle>
-                      <CardDescription className="line-clamp-2 text-burgundy-700">
+                      <CardDescription className="line-clamp-2 text-burgundy-700 text-xs sm:text-sm">
                         {item.itemDetails.description || 'No description available'}
                       </CardDescription>
                     </CardHeader>
 
-                    <CardContent className="pt-0">
+                    <CardContent className="pt-0 pb-3 sm:pb-4">
                       {/* Shop Info */}
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-gradient-to-br from-beige-100 to-beige-200 rounded flex items-center justify-center border border-beige-300">
+                      <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-beige-100 to-beige-200 rounded flex items-center justify-center border border-beige-300">
                           {item.shopDetails.shopLogoUrl ? (
                             <img
                               src={item.shopDetails.shopLogoUrl}
@@ -376,18 +383,18 @@ export default function WishlistPage() {
                               className="w-full h-full object-cover rounded"
                             />
                           ) : (
-                            <Store className="w-3 h-3 text-burgundy-400" />
+                            <Store className="w-2.5 h-2.5 sm:w-3 h-3 text-burgundy-400" />
                           )}
                         </div>
-                        <span className="text-sm text-burgundy-700 truncate">
+                        <span className="text-xs sm:text-sm text-burgundy-700 truncate">
                           {item.shopDetails.shopName}
                         </span>
                       </div>
 
                       {/* Service Pricing */}
                       {item.itemType === "service" && (
-                        <div className="mb-4">
-                          <p className="text-sm text-burgundy-700">
+                        <div className="mb-3 sm:mb-4">
+                          <p className="text-xs sm:text-sm text-burgundy-700">
                             {item.itemDetails.pricing || "Contact for pricing"}
                           </p>
                           {item.itemDetails.duration && (
@@ -399,19 +406,19 @@ export default function WishlistPage() {
                       )}
 
                       {/* Actions */}
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 sm:gap-3">
                         <Button
                           onClick={() => handleAddToCart(item)}
-                          className="flex-1"
+                          className="flex-1 h-9 sm:h-10 text-sm sm:text-base"
                           size="sm"
                         >
-                          <ShoppingCart className="w-4 h-4 mr-2" />
+                          <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                           Add to Cart
                         </Button>
                         <Button
                           asChild
                           variant="outline"
-                          className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                          className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 h-9 sm:h-10 text-sm sm:text-base w-fit"
                           size="sm"
                         >
                           <Link href={`/shops/${item.shopId}`}>
@@ -423,9 +430,9 @@ export default function WishlistPage() {
                   </>
                 ) : (
                   // List View
-                  <div className="flex gap-4 p-4">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-3 sm:p-4">
                     {/* Item Image */}
-                    <div className="w-24 h-24 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center flex-shrink-0 border border-beige-300">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center flex-shrink-0 border border-beige-300 mx-auto sm:mx-0">
                       {item.itemType === "product" && item.itemDetails.imageUrls && item.itemDetails.imageUrls.length > 0 ? (
                         <img
                           src={item.itemDetails.imageUrls[0]}
@@ -444,18 +451,18 @@ export default function WishlistPage() {
                     </div>
 
                     {/* Item Details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0 text-center sm:text-left">
+                      <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-1.5 sm:gap-0">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-burgundy-900 truncate">
+                          <h3 className="font-semibold text-burgundy-900 truncate text-base sm:text-lg mb-1">
                             {item.itemDetails.name}
                           </h3>
-                          <p className="text-sm text-burgundy-700 line-clamp-2 mt-1">
+                          <p className="text-xs sm:text-sm text-burgundy-700 line-clamp-2">
                             {item.itemDetails.description || 'No description available'}
                           </p>
 
                           {/* Shop Info */}
-                          <div className="flex items-center gap-2 mt-2">
+                          <div className="flex items-center justify-center sm:justify-start gap-1.5 mt-2">
                             <Store className="w-3 h-3 text-burgundy-400" />
                             <span className="text-xs text-burgundy-600 truncate">
                               {item.shopDetails.shopName}
@@ -463,13 +470,13 @@ export default function WishlistPage() {
                           </div>
 
                           {/* Price/Pricing */}
-                          <div className="mt-2">
+                          <div className="mt-2 sm:mt-3">
                             {item.itemType === "product" ? (
-                              <div className="text-lg font-bold text-burgundy-900">
+                              <div className="text-base sm:text-lg font-bold text-burgundy-900">
                                 {formatPrice(item.itemDetails.price)}
                               </div>
                             ) : (
-                              <div className="text-sm text-burgundy-700">
+                              <div className="text-xs sm:text-sm text-burgundy-700">
                                 {item.itemDetails.pricing || "Contact for pricing"}
                               </div>
                             )}
@@ -477,19 +484,19 @@ export default function WishlistPage() {
                         </div>
 
                         {/* Actions */}
-                        <div className="flex flex-col gap-2 ml-4">
+                        <div className="flex flex-col items-center sm:items-end gap-2 sm:ml-4 mt-3 sm:mt-0">
                           <Button
-                            size="sm"
+                            size="icon"
                             variant="outline"
                             onClick={() => handleRemoveFromWishlist(item.itemId)}
-                            className="p-2 border-red-200 text-red-600 hover:bg-red-50"
+                            className="w-8 h-8 p-0 border-red-200 text-red-600 hover:bg-red-50"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                           <Button
-                            size="sm"
+                            size="icon"
                             onClick={() => handleAddToCart(item)}
-                            className="bg-burgundy-600 hover:bg-burgundy-700 text-white"
+                            className="bg-burgundy-600 hover:bg-burgundy-700 text-white w-8 h-8"
                           >
                             <Plus className="w-4 h-4" />
                           </Button>
@@ -505,13 +512,13 @@ export default function WishlistPage() {
 
         {/* Quick Actions */}
         {wishlistItems.length > 0 && (
-          <div className="mt-12 text-center">
-            <Card className="border border-burgundy-200 bg-gradient-to-r from-burgundy-50 to-burgundy-100 max-w-md mx-auto">
-              <CardHeader>
-                <CardTitle className="text-burgundy-900">Quick Actions</CardTitle>
+          <div className="mt-8 sm:mt-12 text-center">
+            <Card className="border border-burgundy-200 bg-gradient-to-r from-burgundy-50 to-burgundy-100 max-w-sm sm:max-w-md mx-auto">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="text-lg sm:text-xl text-burgundy-900">Quick Actions</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button asChild className="w-full bg-burgundy-600 hover:bg-burgundy-700 text-white">
+              <CardContent className="space-y-2 sm:space-y-3">
+                <Button asChild variant="primary" className="w-full" size="lg">
                   <Link href="/cart">
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     View Cart
@@ -520,7 +527,8 @@ export default function WishlistPage() {
                 <Button 
                   asChild 
                   variant="outline" 
-                  className="w-full border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                  className="w-full"
+                  size="lg"
                 >
                   <Link href="/shops">
                     <ShoppingBag className="w-4 h-4 mr-2" />

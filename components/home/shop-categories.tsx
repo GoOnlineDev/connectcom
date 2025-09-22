@@ -108,15 +108,10 @@ export default function ShopCategories() {
           <div className="flex flex-col h-full">
             <div className="relative h-28 sm:h-32 overflow-hidden">
               <Image
-                src={`/categories/${category.name.toLowerCase().replace(/\s+/g, '-')}.jpg`}
+                src="/logo.png"
                 alt={category.name}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-                onError={(e) => {
-                  // Fallback to a default image if category image doesn't exist
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/logo.png';
-                }}
+                className="object-contain transition-transform duration-500 group-hover:scale-110 p-4"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-burgundy/70 via-burgundy/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
               

@@ -71,67 +71,47 @@ export default function DashboardNavbar() {
           <div className="hidden md:flex items-center space-x-4">
             {/* Main Navigation Links */}
             <div className="flex items-center space-x-1">
-              <Link href="/">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
-                >
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/">
                   <Home className="w-4 h-4 mr-2" />
                   Home
-                </Button>
-              </Link>
+                </Link>
+              </Button>
               
-              <Link href="/shops">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
-                >
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/shops">
                   <ShoppingBag className="w-4 h-4 mr-2" />
                   Shops
-                </Button>
-              </Link>
+                </Link>
+              </Button>
 
               {/* Admin Navigation */}
               {isAdmin && (
                 <>
-                  <Link href="/admin/users">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
-                    >
+                  <Button asChild variant="ghost" size="sm">
+                    <Link href="/admin/users">
                       <Users className="w-4 h-4 mr-2" />
                       Users
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                   
-                  <Link href="/admin/shops/approve">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
-                    >
+                  <Button asChild variant="ghost" size="sm">
+                    <Link href="/admin/shops/approve">
                       <Store className="w-4 h-4 mr-2" />
                       Shop Approvals
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </>
               )}
 
               {/* Vendor Navigation */}
               {isVendor && (
-                <Link href="/vendor/shops">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
-                  >
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/vendor/shops">
                     <Store className="w-4 h-4 mr-2" />
                     My Shops
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               )}
             </div>
 

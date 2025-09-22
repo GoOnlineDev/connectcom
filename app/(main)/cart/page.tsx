@@ -277,50 +277,52 @@ export default function CartPage() {
   }>);
 
   return (
-    <div className="min-h-screen bg-beige-50">
+    <div className="min-h-screen bg-beige-50 pt-20 pb-10">
       {/* Header */}
-      <div className="bg-white border-b border-burgundy-100">
-        <div className="container mx-auto px-4 py-4">
+      <div className="fixed top-0 left-0 right-0 bg-white border-b border-burgundy-100 z-40 shadow-sm">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <Link 
               href="/shops" 
-              className="inline-flex items-center gap-2 text-burgundy-700 hover:text-burgundy-800 transition-colors"
+              className="inline-flex items-center gap-1.5 text-burgundy-700 hover:text-burgundy-800 transition-colors text-sm sm:text-base"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Continue Shopping
+              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Continue Shopping</span>
+              <span className="inline sm:hidden">Shop</span>
             </Link>
             
             {cartItems.length > 0 && (
               <Button 
                 variant="outline" 
                 onClick={handleClearCart}
-                className="border-red-200 text-red-600 hover:bg-red-50"
+                className="border-red-200 text-red-600 hover:bg-red-50 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm h-auto"
               >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Clear Cart
+                <Trash2 className="w-3.5 h-3.5 mr-1.5 sm:mr-2" />
+                <span className="hidden sm:inline">Clear Cart</span>
+                <span className="inline sm:hidden">Clear</span>
               </Button>
             )}
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 py-4 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="flex items-center gap-3 mb-6">
-              <ShoppingCart className="w-6 h-6 text-burgundy-700" />
-              <h1 className="text-2xl font-bold text-burgundy-900">Shopping Cart</h1>
-              <Badge className="bg-burgundy-600 text-white">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 text-burgundy-700" />
+              <h1 className="text-xl sm:text-2xl font-bold text-burgundy-900">Shopping Cart</h1>
+              <Badge className="bg-burgundy-600 text-white text-xs sm:text-sm">
                 {cartSummary.totalItems} {cartSummary.totalItems === 1 ? 'item' : 'items'}
               </Badge>
             </div>
 
             {(Object.entries(itemsByShop) as [string, { shop: { _id: Id<"shops">; shopName: string; shopLogoUrl?: string; shopType: string; }; items: CartItemWithDetails[] }][]).map(([shopId, shopGroup]) => (
               <Card key={shopId} className="border border-burgundy-200">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center border border-beige-300">
+                <CardHeader className="pb-3 sm:pb-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center border border-beige-300">
                       {shopGroup.shop.shopLogoUrl ? (
                         <img
                           src={shopGroup.shop.shopLogoUrl}
@@ -328,23 +330,23 @@ export default function CartPage() {
                           className="w-full h-full object-cover rounded-lg"
                         />
                       ) : (
-                        <Store className="w-6 h-6 text-burgundy-400" />
+                        <Store className="w-5 h-5 sm:w-6 sm:h-6 text-burgundy-400" />
                       )}
                     </div>
                     <div>
-                      <CardTitle className="text-lg text-burgundy-900">{shopGroup.shop.shopName}</CardTitle>
-                      <CardDescription className="text-burgundy-700">
+                      <CardTitle className="text-base sm:text-lg text-burgundy-900">{shopGroup.shop.shopName}</CardTitle>
+                      <CardDescription className="text-xs sm:text-sm text-burgundy-700">
                         {shopGroup.items.length} {shopGroup.items.length === 1 ? 'item' : 'items'}
                       </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3 sm:space-y-4">
                   {shopGroup.items.map((item: CartItemWithDetails) => (
-                    <div key={item._id} className="flex gap-4 p-4 bg-beige-100/50 rounded-lg border border-beige-200">
+                    <div key={item._id} className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-3 sm:p-4 bg-beige-100/50 rounded-lg border border-beige-200">
                       {/* Item Image */}
-                      <div className="w-20 h-20 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center flex-shrink-0 border border-beige-300">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center flex-shrink-0 border border-beige-300 mx-auto sm:mx-0">
                         {item.itemType === "product" && item.itemDetails.imageUrls && item.itemDetails.imageUrls.length > 0 ? (
                           <img
                             src={item.itemDetails.imageUrls[0]}
@@ -354,60 +356,60 @@ export default function CartPage() {
                         ) : (
                           <div className="text-burgundy-400">
                             {item.itemType === "product" ? (
-                              <Package className="w-8 h-8" />
+                              <Package className="w-7 h-7 sm:w-8 sm:h-8" />
                             ) : (
-                              <Store className="w-8 h-8" />
+                              <Store className="w-7 h-7 sm:w-8 sm:h-8" />
                             )}
                           </div>
                         )}
                       </div>
 
                       {/* Item Details */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0 text-center sm:text-left">
+                        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-2 sm:gap-0">
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-burgundy-900 truncate">
+                            <h3 className="font-semibold text-burgundy-900 truncate text-base sm:text-lg mb-1">
                               {item.itemDetails.name}
                             </h3>
                             {item.itemDetails.description && (
-                              <p className="text-sm text-burgundy-700 mt-1 line-clamp-2">
+                              <p className="text-xs sm:text-sm text-burgundy-700 line-clamp-2">
                                 {item.itemDetails.description}
                               </p>
                             )}
 
                             {/* Service Details */}
                             {item.itemType === "service" && item.serviceDetails && (
-                              <div className="mt-2 space-y-1 text-sm text-burgundy-700">
+                              <div className="mt-1.5 space-y-0.5 text-xs sm:text-sm text-burgundy-700">
                                 {item.serviceDetails.selectedDate && (
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center justify-center sm:justify-start gap-1.5">
                                     <Calendar className="w-3 h-3" />
                                     <span>{item.serviceDetails.selectedDate}</span>
                                   </div>
                                 )}
                                 {item.serviceDetails.selectedTime && (
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center justify-center sm:justify-start gap-1.5">
                                     <Clock className="w-3 h-3" />
                                     <span>{item.serviceDetails.selectedTime}</span>
                                   </div>
                                 )}
                                 {item.serviceDetails.notes && (
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center justify-center sm:justify-start gap-1.5">
                                     <FileText className="w-3 h-3" />
-                                    <span className="truncate">{item.serviceDetails.notes}</span>
+                                    <span className="truncate max-w-[150px] sm:max-w-none">{item.serviceDetails.notes}</span>
                                   </div>
                                 )}
                               </div>
                             )}
 
                             {/* Price */}
-                            <div className="mt-2">
+                            <div className="mt-2 sm:mt-3">
                               {item.itemType === "product" ? (
-                                <div className="text-lg font-bold text-burgundy-900">
+                                <div className="text-base sm:text-lg font-bold text-burgundy-900">
                                   {formatPrice(item.itemDetails.price || 0)}
-                                  <span className="text-sm font-normal text-burgundy-700 ml-1">each</span>
+                                  <span className="text-xs sm:text-sm font-normal text-burgundy-700 ml-1">each</span>
                                 </div>
                               ) : (
-                                <div className="text-sm text-burgundy-700">
+                                <div className="text-xs sm:text-sm text-burgundy-700">
                                   {item.itemDetails.pricing || "Contact for pricing"}
                                 </div>
                               )}
@@ -415,19 +417,19 @@ export default function CartPage() {
                           </div>
 
                           {/* Actions */}
-                          <div className="flex flex-col items-end gap-2 ml-4">
+                          <div className="flex flex-col items-center sm:items-end gap-2 sm:ml-4 mt-3 sm:mt-0">
                             <div className="flex items-center gap-2">
                               <Button
-                                size="sm"
-                                className="p-2"
+                                size="icon"
+                                className="w-8 h-8 p-0"
                                 onClick={() => handleMoveToWishlist(item._id)}
                               >
                                 <Heart className="w-4 h-4" />
                               </Button>
                               <Button
-                                size="sm"
+                                size="icon"
                                 variant="outline"
-                                className="p-2"
+                                className="w-8 h-8 p-0 border-red-200 text-red-600 hover:bg-red-50"
                                 onClick={() => handleRemoveItem(item._id)}
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -435,36 +437,38 @@ export default function CartPage() {
                             </div>
 
                             {/* Quantity Controls */}
-                            <div className="flex items-center gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleQuantityUpdate(item._id, item.quantity - 1)}
-                                disabled={item.quantity <= 1 || updatingItems.has(item._id)}
-                                className="p-2 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
-                              >
-                                <Minus className="w-3 h-3" />
-                              </Button>
-                              
-                              <span className="w-8 text-center font-semibold text-burgundy-900">
-                                {updatingItems.has(item._id) ? "..." : item.quantity}
-                              </span>
-                              
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleQuantityUpdate(item._id, item.quantity + 1)}
-                                disabled={updatingItems.has(item._id)}
-                                className="p-2 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
-                              >
-                                <Plus className="w-3 h-3" />
-                              </Button>
-                            </div>
+                            {item.itemType === "product" && (
+                              <div className="flex items-center gap-1 sm:gap-2 mt-2">
+                                <Button
+                                  size="icon"
+                                  variant="outline"
+                                  onClick={() => handleQuantityUpdate(item._id, item.quantity - 1)}
+                                  disabled={item.quantity <= 1 || updatingItems.has(item._id)}
+                                  className="w-7 h-7 sm:w-8 sm:h-8 p-0 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                                >
+                                  <Minus className="w-3 h-3" />
+                                </Button>
+                                
+                                <span className="w-7 sm:w-8 text-center font-semibold text-burgundy-900 text-sm">
+                                  {updatingItems.has(item._id) ? "..." : item.quantity}
+                                </span>
+                                
+                                <Button
+                                  size="icon"
+                                  variant="outline"
+                                  onClick={() => handleQuantityUpdate(item._id, item.quantity + 1)}
+                                  disabled={updatingItems.has(item._id)}
+                                  className="w-7 h-7 sm:w-8 sm:h-8 p-0 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            )}
 
                             {/* Item Total */}
                             {item.itemType === "product" && (
-                              <div className="text-right">
-                                <div className="font-bold text-burgundy-900">
+                              <div className="text-center sm:text-right mt-2 sm:mt-3">
+                                <div className="font-bold text-burgundy-900 text-base sm:text-lg">
                                   {formatPrice(item.itemTotal)}
                                 </div>
                               </div>
@@ -481,22 +485,22 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <Card className="border border-burgundy-200 sticky top-4">
-              <CardHeader>
-                <CardTitle className="text-burgundy-900">Order Summary</CardTitle>
+            <Card className="border border-burgundy-200 lg:sticky lg:top-24">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="text-lg sm:text-xl text-burgundy-900">Order Summary</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2 text-sm">
+              <CardContent className="space-y-3 sm:space-y-4">
+                <div className="space-y-1.5 sm:space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-burgundy-700">Products ({cartSummary.totalProducts})</span>
-                    <span className="font-semibold text-burgundy-900">
+                    <span className="text-burgundy-700 text-sm">Products ({cartSummary.totalProducts})</span>
+                    <span className="font-semibold text-burgundy-900 text-sm">
                       {formatPrice(cartSummary.totalAmount)}
                     </span>
                   </div>
                   
                   {cartSummary.totalServices > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-burgundy-700">Services ({cartSummary.totalServices})</span>
+                      <span className="text-burgundy-700 text-sm">Services ({cartSummary.totalServices})</span>
                       <span className="text-sm text-burgundy-600">Contact for pricing</span>
                     </div>
                   )}
@@ -508,26 +512,27 @@ export default function CartPage() {
 
                 <Separator className="bg-burgundy-200" />
 
-                <div className="flex justify-between font-bold text-lg text-burgundy-900">
+                <div className="flex justify-between font-bold text-base sm:text-lg text-burgundy-900">
                   <span>Total</span>
                   <span>{formatPrice(cartSummary.totalAmount)}</span>
                 </div>
 
                 {cartSummary.totalServices > 0 && (
-                  <p className="text-xs text-burgundy-600">
+                  <p className="text-xs text-burgundy-600 pt-1">
                     * Services require direct contact with shops for pricing and booking
                   </p>
                 )}
 
-                <div className="space-y-3 pt-4">
-                  <Button className="w-full bg-burgundy-600 hover:bg-burgundy-700 text-white" size="lg">
+                <div className="space-y-2 pt-3 sm:pt-4">
+                  <Button variant="primary" className="w-full" size="lg">
                     <CreditCard className="w-4 h-4 mr-2" />
                     Proceed to Checkout
                   </Button>
                   
                   <Button 
                     variant="outline" 
-                    className="w-full border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                    className="w-full"
+                    size="lg"
                     asChild
                   >
                     <Link href="/shops">
@@ -536,8 +541,8 @@ export default function CartPage() {
                   </Button>
                 </div>
 
-                <div className="pt-4 border-t border-burgundy-100">
-                  <h4 className="font-semibold text-burgundy-900 mb-2">Need Help?</h4>
+                <div className="pt-3 sm:pt-4 border-t border-burgundy-100 mt-4 sm:mt-5">
+                  <h4 className="font-semibold text-burgundy-900 mb-1.5 text-sm sm:text-base">Need Help?</h4>
                   <p className="text-xs text-burgundy-700">
                     Contact the shops directly for service bookings or product inquiries.
                   </p>

@@ -31,11 +31,8 @@ const Navigation = () => {
     setIsMenuOpen(false);
   };
 
-  const baseLinkClasses = "px-4 py-2 rounded-full transition-colors";
-  const desktopLinkClasses = (href: string) =>
-    `${baseLinkClasses} ${isActive(href) ? 'bg-burgundy-900 text-white' : 'text-burgundy-700 hover:text-burgundy-900 hover:bg-beige-50'}`;
-  const mobileLinkClasses = (href: string) =>
-    `block px-3 py-2 rounded-full ${isActive(href) ? 'bg-burgundy-900 text-white' : 'text-burgundy-700 hover:bg-beige-50 hover:text-burgundy-900'}`;
+  const getNavButtonVariant = (href: string): "default" | "ghost" => isActive(href) ? 'default' : 'ghost';
+  const getNavButtonSize = (): "pill-sm" => 'pill-sm';
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-7xl z-50 transition-all duration-300 rounded-full bg-white/90 backdrop-blur-md shadow-lg border border-burgundy-100">
@@ -58,21 +55,41 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            <Link href="/" className={desktopLinkClasses('/')}>
-              Home
-            </Link>
-            <Link href="/shops" className={desktopLinkClasses('/shops')}>
-              Shops
-            </Link>
-            <Link href="/categories" className={desktopLinkClasses('/categories')}>
-              Categories
-            </Link>
-            <Link href="/about" className={desktopLinkClasses('/about')}>
-              About
-            </Link>
-            <Link href="/contact" className={desktopLinkClasses('/contact')}>
-              Contact Us
-            </Link>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/')} 
+              size={getNavButtonSize()}
+            >
+              <Link href="/">Home</Link>
+            </Button>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/shops')} 
+              size={getNavButtonSize()}
+            >
+              <Link href="/shops">Shops</Link>
+            </Button>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/categories')} 
+              size={getNavButtonSize()}
+            >
+              <Link href="/categories">Categories</Link>
+            </Button>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/about')} 
+              size={getNavButtonSize()}
+            >
+              <Link href="/about">About</Link>
+            </Button>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/contact')} 
+              size={getNavButtonSize()}
+            >
+              <Link href="/contact">Contact Us</Link>
+            </Button>
           </div>
 
           {/* Auth Buttons / User Profile */}
@@ -167,21 +184,51 @@ const Navigation = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white/95 backdrop-blur-sm rounded-b-3xl shadow-lg animate-slide-down border border-burgundy-100">
           <div className="px-4 pt-2 pb-4 space-y-1">
-            <Link href="/" className={mobileLinkClasses('/')} onClick={handleMobileLinkClick}>
-              Home
-            </Link>
-            <Link href="/shops" className={mobileLinkClasses('/shops')} onClick={handleMobileLinkClick}>
-              Shops
-            </Link>
-            <Link href="/categories" className={mobileLinkClasses('/categories')} onClick={handleMobileLinkClick}>
-              Categories
-            </Link>
-            <Link href="/about" className={mobileLinkClasses('/about')} onClick={handleMobileLinkClick}>
-              About
-            </Link>
-            <Link href="/contact" className={mobileLinkClasses('/contact')} onClick={handleMobileLinkClick}>
-              Contact Us
-            </Link>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/')} 
+              size="pill-sm" 
+              className="w-full justify-start"
+              onClick={handleMobileLinkClick}
+            >
+              <Link href="/">Home</Link>
+            </Button>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/shops')} 
+              size="pill-sm" 
+              className="w-full justify-start"
+              onClick={handleMobileLinkClick}
+            >
+              <Link href="/shops">Shops</Link>
+            </Button>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/categories')} 
+              size="pill-sm" 
+              className="w-full justify-start"
+              onClick={handleMobileLinkClick}
+            >
+              <Link href="/categories">Categories</Link>
+            </Button>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/about')} 
+              size="pill-sm" 
+              className="w-full justify-start"
+              onClick={handleMobileLinkClick}
+            >
+              <Link href="/about">About</Link>
+            </Button>
+            <Button 
+              asChild 
+              variant={getNavButtonVariant('/contact')} 
+              size="pill-sm" 
+              className="w-full justify-start"
+              onClick={handleMobileLinkClick}
+            >
+              <Link href="/contact">Contact Us</Link>
+            </Button>
           </div>
         </div>
       )}

@@ -943,8 +943,8 @@ export default function ShopPage({ params }: ShopPageProps) {
         <div className="flex gap-2">
           <Button 
             onClick={() => setActiveTab("products")} 
-            variant={activeTab === "products" ? "default" : "outline"}
-            className={`flex-1 ${activeTab === "products" ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50"}`}
+            variant={activeTab === "products" ? "primary" : "outline"}
+            className="flex-1"
             size="sm"
           >
             <Package className="w-4 h-4 mr-2" />
@@ -953,8 +953,8 @@ export default function ShopPage({ params }: ShopPageProps) {
           
           <Button 
             onClick={() => setActiveTab("about")} 
-            variant={activeTab === "about" ? "default" : "outline"}
-            className={`flex-1 ${activeTab === "about" ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50"}`}
+            variant={activeTab === "about" ? "primary" : "outline"}
+            className="flex-1"
             size="sm"
           >
             <Info className="w-4 h-4 mr-2" />
@@ -963,8 +963,8 @@ export default function ShopPage({ params }: ShopPageProps) {
 
           <Button 
             onClick={() => setActiveTab("contact")} 
-            variant={activeTab === "contact" ? "default" : "outline"}
-            className={`flex-1 ${activeTab === "contact" ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50"}`}
+            variant={activeTab === "contact" ? "primary" : "outline"}
+            className="flex-1"
             size="sm"
           >
             <MessageCircle className="w-4 h-4 mr-2" />

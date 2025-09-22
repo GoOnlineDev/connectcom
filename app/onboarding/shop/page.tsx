@@ -256,7 +256,7 @@ export default function ShopOnboardingPage() {
             <div className="flex justify-center mt-10 pt-6 border-t border-burgundy-200">
               <Button 
                 onClick={() => setStep(2)} 
-                className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-8 py-3 text-lg font-semibold shadow-lg transition-all duration-200 hover:scale-105"
+                variant="primary"
                 size="lg"
               >
                 Next: Shop Description →
@@ -312,14 +312,13 @@ export default function ShopOnboardingPage() {
               <Button 
                 variant="outline" 
                 onClick={() => setStep(1)}
-                className="border-2 border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50 px-6 py-2 text-base font-medium"
                 size="lg"
               >
                 ← Back
               </Button>
               <Button 
                 onClick={() => setStep(3)} 
-                className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-2 text-base font-medium shadow-md"
+                variant="primary"
                 size="lg"
               >
                 Next: Contact Information →
@@ -378,14 +377,13 @@ export default function ShopOnboardingPage() {
               <Button 
                 variant="outline" 
                 onClick={() => setStep(2)}
-                className="border-2 border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50 px-6 py-2 text-base font-medium"
                 size="lg"
               >
                 ← Back
               </Button>
               <Button 
                 onClick={() => setStep(4)} 
-                className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-2 text-base font-medium shadow-md"
+                variant="primary"
                 size="lg"
               >
                 Next: Final Details →
@@ -432,14 +430,13 @@ export default function ShopOnboardingPage() {
               <Button 
                 variant="outline" 
                 onClick={() => setStep(3)}
-                className="border-2 border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50 px-6 py-2 text-base font-medium"
                 size="lg"
               >
                 ← Back
               </Button>
               <Button 
                 type="submit" 
-                className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-2 text-base font-medium shadow-md"
+                variant="primary"
                 size="lg"
                 disabled={isSubmitting}
               >

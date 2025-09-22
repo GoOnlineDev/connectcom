@@ -102,25 +102,18 @@ export default function Home() {
         </div>
       </section>
       
-      {/* CTA Section - Enhanced with better responsiveness */}
-      <section className="py-12 md:py-16 lg:py-20 bg-burgundy-900 text-white">
+      {/* CTA Section - Minimalistic and simple with redesigned buttons */}
+      <section className="py-10 bg-burgundy-900 text-white">
         <div className="container px-4 mx-auto">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to Join ConnectCom?</h2>
-            <p className="mb-6 md:mb-8 opacity-90 max-w-2xl mx-auto">
-              Whether you're looking to shop or sell, ConnectCom offers a seamless experience for all your business needs.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
-              <Link href="/shops">
-                <Button className="w-full sm:w-auto font-semibold">
-                  Start Shopping
-                </Button>
-              </Link>
-              <Link href="/onboarding/shop">
-                <Button variant="outline" className="w-full sm:w-auto">
-                  Register Your Shop
-                </Button>
-              </Link>
+          <div className="flex flex-col items-center justify-center text-center gap-4">
+            <h2 className="text-xl md:text-2xl font-semibold">Ready to join?</h2>
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center">
+              <Button asChild size="pill-lg" variant="secondary" className="w-full sm:w-auto bg-white text-burgundy-900 hover:bg-beige-100">
+                <Link href="/shops">Start Shopping</Link>
+              </Button>
+              <Button asChild variant="primary" size="pill-lg" className="w-full sm:w-auto border border-white">
+                <Link href="/onboarding/shop">Register Shop</Link>
+              </Button>
             </div>
           </div>
         </div>
