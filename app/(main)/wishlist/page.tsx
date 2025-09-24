@@ -148,9 +148,9 @@ export default function WishlistPage() {
   // Empty wishlist state
   if (!allWishlistItems || allWishlistItems.length === 0) {
     return (
-      <div className="min-h-screen bg-beige-50 pt-20">
+      <div className="min-h-screen bg-beige-50">
         {/* Header */}
-        <div className="fixed top-0 left-0 right-0 bg-white border-b border-burgundy-100 z-40 shadow-sm">
+        <div className="sticky top-0 bg-white border-b border-burgundy-100 z-20 shadow-sm">
           <div className="container mx-auto px-4 py-3 sm:py-4">
             <Link 
               href="/shops" 
@@ -201,9 +201,9 @@ export default function WishlistPage() {
   const serviceCount = allWishlistItems.filter(item => item.itemType === 'service').length;
 
   return (
-    <div className="min-h-screen bg-beige-50 pt-20 pb-10">
+    <div className="min-h-screen bg-beige-50 pb-10">
       {/* Header */}
-      <div className="fixed top-0 left-0 right-0 bg-white border-b border-burgundy-100 z-40 shadow-sm">
+      <div className="sticky top-0 bg-white border-b border-burgundy-100 z-20 shadow-sm">
         <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <Link 

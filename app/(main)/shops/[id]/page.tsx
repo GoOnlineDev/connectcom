@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
@@ -43,6 +43,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { slugify } from '@/lib/utils';
 
 interface ShopPageProps {
   params: Promise<{
@@ -98,6 +99,38 @@ export default function ShopPage({ params }: ShopPageProps) {
   const updateService = useMutation(api.services.updateService);
   const deleteProduct = useMutation(api.products.deleteProduct);
   const deleteService = useMutation(api.services.deleteService);
+
+  // Inject dynamic meta tags for sharing previews (always declare the hook; guard inside)
+  useEffect(() => {
+    if (!shopData) return;
+    const title = `${shopData.shopName} | ConnectCom`;
+    const description = shopData.description || `Explore ${shopData.shopName} on ConnectCom`;
+    const image = shopData.shopImageUrl || shopData.shopLogoUrl || '/connectcom.png';
+    const url = `${window.location.origin}/shops/${shopData._id}/${slugify(shopData.shopName)}`;
+
+    const ensureMeta = (name: string, property: boolean, content: string) => {
+      const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+      let el = document.querySelector(selector) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement('meta');
+        if (property) el.setAttribute('property', name); else el.setAttribute('name', name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+
+    document.title = title;
+    ensureMeta('description', false, description);
+    ensureMeta('og:title', true, title);
+    ensureMeta('og:description', true, description);
+    ensureMeta('og:type', true, 'website');
+    ensureMeta('og:url', true, url);
+    ensureMeta('og:image', true, image);
+    ensureMeta('twitter:card', false, 'summary_large_image');
+    ensureMeta('twitter:title', false, title);
+    ensureMeta('twitter:description', false, description);
+    ensureMeta('twitter:image', false, image);
+  }, [shopData]);
 
   // Loading state
   if (shopData === undefined || shelves === undefined || currentUser === undefined) {
@@ -396,6 +429,13 @@ export default function ShopPage({ params }: ShopPageProps) {
                 ))}
               </div>
             )}
+            <div className="mt-4 flex justify-center">
+              <ShareShopLink
+                id={resolvedParams.id as string}
+                name={shopData.shopName}
+                imageUrl={shopData.shopImageUrl || shopData.shopLogoUrl}
+              />
+            </div>
           </div>
         </div>
         <div className="container mx-auto px-4 py-8">
@@ -419,7 +459,7 @@ export default function ShopPage({ params }: ShopPageProps) {
               
                               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <div className="flex items-center justify-between mb-6">
-                    <TabsList className="grid grid-cols-3 bg-beige-100 border border-burgundy-200">
+                    <TabsList className="hidden lg:grid grid-cols-3 bg-beige-100 border border-burgundy-200">
                       <TabsTrigger 
                         value="products" 
                         className="flex items-center gap-2 data-[state=active]:bg-burgundy-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
@@ -941,6 +981,11 @@ export default function ShopPage({ params }: ShopPageProps) {
       {/* Mobile Sticky Action Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-burgundy-200 shadow-lg p-4 lg:hidden">
         <div className="flex gap-2">
+          <ShareShopLink
+            id={resolvedParams.id as string}
+            name={shopData.shopName}
+            imageUrl={shopData.shopImageUrl || shopData.shopLogoUrl}
+          />
           <Button 
             onClick={() => setActiveTab("products")} 
             variant={activeTab === "products" ? "primary" : "outline"}
@@ -974,7 +1019,7 @@ export default function ShopPage({ params }: ShopPageProps) {
       </div>
 
       {/* Add bottom padding for mobile action bar */}
-      <div className="h-20 lg:hidden"></div>
+      <div className="h-24 lg:hidden"></div>
 
       {/* Item Detail Modal */}
       <ItemDetailModal
@@ -999,6 +1044,35 @@ export default function ShopPage({ params }: ShopPageProps) {
         )}
       </ItemDetailModal>
     </div>
+  );
+}
+function ShareShopLink({ id, name, imageUrl }: { id: string; name: string; imageUrl?: string }) {
+  const onShare = async () => {
+    const url = `${window.location.origin}/shops/${id}/${slugify(name)}`;
+    const title = name;
+    const text = `Check out ${name} on ConnectCom`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+      } catch {
+        // user cancelled
+      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('Link copied to clipboard');
+    } catch {
+      prompt('Copy this link:', url);
+    }
+  };
+
+  return (
+    <Button onClick={onShare} variant="outline" className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50">
+      Share Link
+    </Button>
   );
 }
 

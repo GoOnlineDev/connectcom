@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { slugify } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -56,7 +57,7 @@ export default function FeaturedShops() {
           className="min-w-[80%] md:min-w-[calc(50%-8px)] lg:min-w-0 lg:w-auto snap-center block"
         >
           <Link 
-            href={`/shops/${shop._id}`} 
+            href={`/shops/${shop._id}/${slugify(shop.shopName)}`} 
             className="block transform transition-transform hover:scale-105"
           >
             <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">

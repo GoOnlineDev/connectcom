@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { slugify } from '@/lib/utils';
 import { useRecentShops } from '@/hooks/useData';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from "framer-motion";
@@ -51,7 +52,7 @@ export default function RecentShops() {
           className="min-w-[80%] md:min-w-[calc(50%-12px)] lg:min-w-0 lg:w-auto snap-center block"
         >
           <Link 
-            href={`/shops/${shop._id}`} 
+            href={`/shops/${shop._id}/${slugify(shop.shopName)}`} 
             className="block transform transition-transform hover:scale-105"
           >
             <div className="relative h-32 overflow-hidden">

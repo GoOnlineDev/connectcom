@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Link from "next/link";
+import { slugify } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Store, 
@@ -399,7 +400,7 @@ export default function AdminShopsPage() {
                       
                       {/* Actions */}
                       <div className="flex items-center gap-2 ml-4">
-                        <Link href={`/shops/${shop._id}`}>
+                        <Link href={`/shops/${shop._id}/${slugify(shop.shopName)}`}>
                           <Button variant="outline" size="sm" className="border-burgundy/30 text-burgundy hover:bg-burgundy/10">
                             <Eye className="w-4 h-4 mr-1" />
                             View

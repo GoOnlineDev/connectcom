@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { slugify } from '@/lib/utils';
 import { useFeaturedShops, useCategories, useSearchShops } from '@/hooks/useData';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -93,7 +94,7 @@ export default function ShopsPage() {
                     ))}
                   </div>
                 )}
-                <Link href={`/shops/${shop._id}`}>
+                <Link href={`/shops/${shop._id}/${slugify(shop.shopName)}`}>
                   <Button className="bg-white text-burgundy-900 font-semibold px-5 py-2 rounded-full shadow hover:bg-beige-100 hover:text-burgundy-800 transition text-sm">
                     View Shop
                   </Button>
@@ -201,7 +202,7 @@ export default function ShopsPage() {
               {shops.data.map((shop: any) => (
                 <Link 
                   key={shop._id} 
-                  href={`/shops/${shop._id}`}
+                  href={`/shops/${shop._id}/${slugify(shop.shopName)}`}
                   className="block transform transition-transform hover:scale-105"
                 >
                   <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">

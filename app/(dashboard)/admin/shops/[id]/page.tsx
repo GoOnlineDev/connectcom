@@ -30,6 +30,7 @@ import {
   Settings
 } from 'lucide-react';
 import Link from 'next/link';
+import { slugify } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 import {
@@ -200,7 +201,7 @@ export default function AdminShopDetailsPage({ params }: AdminShopDetailsPagePro
             </div>
             
             <div className="flex items-center gap-3">
-              <Link href={`/shops/${shop._id}`}>
+              <Link href={`/shops/${shop._id}/${slugify(shop.shopName)}`}>
                 <Button variant="outline" className="border-burgundy text-burgundy hover:bg-burgundy/10">
                   <Eye className="w-4 h-4 mr-2" />
                   View Public Page

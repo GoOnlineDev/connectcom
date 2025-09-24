@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { slugify } from '@/lib/utils';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -236,7 +237,7 @@ export default function CategoryPageClient({ categoryName }: CategoryPageClientP
             {sortedShops.map((shop) => (
               <Link 
                 key={shop._id} 
-                href={`/shops/${shop._id}`}
+                href={`/shops/${shop._id}/${slugify(shop.shopName)}`}
                 className="block transform transition-transform hover:scale-105"
               >
                 <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">

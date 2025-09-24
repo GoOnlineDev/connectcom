@@ -341,9 +341,17 @@ export const searchShops = query({
 
     // Filter by category
     if (args.category) {
-      shops = shops.filter(shop => 
-        shop.categories?.includes(args.category!)
-      );
+      const normalize = (s: string) => s.trim().toLowerCase();
+      const slugify = (s: string) => normalize(s).replace(/\s+/g, "-");
+      const argLower = normalize(args.category!);
+      const argSlug = slugify(args.category!);
+      shops = shops.filter((shop) => {
+        const categories = shop.categories || [];
+        return categories.some((cat) => {
+          const catLower = normalize(cat);
+          return catLower === argLower || slugify(cat) === argSlug;
+        });
+      });
     }
 
     // Filter by shop type
@@ -443,9 +451,17 @@ export const getShopsByCategory = query({
       .collect();
 
     // Filter by category
-    const categoryShops = shops.filter(shop => 
-      shop.categories?.includes(args.category)
-    );
+    const normalize = (s: string) => s.trim().toLowerCase();
+    const slugify = (s: string) => normalize(s).replace(/\s+/g, "-");
+    const argLower = normalize(args.category);
+    const argSlug = slugify(args.category);
+    const categoryShops = shops.filter((shop) => {
+      const categories = shop.categories || [];
+      return categories.some((cat) => {
+        const catLower = normalize(cat);
+        return catLower === argLower || slugify(cat) === argSlug;
+      });
+    });
 
     return categoryShops.slice(0, limit);
   },
