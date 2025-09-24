@@ -39,6 +39,7 @@ import {
   Crown,
   Upload,
   X,
+  Share2,
   Image as ImageIcon
 } from 'lucide-react';
 import Link from 'next/link';
@@ -389,14 +390,22 @@ export default function ShopPage({ params }: ShopPageProps) {
     <div className="min-h-screen bg-beige">
       {/* Back Navigation */}
       <div className="bg-white border-b border-burgundy-100">
-        <div className="container mx-auto px-4 py-4">
-          <Link 
-            href="/shops" 
-            className="inline-flex items-center gap-2 text-burgundy-700 hover:text-burgundy-900 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Shops
-          </Link>
+        <div className="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
+          <div className="flex items-center justify-between">
+            <Link 
+              href="/shops" 
+              className="inline-flex items-center gap-2 text-burgundy-700 hover:text-burgundy-900 transition-colors font-medium"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Shops
+            </Link>
+            <div className="hidden lg:block w-px h-6 bg-burgundy-200 mx-4"></div>
+            <ShareShopLink
+              id={resolvedParams.id as string}
+              name={shopData.shopName}
+              imageUrl={shopData.shopImageUrl || shopData.shopLogoUrl}
+            />
+          </div>
         </div>
       </div>
 
@@ -429,16 +438,9 @@ export default function ShopPage({ params }: ShopPageProps) {
                 ))}
               </div>
             )}
-            <div className="mt-4 flex justify-center">
-              <ShareShopLink
-                id={resolvedParams.id as string}
-                name={shopData.shopName}
-                imageUrl={shopData.shopImageUrl || shopData.shopLogoUrl}
-              />
-            </div>
           </div>
         </div>
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 lg:px-6 py-6 lg:py-8">
 
 
 
@@ -458,104 +460,144 @@ export default function ShopPage({ params }: ShopPageProps) {
               )}
               
                               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <div className="flex items-center justify-between mb-6">
-                    <TabsList className="hidden lg:grid grid-cols-3 bg-beige-100 border border-burgundy-200">
-                      <TabsTrigger 
-                        value="products" 
-                        className="flex items-center gap-2 data-[state=active]:bg-burgundy-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
-                      >
-                        <Package className="w-4 h-4" />
-                        {shopData.shopType === 'product_shop' ? 'Products' : 'Services'}
-                      </TabsTrigger>
-                      <TabsTrigger 
-                        value="about" 
-                        className="flex items-center gap-2 data-[state=active]:bg-burgundy-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
-                      >
-                        <Info className="w-4 h-4" />
-                        About Shop
-                      </TabsTrigger>
-                      <TabsTrigger 
-                        value="contact" 
-                        className="flex items-center gap-2 data-[state=active]:bg-burgundy-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
-                      >
-                        <MessageCircle className="w-4 h-4" />
-                        Contact Shop
-                      </TabsTrigger>
-                    </TabsList>
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-8 mb-6 lg:mb-8">
+                    <div className="flex items-center">
+                      <TabsList className="hidden lg:grid grid-cols-3 bg-beige-100 border border-burgundy-200 shadow-sm">
+                        <TabsTrigger 
+                          value="products" 
+                          className="flex items-center gap-2 data-[state=active]:bg-burgundy-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 px-4 py-2"
+                        >
+                          <Package className="w-4 h-4" />
+                          {shopData.shopType === 'product_shop' ? 'Products' : 'Services'}
+                        </TabsTrigger>
+                        <TabsTrigger 
+                          value="about" 
+                          className="flex items-center gap-2 data-[state=active]:bg-burgundy-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 px-4 py-2"
+                        >
+                          <Info className="w-4 h-4" />
+                          About Shop
+                        </TabsTrigger>
+                        <TabsTrigger 
+                          value="contact" 
+                          className="flex items-center gap-2 data-[state=active]:bg-burgundy-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 px-4 py-2"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          Contact Shop
+                        </TabsTrigger>
+                      </TabsList>
+                    </div>
                   
-                  {/* Edit Mode Toggle - Only show for shop owners */}
+                  {/* Desktop separator */}
                   {isOwner && isVendor && (
-                    <Button
-                      onClick={() => setIsEditMode(!isEditMode)}
-                      variant={isEditMode ? "default" : "outline"}
-                      className={isEditMode ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50"}
-                    >
-                      <Edit3 className="w-4 h-4 mr-2" />
-                      {isEditMode ? 'Exit Edit' : 'Edit Shop'}
-                    </Button>
+                    <>
+                      <div className="hidden lg:block w-px h-8 bg-burgundy-200"></div>
+                      <div className="flex items-center">
+                        <Button
+                          onClick={() => setIsEditMode(!isEditMode)}
+                          variant={isEditMode ? "default" : "outline"}
+                          className={`${isEditMode ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50"} lg:self-start w-full sm:w-auto`}
+                          size={"sm"}
+                        >
+                          <Edit3 className="w-4 h-4 mr-2" />
+                          {isEditMode ? 'Exit Edit' : 'Edit Shop'}
+                        </Button>
+                      </div>
+                    </>
                   )}
                 </div>
 
                 {/* Products/Services Tab */}
                 <TabsContent value="products" className="space-y-6">
-                  {/* Subscription Limits Info */}
-                  {isOwner && isVendor && shelfLimits && (
-                    <Card className="border-burgundy-200 bg-gradient-to-r from-burgundy-50 to-burgundy-100">
-                      <CardHeader>
-                        <CardTitle className="text-burgundy-900 flex items-center gap-2">
-                          <Crown className="w-5 h-5" />
-                          Subscription Limits
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-burgundy-700">
-                              {shelfLimits.currentShelfCount}/{shelfLimits.maxShelves}
+                  {/* Subscription Info */}
+                  {isOwner && isVendor && (
+                    <>
+                      {isEditMode && shelfLimits ? (
+                        // Detailed subscription limits in edit mode
+                        <Card className="border-burgundy-200 bg-gradient-to-r from-burgundy-50 to-burgundy-100">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="text-burgundy-900 flex items-center gap-2 text-lg">
+                              <Crown className="w-5 h-5" />
+                              Subscription Limits
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="pt-0">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                              <div className="text-center p-3 bg-white/50 rounded-lg">
+                                <div className="text-xl sm:text-2xl font-bold text-burgundy-700">
+                                  {shelfLimits.currentShelfCount}/{shelfLimits.maxShelves}
+                                </div>
+                                <div className="text-burgundy-700 text-xs sm:text-sm font-medium">Shelves Used</div>
+                              </div>
+                              <div className="text-center p-3 bg-white/50 rounded-lg">
+                                <div className="text-base sm:text-lg font-semibold text-burgundy-700 capitalize">
+                                  {shelfLimits.packageName}
+                                </div>
+                                <div className="text-burgundy-700 text-xs sm:text-sm font-medium">Current Plan</div>
+                              </div>
+                              <div className="text-center p-3 bg-white/50 rounded-lg flex items-center justify-center">
+                                {shelfLimits.canCreate ? (
+                                  <Badge className="bg-green-100 text-green-800 border-green-200 text-xs px-2 py-1">
+                                    Can Add Shelves
+                                  </Badge>
+                                ) : (
+                                  <Badge variant="destructive" className="text-xs px-2 py-1">
+                                    Shelf Limit Reached
+                                  </Badge>
+                                )}
+                              </div>
                             </div>
-                            <div className="text-burgundy-700">Shelves Used</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-lg font-semibold text-burgundy-700 capitalize">
-                              {shelfLimits.packageName}
+                          </CardContent>
+                        </Card>
+                      ) : (
+                        // Simple subscription status when not in edit mode
+                        <Card className="border-burgundy-200 bg-gradient-to-r from-beige-50 to-beige-100">
+                          <CardContent className="py-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Crown className="w-4 h-4 text-burgundy-600" />
+                                <span className="text-sm font-medium text-burgundy-900">
+                                  Current Plan: {shelfLimits?.packageName ? 
+                                    <span className="capitalize">{shelfLimits.packageName}</span> : 
+                                    'Free Subscription'
+                                  }
+                                </span>
+                              </div>
+                              <Button
+                                onClick={() => setIsEditMode(true)}
+                                variant="outline"
+                                size="sm"
+                                className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                              >
+                                <Edit3 className="w-3 h-3 mr-1" />
+                                View Details
+                              </Button>
                             </div>
-                            <div className="text-burgundy-700">Current Plan</div>
-                          </div>
-                          <div className="text-center">
-                            {shelfLimits.canCreate ? (
-                              <Badge className="bg-green-100 text-green-800 border-green-200">
-                                Can Add Shelves
-                              </Badge>
-                            ) : (
-                              <Badge variant="destructive">
-                                Shelf Limit Reached
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </>
                   )}
 
                   {/* Edit Mode Actions */}
                   {isEditMode && isOwner && isVendor && (
                     <Card className="border-burgundy-200 bg-burgundy-50">
-                      <CardHeader>
-                        <CardTitle className="text-burgundy-900 flex items-center gap-2">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-burgundy-900 flex items-center gap-2 text-lg">
                           <Settings className="w-5 h-5" />
                           Manage {shopData.shopType === 'product_shop' ? 'Products' : 'Services'}
                         </CardTitle>
-                        <CardDescription>
+                        <CardDescription className="text-sm">
                           Organize your shop with shelves and add {shopData.shopType === 'product_shop' ? 'products' : 'services'}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>
-                        <div className="flex flex-wrap gap-3">
+                      <CardContent className="pt-0">
+                        <div className="flex flex-col sm:flex-row gap-3">
                           <Dialog open={isShelfDialogOpen} onOpenChange={setIsShelfDialogOpen}>
                             <DialogTrigger asChild>
                               <Button 
-                                className="bg-burgundy-600 hover:bg-burgundy-700"
+                                className="bg-burgundy-600 hover:bg-burgundy-700 w-full sm:w-auto"
                                 disabled={!shelfLimits?.canCreate}
+                                size={"sm"}
                               >
                                 <Plus className="w-4 h-4 mr-2" />
                                 Add New Shelf
@@ -603,7 +645,11 @@ export default function ShopPage({ params }: ShopPageProps) {
                           {shelves && shelves.length > 0 && (
                             <Dialog open={isItemDialogOpen} onOpenChange={setIsItemDialogOpen}>
                               <DialogTrigger asChild>
-                                <Button variant="outline" className="border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50">
+                                <Button 
+                                  variant="outline" 
+                                  className="border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50 w-full sm:w-auto"
+                                  size={"sm"}
+                                >
                                   <Plus className="w-4 h-4 mr-2" />
                                   Add {shopData.shopType === 'product_shop' ? 'Product' : 'Service'}
                                 </Button>
@@ -979,47 +1025,42 @@ export default function ShopPage({ params }: ShopPageProps) {
       </div>
 
       {/* Mobile Sticky Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-burgundy-200 shadow-lg p-4 lg:hidden">
-        <div className="flex gap-2">
-          <ShareShopLink
-            id={resolvedParams.id as string}
-            name={shopData.shopName}
-            imageUrl={shopData.shopImageUrl || shopData.shopLogoUrl}
-          />
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-burgundy-200 shadow-lg p-3 lg:hidden">
+        <div className="grid grid-cols-3 gap-2">
           <Button 
             onClick={() => setActiveTab("products")} 
-            variant={activeTab === "products" ? "primary" : "outline"}
-            className="flex-1"
+            variant={activeTab === "products" ? "default" : "outline"}
+            className={`flex-1 ${activeTab === "products" ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-200 text-burgundy-700 hover:bg-burgundy-50"}`}
             size="sm"
           >
-            <Package className="w-4 h-4 mr-2" />
-            {shopData.shopType === 'product_shop' ? 'Products' : 'Services'}
+            <Package className="w-4 h-4 mr-1" />
+            <span className="text-xs">{shopData.shopType === 'product_shop' ? 'Products' : 'Services'}</span>
           </Button>
           
           <Button 
             onClick={() => setActiveTab("about")} 
-            variant={activeTab === "about" ? "primary" : "outline"}
-            className="flex-1"
+            variant={activeTab === "about" ? "default" : "outline"}
+            className={`flex-1 ${activeTab === "about" ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-200 text-burgundy-700 hover:bg-burgundy-50"}`}
             size="sm"
           >
-            <Info className="w-4 h-4 mr-2" />
-            About
+            <Info className="w-4 h-4 mr-1" />
+            <span className="text-xs">About</span>
           </Button>
 
           <Button 
             onClick={() => setActiveTab("contact")} 
-            variant={activeTab === "contact" ? "primary" : "outline"}
-            className="flex-1"
+            variant={activeTab === "contact" ? "default" : "outline"}
+            className={`flex-1 ${activeTab === "contact" ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-200 text-burgundy-700 hover:bg-burgundy-50"}`}
             size="sm"
           >
-            <MessageCircle className="w-4 h-4 mr-2" />
-            Contact
+            <MessageCircle className="w-4 h-4 mr-1" />
+            <span className="text-xs">Contact</span>
           </Button>
         </div>
       </div>
 
       {/* Add bottom padding for mobile action bar */}
-      <div className="h-24 lg:hidden"></div>
+      <div className="h-20 lg:hidden"></div>
 
       {/* Item Detail Modal */}
       <ItemDetailModal
@@ -1070,9 +1111,13 @@ function ShareShopLink({ id, name, imageUrl }: { id: string; name: string; image
   };
 
   return (
-    <Button onClick={onShare} variant="outline" className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50">
-      Share Link
-    </Button>
+    <button 
+      onClick={onShare} 
+      className="inline-flex items-center justify-center p-2 rounded-lg text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 transition-colors"
+      title="Share shop link"
+    >
+      <Share2 className="w-5 h-5" />
+    </button>
   );
 }
 
