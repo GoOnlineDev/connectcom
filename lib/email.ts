@@ -78,22 +78,41 @@ export type SendEmailArgs = {
 export async function sendBrandedEmail({ to, subject, html, text, fromName = 'ConnectCom Platform', replyTo }: SendEmailArgs) {
   const transporter = getEmailTransporter();
   const from = `${fromName} <${process.env.EMAIL}>`;
-  const logoPath = path.join(process.cwd(), process.env.EMAIL_LOGO_PATH || 'public/logo.png');
-  await transporter.sendMail({
-    from,
-    to,
-    subject,
-    html,
-    text,
-    replyTo,
-    attachments: [
-      {
-        filename: 'logo.png',
-        path: logoPath,
-        cid: 'connectcom-logo',
-      },
-    ],
-  });
+  // Prefer hosted URL for logo to avoid filesystem access in serverless envs
+  const hostedLogoUrl = process.env.EMAIL_LOGO_URL || (
+    process.env.NEXT_PUBLIC_APP_URL ? `${process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')}/logo.png` : undefined
+  );
+  const localLogoPath = path.join(process.cwd(), process.env.EMAIL_LOGO_PATH || 'public/logo.png');
+
+  const attachments = [] as Array<{ filename: string; path: string; cid: string }>
+  if (hostedLogoUrl) {
+    attachments.push({ filename: 'logo.png', path: hostedLogoUrl, cid: 'connectcom-logo' });
+  } else {
+    attachments.push({ filename: 'logo.png', path: localLogoPath, cid: 'connectcom-logo' });
+  }
+
+  try {
+    await transporter.sendMail({
+      from,
+      to,
+      subject,
+      html,
+      text,
+      replyTo,
+      attachments,
+    });
+  } catch (err: any) {
+    // Fallback: retry without attachments if logo path fails (e.g., ENOENT in serverless)
+    console.error('Email send failed with attachments, retrying without logo. Reason:', err);
+    await transporter.sendMail({
+      from,
+      to,
+      subject,
+      html: html.replace('cid:connectcom-logo', hostedLogoUrl || ''),
+      text,
+      replyTo,
+    });
+  }
 }
 
 
