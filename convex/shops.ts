@@ -363,6 +363,47 @@ export const searchShops = query({
   },
 });
 
+// Update shop basic details (description, contact info, etc.)
+export const updateShop = mutation({
+  args: {
+    shopId: v.id("shops"),
+    description: v.optional(v.string()),
+    contactInfo: v.optional(
+      v.object({
+        email: v.optional(v.string()),
+        phone: v.optional(v.string()),
+        website: v.optional(v.string()),
+      })
+    ),
+  },
+  returns: v.object({
+    success: v.boolean(),
+    error: v.optional(v.string()),
+  }),
+  handler: async (ctx, args) => {
+    const shop = await ctx.db.get(args.shopId);
+    if (!shop) {
+      return { success: false, error: "Shop not found" };
+    }
+
+    const update: any = { updatedAt: Date.now() };
+    if (args.description !== undefined) {
+      update.description = args.description;
+    }
+    if (args.contactInfo !== undefined) {
+      // Merge contact info with existing to preserve fields not provided
+      const existing = shop.contactInfo || {};
+      update.contactInfo = {
+        ...existing,
+        ...args.contactInfo,
+      };
+    }
+
+    await ctx.db.patch(args.shopId, update);
+    return { success: true };
+  },
+});
+
 // Get featured shops (e.g., newest or most popular)
 export const getFeaturedShops = query({
   args: {

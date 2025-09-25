@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/components/ui/use-toast';
 import { ProductImageUploadButton } from '@/utils/uploadthing';
 import { ItemDetailModal } from '@/components/ui/item-detail-modal';
@@ -81,7 +82,58 @@ export default function ShopPage({ params }: ShopPageProps) {
   const shopData = useQuery(api.shops.getShopById, {
     shopId: resolvedParams.id as Id<"shops">
   });
-  
+  // About/Contact Edit state
+  const [aboutDraft, setAboutDraft] = useState("");
+  const [contactDraft, setContactDraft] = useState({ email: "", phone: "", website: "" });
+  const [isAboutEditing, setIsAboutEditing] = useState(false);
+  const [isContactEditing, setIsContactEditing] = useState(false);
+  const updateShop = useMutation(api.shops.updateShop);
+
+  useEffect(() => {
+    if (shopData) {
+      setAboutDraft(shopData.description || "");
+      setContactDraft({
+        email: shopData.contactInfo?.email || "",
+        phone: shopData.contactInfo?.phone || "",
+        website: shopData.contactInfo?.website || "",
+      });
+    }
+  }, [shopData]);
+
+  const saveAbout = async () => {
+    try {
+      const result = await updateShop({ shopId: resolvedParams.id as Id<"shops">, description: aboutDraft.trim() });
+      if (result.success) {
+        toast({ title: "Saved", description: "About updated" });
+        setIsAboutEditing(false);
+      } else {
+        toast({ title: "Error", description: result.error || "Failed to save about", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Error", description: "Failed to save about", variant: "destructive" });
+    }
+  };
+
+  const saveContact = async () => {
+    try {
+      const result = await updateShop({ 
+        shopId: resolvedParams.id as Id<"shops">, 
+        contactInfo: {
+          email: contactDraft.email.trim() || undefined,
+          phone: contactDraft.phone.trim() || undefined,
+          website: contactDraft.website.trim() || undefined,
+        }
+      });
+      if (result.success) {
+        toast({ title: "Saved", description: "Contact info updated" });
+        setIsContactEditing(false);
+      } else {
+        toast({ title: "Error", description: result.error || "Failed to save contact info", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Error", description: "Failed to save contact info", variant: "destructive" });
+    }
+  };
   const shelves = useQuery(api.shelves.getShopShelves, {
     shopId: resolvedParams.id as Id<"shops">
   });
@@ -230,7 +282,7 @@ export default function ShopPage({ params }: ShopPageProps) {
             productId: editingItem._id,
             name: itemName.trim(),
             description: itemDescription.trim() || undefined,
-            price: Math.round(parseFloat(itemPrice) * 100),
+            price: parseInt(itemPrice),
             quantityAvailable: itemQuantity ? parseInt(itemQuantity) : undefined,
             imageUrls: uploadedImages.length > 0 ? uploadedImages : undefined,
           });
@@ -260,7 +312,7 @@ export default function ShopPage({ params }: ShopPageProps) {
             shelfId: selectedShelfId,
             name: itemName.trim(),
             description: itemDescription.trim() || undefined,
-            price: Math.round(parseFloat(itemPrice) * 100), // Convert to cents
+            price: parseInt(itemPrice),
             quantityAvailable: itemQuantity ? parseInt(itemQuantity) : undefined,
             imageUrls: uploadedImages.length > 0 ? uploadedImages : undefined,
           });
@@ -612,7 +664,7 @@ export default function ShopPage({ params }: ShopPageProps) {
                               </DialogHeader>
                               <div className="space-y-4">
                                 <div>
-                                  <Label htmlFor="shelfName">Shelf Name</Label>
+                                  <Label htmlFor="shelfName" className="text-white">Shelf Name</Label>
                                   <Input
                                     id="shelfName"
                                     value={shelfName}
@@ -621,7 +673,7 @@ export default function ShopPage({ params }: ShopPageProps) {
                                   />
                                 </div>
                                 <div>
-                                  <Label htmlFor="shelfDescription">Description (Optional)</Label>
+                                  <Label htmlFor="shelfDescription" className="text-white">Description (Optional)</Label>
                                   <Textarea
                                     id="shelfDescription"
                                     value={shelfDescription}
@@ -663,10 +715,10 @@ export default function ShopPage({ params }: ShopPageProps) {
                                     {isEditingItem ? 'Update the' : 'Add a new'} {shopData.shopType === 'product_shop' ? 'product' : 'service'} {isEditingItem ? 'details' : 'to one of your shelves'}
                                   </DialogDescription>
                                 </DialogHeader>
-                                <div className="space-y-4 overflow-y-auto flex-1 pr-2">
+                                <div className="space-y-4 overflow-y-auto flex-1 pr-2 scrollbar-hide">
                                   {!isEditingItem && (
                                     <div>
-                                      <Label htmlFor="shelf">Select Shelf</Label>
+                                      <Label htmlFor="shelf" className="text-white">Select Shelf</Label>
                                       <select
                                         id="shelf"
                                         value={selectedShelfId || ""}
@@ -683,7 +735,7 @@ export default function ShopPage({ params }: ShopPageProps) {
                                     </div>
                                   )}
                                   <div>
-                                    <Label htmlFor="itemName">{shopData.shopType === 'product_shop' ? 'Product' : 'Service'} Name</Label>
+                                    <Label htmlFor="itemName" className="text-white">{shopData.shopType === 'product_shop' ? 'Product' : 'Service'} Name</Label>
                                     <Input
                                       id="itemName"
                                       value={itemName}
@@ -692,7 +744,7 @@ export default function ShopPage({ params }: ShopPageProps) {
                                     />
                                   </div>
                                   <div>
-                                    <Label htmlFor="itemDescription">Description</Label>
+                                    <Label htmlFor="itemDescription" className="text-white">Description</Label>
                                     <Textarea
                                       id="itemDescription"
                                       value={itemDescription}
@@ -704,7 +756,7 @@ export default function ShopPage({ params }: ShopPageProps) {
 
                                                                     {/* Image Upload Section */}
                                   <div>
-                                    <Label>Images (Optional)</Label>
+                                    <Label className="text-white">Images (Optional)</Label>
                                     <div className="space-y-4">
                                       <ProductImageUploadButton
                                         endpoint="productImageUploader"
@@ -760,18 +812,18 @@ export default function ShopPage({ params }: ShopPageProps) {
                                   {shopData.shopType === 'product_shop' ? (
                                     <div className="grid grid-cols-2 gap-4">
                                       <div>
-                                        <Label htmlFor="itemPrice">Price ($)</Label>
+                                        <Label htmlFor="itemPrice" className="text-white">Price (UGX)</Label>
                                         <Input
                                           id="itemPrice"
                                           type="number"
-                                          step="0.01"
+                                          step="1"
                                           value={itemPrice}
                                           onChange={(e) => setItemPrice(e.target.value)}
-                                          placeholder="0.00"
+                                          placeholder="0"
                                         />
                                       </div>
                                       <div>
-                                        <Label htmlFor="itemQuantity">Quantity Available</Label>
+                                        <Label htmlFor="itemQuantity" className="text-white">Quantity Available</Label>
                                         <Input
                                           id="itemQuantity"
                                           type="number"
@@ -784,7 +836,7 @@ export default function ShopPage({ params }: ShopPageProps) {
                                   ) : (
                                     <div className="grid grid-cols-2 gap-4">
                                       <div>
-                                        <Label htmlFor="itemDuration">Duration</Label>
+                                        <Label htmlFor="itemDuration" className="text-white">Duration</Label>
                                         <Input
                                           id="itemDuration"
                                           value={itemDuration}
@@ -793,7 +845,7 @@ export default function ShopPage({ params }: ShopPageProps) {
                                         />
                                       </div>
                                       <div>
-                                        <Label htmlFor="itemPricing">Pricing</Label>
+                                        <Label htmlFor="itemPricing" className="text-white">Pricing</Label>
                                         <Input
                                           id="itemPricing"
                                           value={itemPricing}
@@ -873,17 +925,39 @@ export default function ShopPage({ params }: ShopPageProps) {
                 <TabsContent value="about" className="space-y-6">
                   <Card className="border-burgundy-200">
                     <CardHeader>
-                      <CardTitle className="text-burgundy-900">About {shopData.shopName}</CardTitle>
+                      <div className="flex items-center justify-between gap-2">
+                        <CardTitle className="text-burgundy-900">About {shopData.shopName}</CardTitle>
+                        {isOwner && isVendor && isEditMode && (
+                          <Button
+                            size={"sm"}
+                            variant={isAboutEditing ? "default" : "outline"}
+                            className={isAboutEditing ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"}
+                            onClick={() => setIsAboutEditing(!isAboutEditing)}
+                          >
+                            <Edit3 className="w-4 h-4 mr-2" />
+                            {isAboutEditing ? 'Exit Edit' : 'Edit'}
+                          </Button>
+                        )}
+                      </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {shopData.description ? (
+                      {(!isEditMode || !isAboutEditing) && shopData.description && (
                         <p className="text-burgundy-700 leading-relaxed">
                           {shopData.description}
                         </p>
-                      ) : (
-                        <p className="text-burgundy-600 italic">
-                          No description available for this shop.
-                        </p>
+                      )}
+                      {isEditMode && isAboutEditing && isOwner && isVendor && (
+                        <div className="space-y-2">
+                          <Label htmlFor="aboutDraft" className="text-white">About</Label>
+                          <Textarea id="aboutDraft" value={aboutDraft} onChange={(e) => setAboutDraft(e.target.value)} rows={5} placeholder="Tell customers about your shop..." />
+                          <div className="flex gap-2">
+                            <Button variant="outline" onClick={() => setAboutDraft(shopData.description || '')}>Reset</Button>
+                            <Button className="bg-burgundy-600 hover:bg-burgundy-700" onClick={saveAbout}>Save</Button>
+                          </div>
+                        </div>
+                      )}
+                      {(!isEditMode || !isAboutEditing) && !shopData.description && (
+                        <p className="text-burgundy-600 italic">No description available for this shop.</p>
                       )}
 
                       <Separator className="bg-burgundy-200" />
@@ -940,44 +1014,78 @@ export default function ShopPage({ params }: ShopPageProps) {
                 <TabsContent value="contact" className="space-y-6">
                   <Card className="border-burgundy-200">
                     <CardHeader>
-                      <CardTitle className="text-burgundy-900">Contact {shopData.shopName}</CardTitle>
-                      <CardDescription>
-                        Get in touch with the shop for inquiries, orders, or support.
-                      </CardDescription>
+                      <div className="flex items-center justify-between gap-2">
+                        <div>
+                          <CardTitle className="text-burgundy-900">Contact {shopData.shopName}</CardTitle>
+                          <CardDescription>
+                            Get in touch with the shop for inquiries, orders, or support.
+                          </CardDescription>
+                        </div>
+                        {isOwner && isVendor && isEditMode && (
+                          <Button
+                            size={"sm"}
+                            variant={isContactEditing ? "default" : "outline"}
+                            className={isContactEditing ? "bg-burgundy-600 hover:bg-burgundy-700" : "border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"}
+                            onClick={() => setIsContactEditing(!isContactEditing)}
+                          >
+                            <Edit3 className="w-4 h-4 mr-2" />
+                            {isContactEditing ? 'Exit Edit' : 'Edit'}
+                          </Button>
+                        )}
+                      </div>
                     </CardHeader>
                     <CardContent className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <h4 className="font-semibold text-burgundy-900 mb-3">Contact Information</h4>
-                          <div className="space-y-3">
-                            {shopData.contactInfo?.phone && (
-                              <div className="flex items-center gap-3">
-                                <Phone className="w-4 h-4 text-burgundy-600" />
-                                <span className="text-sm text-burgundy-700">{shopData.contactInfo.phone}</span>
+                          {!isEditMode || !isContactEditing ? (
+                            <div className="space-y-3">
+                              {shopData.contactInfo?.phone && (
+                                <div className="flex items-center gap-3">
+                                  <Phone className="w-4 h-4 text-burgundy-600" />
+                                  <span className="text-sm text-burgundy-700">{shopData.contactInfo.phone}</span>
+                                </div>
+                              )}
+                              {shopData.contactInfo?.email && (
+                                <div className="flex items-center gap-3">
+                                  <Mail className="w-4 h-4 text-burgundy-600" />
+                                  <span className="text-sm text-burgundy-700">{shopData.contactInfo.email}</span>
+                                </div>
+                              )}
+                              {shopData.contactInfo?.website && (
+                                <div className="flex items-center gap-3">
+                                  <Globe className="w-4 h-4 text-burgundy-600" />
+                                  <a href={shopData.contactInfo.website} target="_blank" rel="noopener noreferrer" className="text-sm text-burgundy-700 hover:text-burgundy-900 hover:underline">
+                                    Visit Website
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          ) : null}
+                          {isEditMode && isContactEditing && isOwner && isVendor && (
+                            <div className="space-y-3">
+                              <div>
+                                <Label htmlFor="contactPhone" className="text-white">Phone</Label>
+                                <Input id="contactPhone" value={contactDraft.phone} onChange={(e) => setContactDraft({...contactDraft, phone: e.target.value})} placeholder="Phone number" />
                               </div>
-                            )}
-                            
-                            {shopData.contactInfo?.email && (
-                              <div className="flex items-center gap-3">
-                                <Mail className="w-4 h-4 text-burgundy-600" />
-                                <span className="text-sm text-burgundy-700">{shopData.contactInfo.email}</span>
+                              <div>
+                                <Label htmlFor="contactEmail" className="text-white">Email</Label>
+                                <Input id="contactEmail" value={contactDraft.email} onChange={(e) => setContactDraft({...contactDraft, email: e.target.value})} placeholder="Email address" />
                               </div>
-                            )}
-                            
-                            {shopData.contactInfo?.website && (
-                              <div className="flex items-center gap-3">
-                                <Globe className="w-4 h-4 text-burgundy-600" />
-                                <a 
-                                  href={shopData.contactInfo.website} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="text-sm text-burgundy-700 hover:text-burgundy-900 hover:underline"
-                                >
-                                  Visit Website
-                                </a>
+                              <div>
+                                <Label htmlFor="contactWebsite" className="text-white">Website</Label>
+                                <Input id="contactWebsite" value={contactDraft.website} onChange={(e) => setContactDraft({...contactDraft, website: e.target.value})} placeholder="https://example.com" />
                               </div>
-                            )}
-                          </div>
+                              <div className="flex gap-2">
+                                <Button variant="outline" onClick={() => setContactDraft({
+                                  email: shopData.contactInfo?.email || '',
+                                  phone: shopData.contactInfo?.phone || '',
+                                  website: shopData.contactInfo?.website || '',
+                                })}>Reset</Button>
+                                <Button className="bg-burgundy-600 hover:bg-burgundy-700" onClick={saveContact}>Save</Button>
+                              </div>
+                            </div>
+                          )}
                         </div>
 
                         {shopData.physicalLocation && (
@@ -1135,9 +1243,10 @@ interface ShelfComponentProps {
   onEditItem: (item: any, shelfId: Id<"shelves">) => void;
   onDeleteItem: (item: any) => void;
   onViewItemDetails: (itemId: Id<"products"> | Id<"services">, itemType: "product_shop" | "service_shop") => void;
+  onEditShelf?: (shelf: { _id: Id<"shelves">; shelfName: string; shelfDescription?: string }) => void;
 }
 
-function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem, onDeleteItem, onViewItemDetails }: ShelfComponentProps) {
+function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem, onDeleteItem, onViewItemDetails, onEditShelf }: ShelfComponentProps) {
   const shelfWithItems = useQuery(api.shelves.getShelfWithItems, {
     shelfId: shelf._id
   });
@@ -1190,6 +1299,14 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
               <Button
                 size="sm"
                 variant="outline"
+                onClick={() => onEditShelf && onEditShelf({ _id: shelf._id, shelfName: shelf.shelfName, shelfDescription: shelf.shelfDescription })}
+                className="border-burgundy-200 text-burgundy-700 hover:bg-burgundy-50"
+              >
+                <Edit3 className="w-3 h-3" />
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
                 onClick={() => onDeleteShelf(shelf._id)}
                 className="border-red-200 text-red-600 hover:bg-red-50"
               >
@@ -1206,10 +1323,18 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
             {/* Horizontal scroll container */}
             <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-thin scrollbar-track-burgundy-100 scrollbar-thumb-burgundy-300 hover:scrollbar-thumb-burgundy-500">
               {items.map((item) => (
-                <button 
+                <div 
                   key={item._id}
-                  onClick={() => onViewItemDetails(item._id, shopType as "product_shop" | "service_shop")}
-                  className="flex-shrink-0 w-64 focus:outline-none focus:ring-2 focus:ring-burgundy-500 focus:ring-offset-2 rounded-lg"
+                  onClick={() => {
+                    if (isEditMode) {
+                      onEditItem(item, shelf._id);
+                    } else {
+                      onViewItemDetails(item._id, shopType as "product_shop" | "service_shop");
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  className="flex-shrink-0 w-64 rounded-lg outline-none focus:ring-2 focus:ring-burgundy-500 focus:ring-offset-2 cursor-pointer"
                 >
                   <Card className="h-full hover:shadow-md transition-shadow border-burgundy-200 relative group cursor-pointer">
                     <div className="h-32 bg-gradient-to-br from-beige-100 to-beige-300 rounded-t-lg relative">
@@ -1232,7 +1357,7 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
                       {shopType === 'product_shop' && 'price' in item && item.price && (
                         <div className="absolute top-2 right-2">
                           <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700">
-                            ${(item.price / 100).toFixed(2)}
+                            {`UGX ${(item.price).toLocaleString()}`}
                           </Badge>
                         </div>
                       )}
@@ -1244,6 +1369,8 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
                             size="sm"
                             variant="outline"
                             onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
                               onEditItem(item, shelf._id);
                             }}
                             className="h-7 w-7 p-0 bg-white/90 hover:bg-white border-burgundy/30"
@@ -1254,6 +1381,8 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
                             size="sm"
                             variant="outline"
                             onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
                               onDeleteItem(item);
                             }}
                             className="h-7 w-7 p-0 bg-white/90 hover:bg-red-50 border-red-200"
@@ -1308,7 +1437,7 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
                       )}
                     </CardContent>
                   </Card>
-                </button>
+                </div>
               ))}
             </div>
           </div>

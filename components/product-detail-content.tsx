@@ -343,7 +343,7 @@ export function ProductDetailContent({
             <h1 className="text-3xl font-bold text-burgundy-900 mb-2">{product.name}</h1>
             <div className="flex items-center gap-4 mb-4">
               <div className="text-3xl font-bold text-burgundy-700">
-                ${(product.price / 100).toFixed(2)}
+                {`UGX ${product.price.toLocaleString()}`}
               </div>
               {reviewStats && reviewStats.totalReviews > 0 && (
                 <StarRatingDisplay 
@@ -482,13 +482,13 @@ export function ProductDetailContent({
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label>Rating</Label>
+                      <Label className="text-white">Rating</Label>
                       <div className="flex gap-1 mt-2">
                         <StarRating interactive={true} rating={reviewStars} onRatingChange={setReviewStars} size="lg" />
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="reviewComment">Comment (Optional)</Label>
+                      <Label htmlFor="reviewComment" className="text-white">Comment (Optional)</Label>
                       <Textarea
                         id="reviewComment"
                         value={reviewComment}

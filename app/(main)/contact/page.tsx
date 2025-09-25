@@ -6,6 +6,7 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: ''
   });
@@ -20,26 +21,27 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('Form submitted:', formData);
-    setSubmitSuccess(true);
-    setIsSubmitting(false);
-    
-    // Reset form after submission
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
-    
-    // Reset success message after 5 seconds
-    setTimeout(() => {
-      setSubmitSuccess(false);
-    }, 5000);
+    try {
+      const res = await fetch('/api/send-email/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || 'Failed to send message');
+      }
+      setSubmitSuccess(true);
+      // Reset form after submission
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      // Reset success message after 5 seconds
+      setTimeout(() => setSubmitSuccess(false), 5000);
+    } catch (err) {
+      console.error('Contact submit failed', err);
+      alert('Failed to send your message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -85,6 +87,21 @@ export default function ContactPage() {
                     />
                   </div>
                   
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-burgundy-900 mb-1">
+                      Phone Number (optional)
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="e.g. +256 700 000000"
+                      className="w-full px-4 py-2 border border-beige-300 rounded-md focus:outline-none focus:ring-2 focus:ring-burgundy-500 focus:border-burgundy-500"
+                    />
+                  </div>
+
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-burgundy-900 mb-1">
                       Email Address

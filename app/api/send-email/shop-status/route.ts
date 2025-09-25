@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { renderBrandedEmail, sendBrandedEmail, verifyEmailTransporter, getEmailTransporter } from '@/lib/email';
 
 export async function POST(req: Request) {
   try {
@@ -23,22 +24,10 @@ export async function POST(req: Request) {
       }, { status: 400 });
     }
 
-    // Set up transporter with improved configuration
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false, // use TLS
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-      debug: process.env.NODE_ENV === 'development',
-      logger: process.env.NODE_ENV === 'development',
-    });
-
     // Verify SMTP connection
     try {
-      await transporter.verify();
+      getEmailTransporter();
+      await verifyEmailTransporter();
       console.log('SMTP server is ready for shop status email');
     } catch (verifyError) {
       console.error('SMTP verification failed:', verifyError);
@@ -92,83 +81,32 @@ export async function POST(req: Request) {
     const statusInfo = getStatusMessage(newStatus);
 
     // Email to shop owner about status change (no attachments to avoid path issues)
-    const ownerMailOptions = {
-      from: `"ConnectCom Platform" <${process.env.EMAIL}>`,
+    const ownerHtml = renderBrandedEmail({
+      title: statusInfo.title,
+      preheader: `${shopName} status updated to ${newStatus}`,
+      bodyHtml: `
+        <p style="margin:0 0 12px 0; color:#7f1d1d;">Dear ${shopOwnerName},</p>
+        <p style="margin:0 0 12px 0; color:#7f1d1d;">${statusInfo.message}</p>
+        <table style="width:100%; border-collapse:collapse; margin:12px 0;">
+          <tr><td style="padding:6px 0; font-weight:600; width:40%;">Shop Name:</td><td style="padding:6px 0; color:#b91c1c;">${shopName}</td></tr>
+          <tr><td style="padding:6px 0; font-weight:600;">Previous Status:</td><td style="padding:6px 0; color:#b91c1c; text-transform:capitalize;">${previousStatus?.replace('_', ' ') || 'N/A'}</td></tr>
+          <tr><td style="padding:6px 0; font-weight:600;">New Status:</td><td style="padding:6px 0; color:${statusInfo.color}; text-transform:capitalize; font-weight:600;">${newStatus.replace('_', ' ')}</td></tr>
+        </table>
+        ${adminNotes ? `<div style=\"margin-top:12px; padding:12px; border:1px solid #f4ecd8; border-radius:8px; color:#8a6f37;\"><strong>Admin Notes:</strong> ${adminNotes}</div>` : ''}
+        <div style="text-align:center; margin-top:16px;">
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://connectcom.com'}/vendor" style="background:#7f1d1d;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block;margin-right:8px;">Go to Dashboard</a>
+          <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://connectcom.com'}/contact" style="background:transparent;color:#7f1d1d;padding:10px 18px;border:1px solid #7f1d1d;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block;">Contact Support</a>
+        </div>
+        <p style="text-align:center;margin-top:16px;color:#b91c1c;font-size:14px;">Best regards,<br/>The ConnectCom Team</p>
+      `,
+    });
+
+    await sendBrandedEmail({
       to: shopOwnerEmail,
       subject: `${statusInfo.title} - ${shopName}`,
-      text: `
-Dear ${shopOwnerName},
-
-${statusInfo.message}
-
-Shop: ${shopName}
-Previous Status: ${previousStatus}
-New Status: ${newStatus}
-
-${statusInfo.action}
-
-${adminNotes ? `Admin Notes: ${adminNotes}` : ''}
-
-If you have any questions, please don't hesitate to contact our support team.
-
-Best regards,
-The ConnectCom Team
-      `,
-      html: `
-        <div style="font-family: 'Inter', 'Segoe UI', Arial, sans-serif; color: #7f1d1d; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="text-align: center; margin-bottom: 32px;">
-            <h1 style="color: ${statusInfo.color}; margin: 0; font-size: 24px; font-weight: bold;">${statusInfo.title}</h1>
-          </div>
-          
-          <div style="background: #fdf2f2; border: 1px solid #f9d4d4; border-radius: 8px; padding: 24px; margin-bottom: 24px;">
-            <p style="color: #7f1d1d; margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;">Dear ${shopOwnerName},</p>
-            <p style="color: #7f1d1d; margin: 0 0 16px 0; font-size: 16px; line-height: 1.6;">${statusInfo.message}</p>
-            
-            <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
-              <tr>
-                <td style="padding: 8px 0; font-weight: 600; color: #7f1d1d; width: 40%;">Shop Name:</td>
-                <td style="padding: 8px 0; color: #b91c1c;">${shopName}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: 600; color: #7f1d1d;">Previous Status:</td>
-                <td style="padding: 8px 0; color: #b91c1c; text-transform: capitalize;">${previousStatus?.replace('_', ' ') || 'N/A'}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: 600; color: #7f1d1d;">New Status:</td>
-                <td style="padding: 8px 0; color: ${statusInfo.color}; text-transform: capitalize; font-weight: 600;">${newStatus.replace('_', ' ')}</td>
-              </tr>
-            </table>
-            
-            <p style="color: #7f1d1d; margin: 16px 0; font-size: 16px; line-height: 1.6;">${statusInfo.action}</p>
-          </div>
-
-          ${adminNotes ? `
-          <div style="background: #faf6ed; border: 1px solid #f4ecd8; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
-            <h3 style="color: #7f1d1d; margin: 0 0 8px 0; font-size: 16px;">Admin Notes</h3>
-            <p style="color: #8a6f37; margin: 0; line-height: 1.6;">${adminNotes}</p>
-          </div>
-          ` : ''}
-
-          <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid #f9d4d4;">
-            <p style="color: #7f1d1d; margin-bottom: 16px;">Need help? Contact our support team.</p>
-            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://connectcom.com'}/vendor" 
-               style="background: #7f1d1d; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block; margin-right: 12px;">
-              Go to Dashboard
-            </a>
-            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://connectcom.com'}/contact" 
-               style="background: transparent; color: #7f1d1d; padding: 12px 24px; border: 1px solid #7f1d1d; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">
-              Contact Support
-            </a>
-          </div>
-          
-          <div style="text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid #f9d4d4;">
-            <p style="color: #b91c1c; font-size: 14px; margin: 0;">Best regards,<br/>The ConnectCom Team</p>
-          </div>
-        </div>
-      `,
-    };
-
-    await transporter.sendMail(ownerMailOptions);
+      html: ownerHtml,
+      text: `Dear ${shopOwnerName}, ${statusInfo.message}. Shop: ${shopName}. Previous: ${previousStatus}. New: ${newStatus}. ${adminNotes ? `Admin Notes: ${adminNotes}` : ''}`,
+    });
     console.log(`Shop status change email sent successfully to ${shopOwnerEmail}`);
     
     return NextResponse.json({ success: true });
