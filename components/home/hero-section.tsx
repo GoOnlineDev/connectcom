@@ -17,43 +17,29 @@ export default function HeroSection() {
       <div className="container relative z-10 mx-auto max-w-6xl">
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           <div className="w-full md:w-1/2 space-y-6">
-            <div className="space-y-3 animate-slide-up">
+            <div className="space-y-3 animate-slide-up text-center md:text-left" >
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-burgundy">
-                Connect with the Best Online Shops
+                Connect and Create with the best online shops
               </h1>
               <p className="text-base md:text-lg text-burgundy/80 max-w-xl">
-                Discover thousands of unique products from independent stores all in one place. Shop with confidence and support small businesses.
+                Discover products and services from independent stores all in one place. Shop with confidence and support small businesses.
               </p>
             </div>
             
             {/* Buttons in row direction with padding */}
             <div className="flex flex-row gap-4 pt-2 animate-fade-in w-full" style={{ animationDelay: "0.2s" }}>
               <Link href="/shops" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto px-6 py-3 animate-scale">
+                <Button className="w-full sm:w-auto px-4 py-2 rounded-xl text-sm animate-scale">
                   Start Shopping
                 </Button>
               </Link>
               <Link href="/onboarding/shop" className="w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto px-6 py-3">
+                <Button variant="outline" className="w-full sm:w-auto px-4 py-2 rounded-xl text-sm">
                   Register Your Shop
                 </Button>
               </Link>
             </div>
             
-            <div className="flex items-center gap-4 text-burgundy/70 text-sm pt-2 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              <div className="flex items-center">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Trusted by {stats ? `${stats.activeShops}+` : isLoading ? '...' : '100+'} shops</span>
-              </div>
-              <div className="flex items-center">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Secure payments</span>
-              </div>
-            </div>
 
             {/* Live stats */}
             {stats && (
