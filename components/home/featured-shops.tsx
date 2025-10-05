@@ -46,7 +46,18 @@ export default function FeaturedShops() {
   }
 
   return (
-    <div className="flex space-x-4 overflow-x-auto snap-x snap-mandatory pb-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-x-0">
+    <div
+      className="flex space-x-4 overflow-x-auto snap-x snap-mandatory pb-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-x-0"
+      style={{
+        scrollbarWidth: 'none', // Firefox
+        msOverflowStyle: 'none', // IE 10+
+      }}
+    >
+      <style jsx>{`
+        div::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
       {featuredShops.map((shop: any, index: number) => (
         <motion.div
           key={shop._id}
