@@ -1,19 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 import ConvexClientProvider from '@/providers/convexProviderWithClerk'
 import SWRProvider from '@/providers/swr-provider'
 import { Toaster } from '@/components/ui/toaster'
 
-const geistSans = Geist({
+const inter = Inter({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+  fallback: ["system-ui", "arial"],
 });
 
-const geistMono = Geist_Mono({
+const robotoMono = Roboto_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+  fallback: ["monospace"],
 });
 
 export const viewport: Viewport = {
@@ -74,7 +78,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#7C2D32" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} ${robotoMono.variable} antialiased`}
       >
         <ClerkProvider>
           <ConvexClientProvider>

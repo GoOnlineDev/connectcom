@@ -72,6 +72,21 @@ export default function ProfileSettingsPage() {
     );
   }
 
+  if (!currentUser) {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-burgundy">Profile Settings</h1>
+        </div>
+        <Card className="bg-white border-burgundy/10">
+          <CardContent className="p-6 text-center">
+            <p className="text-burgundy">User not found</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">

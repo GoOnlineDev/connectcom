@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Store, Package, Calendar, Clock, MapPin, Mail, Phone, Globe, PlusCircle, AlertCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { slugify } from "@/lib/utils";
 
 export default function VendorShopsPage() {
   const { user, isLoaded: isUserLoaded } = useUser();

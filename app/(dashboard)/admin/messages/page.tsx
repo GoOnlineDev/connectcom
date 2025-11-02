@@ -76,8 +76,20 @@ export default function AdminMessagesPage() {
     }
   };
 
-  const selectedUserData = searchResults?.find(u => u.clerkId === selectedUser) ||
-    conversations?.find(c => c.userId === selectedUser);
+  const selectedUserFromSearch = searchResults?.find(u => u.clerkId === selectedUser);
+  const selectedUserFromConvos = conversations?.find(c => c.userId === selectedUser);
+  const selectedUserData = selectedUserFromSearch || selectedUserFromConvos;
+  
+  // Get image and name regardless of source with explicit type handling
+  const selectedUserImage: string | undefined = selectedUserData
+    ? ('imageUrl' in selectedUserData ? selectedUserData.imageUrl : selectedUserData.userImage)
+    : undefined;
+  const selectedUserName: string = selectedUserData
+    ? ('name' in selectedUserData ? selectedUserData.name : selectedUserData.userName)
+    : 'User';
+  const selectedUserEmail: string = selectedUserData
+    ? ('email' in selectedUserData ? selectedUserData.email : selectedUserData.userEmail)
+    : '';
 
   return (
     <div>
@@ -237,10 +249,10 @@ export default function AdminMessagesPage() {
             <Card className="bg-white border-burgundy/10 h-[600px] flex flex-col">
               <CardHeader className="border-b border-burgundy/20">
                 <div className="flex items-center space-x-3">
-                  {selectedUserData?.imageUrl || selectedUserData?.userImage ? (
+                  {selectedUserImage ? (
                     <Image
-                      src={selectedUserData.imageUrl || selectedUserData.userImage || ""}
-                      alt={selectedUserData?.name || selectedUserData?.userName || ""}
+                      src={selectedUserImage}
+                      alt={selectedUserName || "User"}
                       width={40}
                       height={40}
                       className="rounded-full"
@@ -252,10 +264,10 @@ export default function AdminMessagesPage() {
                   )}
                   <div>
                     <CardTitle className="text-lg text-burgundy">
-                      {selectedUserData?.name || selectedUserData?.userName || "User"}
+                      {selectedUserName || "User"}
                     </CardTitle>
                     <CardDescription className="text-burgundy/70">
-                      {selectedUserData?.email || selectedUserData?.userEmail || ""}
+                      {selectedUserEmail || ""}
                     </CardDescription>
                   </div>
                 </div>

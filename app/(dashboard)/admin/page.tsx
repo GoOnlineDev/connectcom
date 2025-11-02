@@ -24,6 +24,19 @@ import { Doc } from "@/convex/_generated/dataModel";
 // Define shop type for TypeScript
 type Shop = Doc<"shops">;
 
+// Define activity type
+type Activity = {
+  id: string;
+  type: string;
+  entityType: string;
+  entityId: string;
+  entityName: string;
+  userId?: string;
+  userName?: string;
+  timestamp: number;
+  details?: string;
+};
+
 export default function AdminDashboardPage() {
   // Get dashboard stats
   const stats = useQuery(api.admin.getDashboardStats, {});
@@ -220,7 +233,7 @@ export default function AdminDashboardPage() {
           <CardContent className="max-h-80 overflow-y-auto">
             {recentActivity.length > 0 ? (
               <div className="space-y-3 md:space-y-4">
-                {recentActivity.map(activity => (
+                {recentActivity.map((activity: Activity) => (
                   <div key={activity.id} className="flex items-start p-3 border border-burgundy/10 rounded-lg hover:bg-burgundy/5 transition-colors">
                     <div className="h-8 w-8 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
                       {activity.type === "shop_created" && (
