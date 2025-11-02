@@ -124,7 +124,7 @@ export default function VendorShopsPage() {
               </div>
             </div>
           </div>
-          <Link href={`/dashboard/vendor/shops/${shop._id}`}>
+          <Link href={`/shops/${shop._id}/${slugify(shop.shopName)}`}>
             <Button variant="outline" size="sm">
               Manage
             </Button>

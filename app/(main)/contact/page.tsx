@@ -179,7 +179,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-burgundy-900">Phone</p>
-                      <p className="text-burgundy-700">+1 (555) 123-4567</p>
+                      <p className="text-burgundy-700">+256 783 618441</p>
                     </div>
                   </div>
                   
@@ -191,7 +191,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-burgundy-900">Email</p>
-                      <p className="text-burgundy-700">contact@connectcom.com</p>
+                      <p className="text-burgundy-700">connectcom256@gmail.com</p>
                     </div>
                   </div>
                   

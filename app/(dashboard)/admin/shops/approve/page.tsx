@@ -198,7 +198,7 @@ export default function ShopApprovalPage() {
     return (
       <div>
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-blue-600">Shop Approvals</h1>
+          <h1 className="text-2xl font-bold text-burgundy">Shop Approvals</h1>
         </div>
         <Skeleton className="h-12 w-full mb-6" />
         <div className="space-y-6">
@@ -218,8 +218,8 @@ export default function ShopApprovalPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-blue-600">Shop Approvals</h1>
-        <Badge className="bg-blue-100 text-blue-600 hover:bg-blue-100 hover:text-blue-600">
+        <h1 className="text-2xl font-bold text-burgundy">Shop Approvals</h1>
+        <Badge className="bg-burgundy text-white hover:bg-burgundy-dark hover:text-white">
           {pendingShops.length} Pending Approval
         </Badge>
       </div>
@@ -242,16 +242,16 @@ export default function ShopApprovalPage() {
           {pendingShops.length > 0 ? (
             <div className="space-y-6">
               {pendingShops.map((shop: AdminShop) => (
-                <Card key={shop._id} className="overflow-hidden">
-                  <CardHeader className="bg-amber-50 border-b pb-4">
+                <Card key={shop._id} className="overflow-hidden border-burgundy/10 bg-white">
+                  <CardHeader className="bg-amber-50 border-b border-burgundy/10 pb-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center mr-4">
                           <Store className="h-5 w-5 text-amber-600" />
                         </div>
                         <div>
-                          <CardTitle className="text-xl text-gray-800">{shop.shopName}</CardTitle>
-                          <CardDescription>
+                          <CardTitle className="text-xl text-burgundy">{shop.shopName}</CardTitle>
+                          <CardDescription className="text-burgundy/70">
                             Submitted on {new Date(shop.createdAt).toLocaleDateString()} •&nbsp;
                             {shop.shopType === "product_shop" ? "Product Shop" : "Service Shop"}
                           </CardDescription>
@@ -266,48 +266,48 @@ export default function ShopApprovalPage() {
                   <CardContent className="pt-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Shop Details</h3>
+                        <h3 className="text-sm font-semibold text-burgundy/70 uppercase mb-2">Shop Details</h3>
                         <div className="space-y-4">
                           <div>
-                            <p className="text-sm font-medium text-gray-700">Description</p>
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-sm font-medium text-burgundy">Description</p>
+                            <p className="text-sm text-burgundy/70 mt-1">
                               {shop.description || "No description provided"}
                             </p>
                           </div>
                           
-                          <div className="grid grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {shop.contactInfo?.email && (
-                              <div className="flex items-center text-sm text-gray-600">
-                                <Mail className="h-4 w-4 mr-2 text-gray-400" />
-                                <span>{shop.contactInfo.email}</span>
+                              <div className="flex items-center text-sm text-burgundy/80">
+                                <Mail className="h-4 w-4 mr-2 text-burgundy/60" />
+                                <span className="truncate">{shop.contactInfo.email}</span>
                               </div>
                             )}
                             
                             {shop.contactInfo?.phone && (
-                              <div className="flex items-center text-sm text-gray-600">
-                                <Phone className="h-4 w-4 mr-2 text-gray-400" />
+                              <div className="flex items-center text-sm text-burgundy/80">
+                                <Phone className="h-4 w-4 mr-2 text-burgundy/60" />
                                 <span>{shop.contactInfo.phone}</span>
                               </div>
                             )}
                             
                             {shop.contactInfo?.website && (
-                              <div className="flex items-center text-sm text-gray-600">
-                                <Globe className="h-4 w-4 mr-2 text-gray-400" />
-                                <span>{shop.contactInfo.website}</span>
+                              <div className="flex items-center text-sm text-burgundy/80">
+                                <Globe className="h-4 w-4 mr-2 text-burgundy/60" />
+                                <span className="truncate">{shop.contactInfo.website}</span>
                               </div>
                             )}
                             
                             {shop.physicalLocation && (
-                              <div className="flex items-center text-sm text-gray-600">
-                                <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-                                <span>{shop.physicalLocation.toString()}</span>
+                              <div className="flex items-center text-sm text-burgundy/80">
+                                <MapPin className="h-4 w-4 mr-2 text-burgundy/60" />
+                                <span className="truncate">{shop.physicalLocation.toString()}</span>
                               </div>
                             )}
                             
                             {shop.operatingHours && (
-                              <div className="flex items-center text-sm text-gray-600">
-                                <Clock className="h-4 w-4 mr-2 text-gray-400" />
-                                <span>{shop.operatingHours.toString()}</span>
+                              <div className="flex items-center text-sm text-burgundy/80">
+                                <Clock className="h-4 w-4 mr-2 text-burgundy/60" />
+                                <span className="truncate">{shop.operatingHours.toString()}</span>
                               </div>
                             )}
                           </div>
@@ -315,10 +315,10 @@ export default function ShopApprovalPage() {
                       </div>
                       
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Admin Notes</h3>
+                        <h3 className="text-sm font-semibold text-burgundy/70 uppercase mb-2">Admin Notes</h3>
                         <Textarea 
                           placeholder="Add notes about this shop (required for rejection)"
-                          className="min-h-[120px]"
+                          className="min-h-[120px] border-burgundy/20 focus:border-burgundy"
                           value={adminNotes[shop._id] || ""}
                           onChange={(e) => setAdminNotes(prev => ({ ...prev, [shop._id]: e.target.value }))}
                         />
@@ -326,7 +326,7 @@ export default function ShopApprovalPage() {
                     </div>
                   </CardContent>
                   
-                  <CardFooter className="border-t pt-4 flex justify-end space-x-4">
+                  <CardFooter className="border-t border-burgundy/10 pt-4 flex justify-end space-x-4">
                     <Button 
                       variant="outline" 
                       onClick={() => handleReject(shop._id)}
@@ -339,7 +339,7 @@ export default function ShopApprovalPage() {
                     <Button 
                       onClick={() => handleApprove(shop._id)}
                       disabled={processingShops[shop._id]}
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-burgundy hover:bg-burgundy-dark text-white"
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />
                       Approve
@@ -349,11 +349,11 @@ export default function ShopApprovalPage() {
               ))}
             </div>
           ) : (
-            <Card>
+            <Card className="bg-white border-burgundy/10">
               <CardContent className="pt-6 pb-6 flex flex-col items-center justify-center text-center">
                 <CheckCircle className="h-12 w-12 text-green-500 mb-3" />
-                <h3 className="text-lg font-medium text-gray-800 mb-1">No Pending Shops</h3>
-                <p className="text-gray-600">
+                <h3 className="text-lg font-medium text-burgundy mb-1">No Pending Shops</h3>
+                <p className="text-burgundy/70">
                   There are no shops waiting for approval at this time.
                 </p>
               </CardContent>
@@ -365,16 +365,16 @@ export default function ShopApprovalPage() {
           {approvedShops.length > 0 ? (
             <div className="space-y-4">
               {approvedShops.map((shop: AdminShop) => (
-                <Card key={shop._id} className="overflow-hidden">
-                  <CardHeader className="bg-green-50 border-b pb-4">
+                <Card key={shop._id} className="overflow-hidden bg-white border-burgundy/10">
+                  <CardHeader className="bg-green-50 border-b border-burgundy/10 pb-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
                           <Store className="h-5 w-5 text-green-600" />
                         </div>
                         <div>
-                          <CardTitle className="text-xl text-gray-800">{shop.shopName}</CardTitle>
-                          <CardDescription>
+                          <CardTitle className="text-xl text-burgundy">{shop.shopName}</CardTitle>
+                          <CardDescription className="text-burgundy/70">
                             Approved on {shop.reviewedAt ? new Date(shop.reviewedAt).toLocaleDateString() : "Unknown"} •&nbsp;
                             {shop.shopType === "product_shop" ? "Product Shop" : "Service Shop"}
                           </CardDescription>
@@ -388,23 +388,23 @@ export default function ShopApprovalPage() {
                   
                   <CardContent className="pt-4">
                     <div className="flex items-start">
-                      <Info className="h-4 w-4 text-gray-400 mr-2 mt-0.5" />
-                      <p className="text-sm text-gray-600">
+                      <Info className="h-4 w-4 text-burgundy/60 mr-2 mt-0.5" />
+                      <p className="text-sm text-burgundy/70">
                         This shop has been approved and is visible to customers.
                       </p>
                     </div>
                     
                     {shop.adminNotes && (
-                      <div className="mt-4 p-3 bg-gray-50 rounded-md">
-                        <p className="text-sm font-medium text-gray-700 mb-1">Admin Notes:</p>
-                        <p className="text-sm text-gray-600">{shop.adminNotes}</p>
+                      <div className="mt-4 p-3 bg-burgundy/5 border border-burgundy/10 rounded-md">
+                        <p className="text-sm font-medium text-burgundy mb-1">Admin Notes:</p>
+                        <p className="text-sm text-burgundy/70">{shop.adminNotes}</p>
                       </div>
                     )}
                   </CardContent>
                   
-                  <CardFooter className="border-t pt-4">
+                  <CardFooter className="border-t border-burgundy/10 pt-4">
                     <Link href={`/admin/shops/${shop._id}`}>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="border-burgundy text-burgundy hover:bg-burgundy/10">
                         View Details
                       </Button>
                     </Link>
@@ -413,11 +413,11 @@ export default function ShopApprovalPage() {
               ))}
             </div>
           ) : (
-            <Card>
+            <Card className="bg-white border-burgundy/10">
               <CardContent className="pt-6 pb-6 flex flex-col items-center justify-center text-center">
-                <Info className="h-12 w-12 text-blue-500 mb-3" />
-                <h3 className="text-lg font-medium text-gray-800 mb-1">No Approved Shops</h3>
-                <p className="text-gray-600">
+                <Info className="h-12 w-12 text-burgundy/40 mb-3" />
+                <h3 className="text-lg font-medium text-burgundy mb-1">No Approved Shops</h3>
+                <p className="text-burgundy/70">
                   There are no approved shops at this time.
                 </p>
               </CardContent>
@@ -429,16 +429,16 @@ export default function ShopApprovalPage() {
           {rejectedShops.length > 0 ? (
             <div className="space-y-4">
               {rejectedShops.map((shop: AdminShop) => (
-                <Card key={shop._id} className="overflow-hidden">
-                  <CardHeader className="bg-red-50 border-b pb-4">
+                <Card key={shop._id} className="overflow-hidden bg-white border-burgundy/10">
+                  <CardHeader className="bg-red-50 border-b border-burgundy/10 pb-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4">
                           <Store className="h-5 w-5 text-red-600" />
                         </div>
                         <div>
-                          <CardTitle className="text-xl text-gray-800">{shop.shopName}</CardTitle>
-                          <CardDescription>
+                          <CardTitle className="text-xl text-burgundy">{shop.shopName}</CardTitle>
+                          <CardDescription className="text-burgundy/70">
                             Rejected on {shop.reviewedAt ? new Date(shop.reviewedAt).toLocaleDateString() : "Unknown"} •&nbsp;
                             {shop.shopType === "product_shop" ? "Product Shop" : "Service Shop"}
                           </CardDescription>
@@ -452,23 +452,23 @@ export default function ShopApprovalPage() {
                   
                   <CardContent className="pt-4">
                     <div className="flex items-start">
-                      <Info className="h-4 w-4 text-gray-400 mr-2 mt-0.5" />
-                      <p className="text-sm text-gray-600">
+                      <Info className="h-4 w-4 text-burgundy/60 mr-2 mt-0.5" />
+                      <p className="text-sm text-burgundy/70">
                         This shop has been rejected and is not visible to customers.
                       </p>
                     </div>
                     
                     {shop.adminNotes && (
-                      <div className="mt-4 p-3 bg-gray-50 rounded-md">
-                        <p className="text-sm font-medium text-gray-700 mb-1">Rejection Reason:</p>
-                        <p className="text-sm text-gray-600">{shop.adminNotes}</p>
+                      <div className="mt-4 p-3 bg-burgundy/5 border border-burgundy/10 rounded-md">
+                        <p className="text-sm font-medium text-burgundy mb-1">Rejection Reason:</p>
+                        <p className="text-sm text-burgundy/70">{shop.adminNotes}</p>
                       </div>
                     )}
                   </CardContent>
                   
-                  <CardFooter className="border-t pt-4">
+                  <CardFooter className="border-t border-burgundy/10 pt-4">
                     <Link href={`/admin/shops/${shop._id}`}>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="border-burgundy text-burgundy hover:bg-burgundy/10">
                         View Details
                       </Button>
                     </Link>
@@ -477,11 +477,11 @@ export default function ShopApprovalPage() {
               ))}
             </div>
           ) : (
-            <Card>
+            <Card className="bg-white border-burgundy/10">
               <CardContent className="pt-6 pb-6 flex flex-col items-center justify-center text-center">
-                <Info className="h-12 w-12 text-blue-500 mb-3" />
-                <h3 className="text-lg font-medium text-gray-800 mb-1">No Rejected Shops</h3>
-                <p className="text-gray-600">
+                <Info className="h-12 w-12 text-burgundy/40 mb-3" />
+                <h3 className="text-lg font-medium text-burgundy mb-1">No Rejected Shops</h3>
+                <p className="text-burgundy/70">
                   There are no rejected shops at this time.
                 </p>
               </CardContent>

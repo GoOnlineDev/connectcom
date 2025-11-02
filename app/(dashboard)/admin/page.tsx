@@ -25,58 +25,35 @@ import { Doc } from "@/convex/_generated/dataModel";
 type Shop = Doc<"shops">;
 
 export default function AdminDashboardPage() {
-  // Get users data
-  const users = useQuery(api.admin.getUsers, {}) || [];
+  // Get dashboard stats
+  const stats = useQuery(api.admin.getDashboardStats, {});
   
-  // Get shops data with their status counts
+  // Get shops data for pending approvals
   const shops = useQuery(api.admin.getShops, {}) || [];
   
-  // Get products data
-  const products = useQuery(api.admin.getProducts, {}) || [];
+  // Get recent activity
+  const recentActivity = useQuery(api.admin.getRecentActivity, { limit: 10 }) || [];
   
-  // Get services data
-  const services = useQuery(api.admin.getServices, {}) || [];
-  
-  // Mock data for recent activity
-  const recentActivity = [
-    {
-      id: 1,
-      type: "shop_created",
-      user: "Jane Cooper",
-      details: "Created new shop: 'Jane's Boutique'",
-      time: "10 minutes ago"
-    },
-    {
-      id: 2,
-      type: "shop_approval",
-      user: "System",
-      details: "Shop 'Tech Haven' is pending approval",
-      time: "30 minutes ago"
-    },
-    {
-      id: 3,
-      type: "product_added",
-      user: "Alex Morgan",
-      details: "Added 5 new products to 'Sports World'",
-      time: "2 hours ago"
-    },
-    {
-      id: 4,
-      type: "user_registered",
-      user: "Robert Johnson",
-      details: "New user registered",
-      time: "5 hours ago"
-    }
-  ];
+  // Format time ago helper
+  const formatTimeAgo = (timestamp: number) => {
+    const seconds = Math.floor((Date.now() - timestamp) / 1000);
+    if (seconds < 60) return `${seconds} seconds ago`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+    const days = Math.floor(hours / 24);
+    return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+  };
   
   // Show loading state while data is being fetched
-  if (users.length === 0 && shops.length === 0 && products.length === 0 && services.length === 0) {
+  if (stats === undefined || recentActivity === undefined || shops === undefined) {
     return (
       <div>
-        <h1 className="text-2xl font-bold text-blue-600 mb-6">Admin Dashboard</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <h1 className="text-2xl font-bold text-burgundy mb-6">Admin Dashboard</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
           {[1, 2, 3, 4].map((i) => (
-            <Card key={i}>
+            <Card key={i} className="bg-white">
               <CardHeader className="pb-2">
                 <Skeleton className="h-4 w-24" />
               </CardHeader>
@@ -87,7 +64,7 @@ export default function AdminDashboardPage() {
             </Card>
           ))}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           <Skeleton className="h-[400px] w-full" />
           <Skeleton className="h-[400px] w-full" />
         </div>
@@ -95,91 +72,91 @@ export default function AdminDashboardPage() {
     );
   }
   
-  // Extract counts and data
-  const userCount = users.length;
-  const shopCount = shops.length;
-  const pendingShopCount = shops.filter((shop: Shop) => shop.status === "pending_approval").length;
-  const productCount = products.length;
-  const serviceCount = services.length;
+  // Extract counts from stats
+  const userCount = stats?.totalUsers || 0;
+  const shopCount = stats?.totalShops || 0;
+  const pendingShopCount = stats?.pendingShops || 0;
+  const productCount = stats?.totalProducts || 0;
+  const serviceCount = stats?.totalServices || 0;
   
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-blue-600">Admin Dashboard</h1>
-        <Badge className="bg-blue-100 text-blue-600 hover:bg-blue-100 hover:text-blue-600">
+        <h1 className="text-2xl font-bold text-burgundy">Admin Dashboard</h1>
+        <Badge className="bg-burgundy text-white hover:bg-burgundy-dark hover:text-white">
           Admin Mode
         </Badge>
       </div>
       
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card className="hover:shadow-md transition-shadow">
+        <Card className="bg-white hover:shadow-md transition-shadow border-burgundy/10">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium text-burgundy/70">Total Users</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-3xl font-bold text-gray-800">{userCount}</p>
-                <p className="text-xs text-gray-500">Registered users</p>
+                <p className="text-3xl font-bold text-burgundy">{userCount}</p>
+                <p className="text-xs text-burgundy/60">Registered users</p>
               </div>
-              <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Users className="h-5 w-5 text-blue-600" />
+              <div className="h-10 w-10 bg-burgundy/10 rounded-full flex items-center justify-center">
+                <Users className="h-5 w-5 text-burgundy" />
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="hover:shadow-md transition-shadow">
+        <Card className="bg-white hover:shadow-md transition-shadow border-burgundy/10">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Shops</CardTitle>
+            <CardTitle className="text-sm font-medium text-burgundy/70">Shops</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-3xl font-bold text-gray-800">{shopCount}</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-3xl font-bold text-burgundy">{shopCount}</p>
+                <p className="text-xs text-burgundy/60">
                   {pendingShopCount > 0 ? 
                     <span className="text-amber-600">{pendingShopCount} pending approval</span> : 
                     "All approved"}
                 </p>
               </div>
-              <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Store className="h-5 w-5 text-blue-600" />
+              <div className="h-10 w-10 bg-burgundy/10 rounded-full flex items-center justify-center">
+                <Store className="h-5 w-5 text-burgundy" />
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="hover:shadow-md transition-shadow">
+        <Card className="bg-white hover:shadow-md transition-shadow border-burgundy/10">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Products</CardTitle>
+            <CardTitle className="text-sm font-medium text-burgundy/70">Products</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-3xl font-bold text-gray-800">{productCount}</p>
-                <p className="text-xs text-gray-500">Listed products</p>
+                <p className="text-3xl font-bold text-burgundy">{productCount}</p>
+                <p className="text-xs text-burgundy/60">Listed products</p>
               </div>
-              <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <ShoppingBag className="h-5 w-5 text-blue-600" />
+              <div className="h-10 w-10 bg-burgundy/10 rounded-full flex items-center justify-center">
+                <ShoppingBag className="h-5 w-5 text-burgundy" />
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="hover:shadow-md transition-shadow">
+        <Card className="bg-white hover:shadow-md transition-shadow border-burgundy/10">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Services</CardTitle>
+            <CardTitle className="text-sm font-medium text-burgundy/70">Services</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-3xl font-bold text-gray-800">{serviceCount}</p>
-                <p className="text-xs text-gray-500">Available services</p>
+                <p className="text-3xl font-bold text-burgundy">{serviceCount}</p>
+                <p className="text-xs text-burgundy/60">Available services</p>
               </div>
-              <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Calendar className="h-5 w-5 text-blue-600" />
+              <div className="h-10 w-10 bg-burgundy/10 rounded-full flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-burgundy" />
               </div>
             </div>
           </CardContent>
@@ -187,107 +164,116 @@ export default function AdminDashboardPage() {
       </div>
       
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Shops pending approval */}
-        <Card>
+        <Card className="bg-white border-burgundy/10">
           <CardHeader>
-            <CardTitle className="text-lg text-blue-600">Pending Approvals</CardTitle>
-            <CardDescription>Shops waiting for admin approval</CardDescription>
+            <CardTitle className="text-lg text-burgundy">Pending Approvals</CardTitle>
+            <CardDescription className="text-burgundy/70">Shops waiting for admin approval</CardDescription>
           </CardHeader>
           <CardContent className="max-h-80 overflow-y-auto">
             {pendingShopCount > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {shops
                   .filter((shop: Shop) => shop.status === "pending_approval")
+                  .sort((a: Shop, b: Shop) => b.createdAt - a.createdAt)
+                  .slice(0, 5)
                   .map((shop: Shop) => (
-                    <div key={shop._id} className="flex items-center p-3 border rounded-lg hover:bg-blue-50 transition-colors">
-                      <div className="h-10 w-10 bg-amber-100 rounded-full flex items-center justify-center mr-4">
-                        <Clock className="h-5 w-5 text-amber-600" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-800">{shop.shopName}</p>
-                        <p className="text-xs text-gray-500">
-                          Submitted {new Date(shop.createdAt).toLocaleDateString()} • {shop.shopType === "product_shop" ? "Products" : "Services"}
-                        </p>
-                      </div>
-                      <Link href={`/admin/shops/${shop._id}`}>
-                        <Button variant="outline" size="sm">
+                    <Link key={shop._id} href={`/admin/shops/${shop._id}`}>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center p-3 border border-burgundy/10 rounded-lg hover:bg-burgundy/5 transition-colors gap-3">
+                        <div className="h-10 w-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Clock className="h-5 w-5 text-amber-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-burgundy truncate">{shop.shopName}</p>
+                          <p className="text-xs text-burgundy/60">
+                            Submitted {formatTimeAgo(shop.createdAt)} • {shop.shopType === "product_shop" ? "Products" : "Services"}
+                          </p>
+                        </div>
+                        <Button variant="outline" size="sm" className="border-burgundy text-burgundy hover:bg-burgundy/10 w-full sm:w-auto">
                           Review
                         </Button>
-                      </Link>
-                    </div>
+                      </div>
+                    </Link>
                   ))}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center text-center p-6">
                 <CheckCircle className="h-12 w-12 text-green-500 mb-3" />
-                <p className="text-gray-600">No shops are currently pending approval.</p>
+                <p className="text-burgundy/70">No shops are currently pending approval.</p>
               </div>
             )}
           </CardContent>
-          <CardFooter className="border-t pt-4">
-            <Link href="/admin/shops?status=pending" className="text-blue-600 text-sm flex items-center hover:underline">
+          <CardFooter className="border-t border-burgundy/10 pt-4">
+            <Link href="/admin/shops?status=pending" className="text-burgundy text-sm flex items-center hover:underline">
               View all pending shops <ArrowRight className="ml-1 h-3 w-3" />
             </Link>
           </CardFooter>
         </Card>
         
         {/* Recent Activity */}
-        <Card>
+        <Card className="bg-white border-burgundy/10">
           <CardHeader>
-            <CardTitle className="text-lg text-blue-600">Recent Activity</CardTitle>
-            <CardDescription>Latest actions and events</CardDescription>
+            <CardTitle className="text-lg text-burgundy">Recent Activity</CardTitle>
+            <CardDescription className="text-burgundy/70">Latest actions and events</CardDescription>
           </CardHeader>
           <CardContent className="max-h-80 overflow-y-auto">
-            <div className="space-y-4">
-              {recentActivity.map(activity => (
-                <div key={activity.id} className="flex items-start p-3 border rounded-lg hover:bg-blue-50 transition-colors">
-                  <div className="h-8 w-8 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                    {activity.type === "shop_created" && (
-                      <Store className="h-4 w-4 text-blue-600" />
-                    )}
-                    {activity.type === "shop_approval" && (
-                      <AlertCircle className="h-4 w-4 text-amber-600" />
-                    )}
-                    {activity.type === "product_added" && (
-                      <ShoppingBag className="h-4 w-4 text-green-600" />
-                    )}
-                    {activity.type === "user_registered" && (
-                      <Users className="h-4 w-4 text-purple-600" />
-                    )}
+            {recentActivity.length > 0 ? (
+              <div className="space-y-3 md:space-y-4">
+                {recentActivity.map(activity => (
+                  <div key={activity.id} className="flex items-start p-3 border border-burgundy/10 rounded-lg hover:bg-burgundy/5 transition-colors">
+                    <div className="h-8 w-8 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                      {activity.type === "shop_created" && (
+                        <Store className="h-4 w-4 text-burgundy" />
+                      )}
+                      {activity.type === "shop_approval" && (
+                        <AlertCircle className="h-4 w-4 text-amber-600" />
+                      )}
+                      {activity.type === "product_added" && (
+                        <ShoppingBag className="h-4 w-4 text-green-600" />
+                      )}
+                      {activity.type === "user_registered" && (
+                        <Users className="h-4 w-4 text-purple-600" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-burgundy truncate">{activity.userName || "System"}</p>
+                      <p className="text-sm text-burgundy/70 truncate">{activity.details || `${activity.type} - ${activity.entityName}`}</p>
+                      <p className="text-xs text-burgundy/60 mt-1">{formatTimeAgo(activity.timestamp)}</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-800">{activity.user}</p>
-                    <p className="text-sm text-gray-600">{activity.details}</p>
-                    <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center p-6">
+                <Clock className="h-12 w-12 text-burgundy/40 mb-3" />
+                <p className="text-burgundy/70">No recent activity</p>
+              </div>
+            )}
           </CardContent>
-          <CardFooter className="border-t pt-4">
-            <Link href="/admin/activity" className="text-blue-600 text-sm flex items-center hover:underline">
+          <CardFooter className="border-t border-burgundy/10 pt-4">
+            <Link href="/admin/activity" className="text-burgundy text-sm flex items-center hover:underline">
               View all activity <ArrowRight className="ml-1 h-3 w-3" />
             </Link>
           </CardFooter>
         </Card>
         
         {/* Quick Actions */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 bg-white border-burgundy/10">
           <CardHeader>
-            <CardTitle className="text-lg text-blue-600">Quick Actions</CardTitle>
-            <CardDescription>Common administrative tasks</CardDescription>
+            <CardTitle className="text-lg text-burgundy">Quick Actions</CardTitle>
+            <CardDescription className="text-burgundy/70">Common administrative tasks</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <Link href="/admin/users/new">
-                <div className="p-4 border rounded-lg hover:bg-blue-50 transition-colors h-full flex flex-col">
-                  <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center mb-3">
-                    <Users className="h-5 w-5 text-blue-600" />
+                <div className="p-4 border border-burgundy/10 rounded-lg hover:bg-burgundy/5 transition-colors h-full flex flex-col">
+                  <div className="h-10 w-10 bg-burgundy/10 rounded-full flex items-center justify-center mb-3">
+                    <Users className="h-5 w-5 text-burgundy" />
                   </div>
-                  <h3 className="font-medium text-gray-800 mb-2">Add New User</h3>
-                  <p className="text-sm text-gray-600 flex-1">Create a new user account with specified permissions</p>
-                  <div className="flex items-center mt-3 text-blue-600 text-sm">
+                  <h3 className="font-medium text-burgundy mb-2">Add New User</h3>
+                  <p className="text-sm text-burgundy/70 flex-1">Create a new user account with specified permissions</p>
+                  <div className="flex items-center mt-3 text-burgundy text-sm">
                     <span>Add user</span>
                     <ArrowUpRight className="ml-1 h-3 w-3" />
                   </div>
@@ -295,13 +281,13 @@ export default function AdminDashboardPage() {
               </Link>
               
               <Link href="/admin/shops/approve">
-                <div className="p-4 border rounded-lg hover:bg-blue-50 transition-colors h-full flex flex-col">
-                  <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center mb-3">
-                    <CheckCircle className="h-5 w-5 text-blue-600" />
+                <div className="p-4 border border-burgundy/10 rounded-lg hover:bg-burgundy/5 transition-colors h-full flex flex-col">
+                  <div className="h-10 w-10 bg-burgundy/10 rounded-full flex items-center justify-center mb-3">
+                    <CheckCircle className="h-5 w-5 text-burgundy" />
                   </div>
-                  <h3 className="font-medium text-gray-800 mb-2">Approve Shops</h3>
-                  <p className="text-sm text-gray-600 flex-1">Review and approve pending shop submissions</p>
-                  <div className="flex items-center mt-3 text-blue-600 text-sm">
+                  <h3 className="font-medium text-burgundy mb-2">Approve Shops</h3>
+                  <p className="text-sm text-burgundy/70 flex-1">Review and approve pending shop submissions</p>
+                  <div className="flex items-center mt-3 text-burgundy text-sm">
                     <span>Review shops</span>
                     <ArrowUpRight className="ml-1 h-3 w-3" />
                   </div>
@@ -309,13 +295,13 @@ export default function AdminDashboardPage() {
               </Link>
               
               <Link href="/admin/categories/manage">
-                <div className="p-4 border rounded-lg hover:bg-blue-50 transition-colors h-full flex flex-col">
-                  <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center mb-3">
-                    <Store className="h-5 w-5 text-blue-600" />
+                <div className="p-4 border border-burgundy/10 rounded-lg hover:bg-burgundy/5 transition-colors h-full flex flex-col">
+                  <div className="h-10 w-10 bg-burgundy/10 rounded-full flex items-center justify-center mb-3">
+                    <Store className="h-5 w-5 text-burgundy" />
                   </div>
-                  <h3 className="font-medium text-gray-800 mb-2">Manage Categories</h3>
-                  <p className="text-sm text-gray-600 flex-1">Update product and service categories</p>
-                  <div className="flex items-center mt-3 text-blue-600 text-sm">
+                  <h3 className="font-medium text-burgundy mb-2">Manage Categories</h3>
+                  <p className="text-sm text-burgundy/70 flex-1">Update product and service categories</p>
+                  <div className="flex items-center mt-3 text-burgundy text-sm">
                     <span>Edit categories</span>
                     <ArrowUpRight className="ml-1 h-3 w-3" />
                   </div>

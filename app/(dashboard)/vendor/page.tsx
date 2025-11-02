@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Store, Package, Calendar, TrendingUp, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { slugify } from "@/lib/utils";
 
 export default function VendorDashboardPage() {
   const { user, isLoaded: isUserLoaded } = useUser();
@@ -107,7 +108,7 @@ export default function VendorDashboardPage() {
       <h1 className="text-2xl font-bold text-burgundy mb-6">Dashboard Overview</h1>
       
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
         <Card className="bg-white hover:shadow-md transition-shadow">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">Shops</CardTitle>
@@ -170,7 +171,7 @@ export default function VendorDashboardPage() {
       </div>
       
       {/* Shop List and Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         <Card className="bg-white hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle className="text-lg text-burgundy">My Shops</CardTitle>
@@ -207,7 +208,7 @@ export default function VendorDashboardPage() {
                       {shop.shopType === "product_shop" ? "Products" : "Services"}
                     </p>
                   </div>
-                  <Link href={`/vendor/shops/${shop._id}`}>
+                  <Link href={`/shops/${shop._id}/${slugify(shop.shopName)}`}>
                     <Button variant="outline" size="sm" className="text-xs">
                       Manage
                     </Button>

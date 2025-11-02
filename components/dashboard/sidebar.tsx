@@ -137,6 +137,11 @@ export default function DashboardSidebar({ className }: SidebarProps) {
         { title: 'Announcements', href: '/admin/content/announcements', icon: Bell },
       ]
     },
+    {
+      title: 'Messages',
+      href: '/admin/messages',
+      icon: MessageSquare,
+    },
   ];
 
   // Vendor navigation items
@@ -302,23 +307,8 @@ export default function DashboardSidebar({ className }: SidebarProps) {
 
   return (
     <div className={cn("flex flex-col h-full bg-white border-r border-burgundy/20", className)}>
-      {/* Sidebar Header */}
-      <div className="p-4 border-b border-burgundy/20">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-burgundy rounded-lg flex items-center justify-center">
-            <Store className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <h2 className="text-sm font-semibold text-burgundy">Dashboard</h2>
-            <p className="text-xs text-burgundy/60 capitalize">
-              {currentUser?.role || 'Loading...'}
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto py-4 space-y-6">
+      <div className="flex-1 overflow-y-auto py-4 space-y-6 pt-6">
         {/* Main Navigation */}
         {renderSection("Main", mainNavItems)}
 
@@ -335,13 +325,7 @@ export default function DashboardSidebar({ className }: SidebarProps) {
         {renderSection("Settings", settingsNavItems)}
       </div>
 
-      {/* Sidebar Footer */}
-      <div className="p-4 border-t border-burgundy/20">
-        <div className="text-xs text-burgundy/60 text-center">
-          <p>ConnectCom Dashboard</p>
-          <p className="mt-1">v1.0.0</p>
-        </div>
-      </div>
+      {/* Sidebar Footer - Removed version as it's in main footer */}
     </div>
   );
 }

@@ -84,7 +84,7 @@ export default function AdminUsersPage() {
     return (
       <div>
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-blue-600">User Management</h1>
+          <h1 className="text-2xl font-bold text-burgundy">User Management</h1>
           <Skeleton className="h-10 w-32" />
         </div>
         <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -116,10 +116,10 @@ export default function AdminUsersPage() {
       {/* Search and filter */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-burgundy/60" />
           <Input
             placeholder="Search users..."
-            className="pl-10"
+            className="pl-10 border-burgundy/20 focus:border-burgundy"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -128,7 +128,7 @@ export default function AdminUsersPage() {
           value={roleFilter}
           onValueChange={setRoleFilter}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full md:w-[180px] border-burgundy/20 focus:border-burgundy">
             <SelectValue placeholder="Filter by role" />
           </SelectTrigger>
           <SelectContent>
@@ -160,8 +160,8 @@ export default function AdminUsersPage() {
         </CardHeader>
         <CardContent>
           {filteredUsers.length > 0 ? (
-            <div className="rounded-md border">
-              <div className="grid grid-cols-12 bg-gray-50 py-3 px-4 text-sm font-medium text-gray-500">
+            <div className="rounded-md border border-burgundy/10 overflow-hidden">
+              <div className="hidden md:grid grid-cols-12 bg-burgundy/5 py-3 px-4 text-sm font-medium text-burgundy">
                 <div className="col-span-4">User</div>
                 <div className="col-span-2">Role</div>
                 <div className="col-span-2">Shops</div>
@@ -169,25 +169,25 @@ export default function AdminUsersPage() {
                 <div className="col-span-2 text-right">Actions</div>
               </div>
               
-              <div className="divide-y">
+              <div className="divide-y divide-burgundy/10">
                 {filteredUsers.map((user: User) => (
-                  <div key={user._id} className="grid grid-cols-12 py-3 px-4 items-center text-sm">
-                    <div className="col-span-4 flex items-center">
-                      <div className="w-8 h-8 bg-burgundy/10 text-burgundy rounded-full flex items-center justify-center mr-3">
+                  <div key={user._id} className="grid grid-cols-1 md:grid-cols-12 py-3 px-4 items-center text-sm gap-3 md:gap-0">
+                    <div className="col-span-1 md:col-span-4 flex items-center">
+                      <div className="w-8 h-8 bg-burgundy/10 text-burgundy rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                         <Users className="h-4 w-4" />
                       </div>
-                      <div>
-                        <p className="font-medium text-burgundy">
+                      <div className="min-w-0">
+                        <p className="font-medium text-burgundy truncate">
                           {user.firstName && user.lastName 
                             ? `${user.firstName} ${user.lastName}` 
                             : user.clerkId ? user.clerkId.substring(0, 12) + "..." : "Unknown User"}
                         </p>
-                        <p className="text-xs text-burgundy/70">
+                        <p className="text-xs text-burgundy/70 truncate">
                           ID: {user.clerkId ? user.clerkId.substring(0, 12) + "..." : "N/A"}
                         </p>
                       </div>
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1 md:col-span-2">
                       {user.role === "admin" && (
                         <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100 hover:text-purple-800">
                           <ShieldCheck className="h-3 w-3 mr-1" />
@@ -207,17 +207,17 @@ export default function AdminUsersPage() {
                         </Badge>
                       )}
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1 md:col-span-2">
                       {user.shopIds && user.shopIds.length > 0 ? (
-                        <Badge variant="outline">{user.shopIds.length} shops</Badge>
+                        <Badge variant="outline" className="border-burgundy/20 text-burgundy">{user.shopIds.length} shops</Badge>
                       ) : (
-                        <span className="text-xs text-gray-500">No shops</span>
+                        <span className="text-xs text-burgundy/60">No shops</span>
                       )}
                     </div>
-                    <div className="col-span-2 text-gray-500">
+                    <div className="col-span-1 md:col-span-2 text-burgundy/70">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </div>
-                    <div className="col-span-2 flex justify-end">
+                    <div className="col-span-1 md:col-span-2 flex justify-end">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm" disabled={isUpdating}>
@@ -268,21 +268,21 @@ export default function AdminUsersPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Users className="h-12 w-12 text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-1">No users found</h3>
-              <p className="text-gray-500 mb-4">
+              <Users className="h-12 w-12 text-burgundy/40 mb-4" />
+              <h3 className="text-lg font-medium text-burgundy mb-1">No users found</h3>
+              <p className="text-burgundy/70 mb-4">
                 {searchQuery ? "Try adjusting your search or filter criteria" : "No users match the current filters"}
               </p>
               {searchQuery && (
-                <Button variant="outline" onClick={() => setSearchQuery("")}>
+                <Button variant="outline" onClick={() => setSearchQuery("")} className="border-burgundy text-burgundy hover:bg-burgundy/10">
                   Clear Search
                 </Button>
               )}
             </div>
           )}
         </CardContent>
-        <CardFooter className="border-t pt-4 flex justify-between">
-          <p className="text-sm text-gray-500">
+        <CardFooter className="border-t border-burgundy/10 pt-4 flex justify-between">
+          <p className="text-sm text-burgundy/70">
             Showing {filteredUsers.length} of {users.length} users
           </p>
         </CardFooter>

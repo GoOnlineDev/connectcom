@@ -275,7 +275,7 @@ export const deleteShop = mutation({
       .query("services")
       .withIndex("by_shopId", (q) => q.eq("shopId", shopId))
       .collect();
-      
+    
     for (const service of services) {
       await ctx.db.delete(service._id);
     }
@@ -288,4 +288,151 @@ export const deleteShop = mutation({
       shopId,
     };
   }),
-}); 
+});
+
+/**
+ * Get dashboard statistics
+ */
+export const getDashboardStats = query({
+  args: {},
+  returns: v.object({
+    totalUsers: v.number(),
+    totalShops: v.number(),
+    totalProducts: v.number(),
+    totalServices: v.number(),
+    pendingShops: v.number(),
+    activeShops: v.number(),
+    rejectedShops: v.number(),
+    suspendedShops: v.number(),
+    usersByRole: v.object({
+      admin: v.number(),
+      vendor: v.number(),
+      customer: v.number(),
+    }),
+  }),
+  handler: withAdminAuthQuery(async (ctx, args) => {
+    const users = await ctx.db.query("users").collect();
+    const shops = await ctx.db.query("shops").collect();
+    const products = await ctx.db.query("products").collect();
+    const services = await ctx.db.query("services").collect();
+    
+    const usersByRole = {
+      admin: users.filter(u => u.role === "admin").length,
+      vendor: users.filter(u => u.role === "vendor").length,
+      customer: users.filter(u => u.role === "customer").length,
+    };
+    
+    return {
+      totalUsers: users.length,
+      totalShops: shops.length,
+      totalProducts: products.length,
+      totalServices: services.length,
+      pendingShops: shops.filter(s => s.status === "pending_approval").length,
+      activeShops: shops.filter(s => s.status === "active").length,
+      rejectedShops: shops.filter(s => s.status === "rejected").length,
+      suspendedShops: shops.filter(s => s.status === "suspended").length,
+      usersByRole,
+    };
+  }),
+});
+
+/**
+ * Get recent activity
+ */
+export const getRecentActivity = query({
+  args: {
+    limit: v.optional(v.number()),
+  },
+  returns: v.array(v.object({
+    id: v.string(),
+    type: v.string(),
+    entityType: v.string(),
+    entityId: v.string(),
+    entityName: v.string(),
+    userId: v.optional(v.string()),
+    userName: v.optional(v.string()),
+    timestamp: v.number(),
+    details: v.optional(v.string()),
+  })),
+  handler: withAdminAuthQuery(async (ctx, args) => {
+    const limit = args.limit || 10;
+    const activities: any[] = [];
+    
+    // Get all shops, users, and products (we'll sort in memory)
+    const allShops = await ctx.db.query("shops").collect();
+    const allUsers = await ctx.db.query("users").collect();
+    const allProducts = await ctx.db.query("products").collect();
+    
+    // Sort by creation time (most recent first)
+    const recentShops = allShops
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, limit);
+    
+    for (const shop of recentShops) {
+      const owner = await ctx.db
+        .query("users")
+        .withIndex("by_clerkId", (q) => q.eq("clerkId", shop.ownerId))
+        .unique();
+      
+      activities.push({
+        id: `shop-${shop._id}`,
+        type: shop.status === "pending_approval" ? "shop_approval" : "shop_created",
+        entityType: "shop",
+        entityId: shop._id,
+        entityName: shop.shopName,
+        userId: shop.ownerId,
+        userName: owner ? `${owner.firstName || ""} ${owner.lastName || ""}`.trim() || owner.email : shop.ownerId.substring(0, 12) + "...",
+        timestamp: shop.createdAt,
+        details: shop.status === "pending_approval" ? `Shop '${shop.shopName}' is pending approval` : `Created new shop: '${shop.shopName}'`,
+      });
+    }
+    
+    // Get recent users
+    const recentUsers = allUsers
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, limit);
+    
+    for (const user of recentUsers) {
+      activities.push({
+        id: `user-${user._id}`,
+        type: "user_registered",
+        entityType: "user",
+        entityId: user._id,
+        entityName: `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email,
+        userId: user.clerkId,
+        userName: `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email,
+        timestamp: user.createdAt,
+        details: `New user registered: ${user.email}`,
+      });
+    }
+    
+    // Get recent products
+    const recentProducts = allProducts
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, Math.floor(limit / 2));
+    
+    for (const product of recentProducts) {
+      const shop = await ctx.db.get(product.shopId);
+      const owner = shop ? await ctx.db
+        .query("users")
+        .withIndex("by_clerkId", (q) => q.eq("clerkId", shop.ownerId))
+        .unique() : null;
+      
+      activities.push({
+        id: `product-${product._id}`,
+        type: "product_added",
+        entityType: "product",
+        entityId: product._id,
+        entityName: product.name,
+        userId: shop?.ownerId,
+        userName: owner ? `${owner.firstName || ""} ${owner.lastName || ""}`.trim() || owner.email : shop?.ownerId.substring(0, 12) + "...",
+        timestamp: product.createdAt,
+        details: shop ? `Added product '${product.name}' to '${shop.shopName}'` : `Added product '${product.name}'`,
+      });
+    }
+    
+    // Sort all activities by timestamp (most recent first) and limit
+    activities.sort((a, b) => b.timestamp - a.timestamp);
+    return activities.slice(0, limit);
+  }),
+});

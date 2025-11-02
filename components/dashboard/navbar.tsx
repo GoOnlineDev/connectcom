@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import CustomUserButton from '../user-button';
@@ -20,17 +19,13 @@ import {
 import {
   Bell,
   Home,
-  Store,
   Settings,
-  Users,
-  BarChart3,
-  Menu,
-  ShoppingBag
+  Menu
 } from 'lucide-react';
 
 export default function DashboardNavbar() {
-  const { user } = useUser();
   const currentUser = useQuery(api.users.getCurrentUser);
+  const unreadNotifications = useQuery(api.notifications.getUnreadCount);
   const [mounted, setMounted] = useState(false);
 
   const isAdmin = currentUser?.role === 'admin';
@@ -43,110 +38,72 @@ export default function DashboardNavbar() {
   return (
     <nav className="bg-white border-b border-burgundy-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo and Brand */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 flex items-center justify-center">
-              <Image
-                src="/logo.png"
-                alt="ConnectCom Logo"
-                width={40}
-                height={40}
-                className="mr-2 animate-scale"
-              />
+            <div className="flex justify-between items-center h-16 gap-2">
+              {/* Logo and Brand */}
+              <div className="flex items-center gap-2 min-w-0">
+                <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+                  <Image
+                    src="/logo.png"
+                    alt="ConnectCom Logo"
+                    width={32}
+                    height={32}
+                    className="w-8 h-8"
+                  />
+                  <span className="text-lg md:text-xl font-bold text-burgundy-900 hidden sm:block">ConnectCom</span>
+                </Link>
+                
+                {/* Dashboard Label - Hidden on very small screens */}
+                <div className="hidden md:flex items-center ml-2 pl-2 md:ml-4 md:pl-4 border-l border-burgundy-200">
+                  <Badge variant="outline" className="border-burgundy-300 text-burgundy-700 bg-burgundy-50 text-xs whitespace-nowrap">
+                    {isAdmin ? 'Admin' : isVendor ? 'Vendor' : 'Customer'}
+                  </Badge>
+                </div>
               </div>
-              <span className="text-xl font-bold text-burgundy-900">ConnectCom</span>
-            </Link>
-            
-            {/* Dashboard Label */}
-            <div className="ml-6 pl-6 border-l border-burgundy-200">
-              <Badge variant="outline" className="border-burgundy-300 text-burgundy-700 bg-burgundy-50">
-                {isAdmin ? 'Admin Dashboard' : isVendor ? 'Vendor Dashboard' : 'Dashboard'}
-              </Badge>
-            </div>
-          </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            {/* Main Navigation Links */}
-            <div className="flex items-center space-x-1">
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/">
-                  <Home className="w-4 h-4 mr-2" />
-                  Home
-                </Link>
-              </Button>
-              
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/shops">
-                  <ShoppingBag className="w-4 h-4 mr-2" />
-                  Shops
-                </Link>
-              </Button>
-
-              {/* Admin Navigation */}
-              {isAdmin && (
-                <>
-                  <Button asChild variant="ghost" size="sm">
-                    <Link href="/admin/users">
-                      <Users className="w-4 h-4 mr-2" />
-                      Users
-                    </Link>
-                  </Button>
-                  
-                  <Button asChild variant="ghost" size="sm">
-                    <Link href="/admin/shops/approve">
-                      <Store className="w-4 h-4 mr-2" />
-                      Shop Approvals
-                    </Link>
-                  </Button>
-                </>
-              )}
-
-              {/* Vendor Navigation */}
-              {isVendor && (
-                <Button asChild variant="ghost" size="sm">
-                  <Link href="/vendor/shops">
-                    <Store className="w-4 h-4 mr-2" />
-                    My Shops
-                  </Link>
-                </Button>
-              )}
-            </div>
-
-            {/* User Actions */}
-            <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-burgundy-200">
-              {/* Notifications */}
+              {/* Desktop Navigation - User Actions Only */}
+              <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+            {/* Notifications */}
+            <Link href="/notifications">
               <Button 
                 variant="ghost" 
                 size="sm" 
                 className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 relative"
               >
                 <Bell className="w-4 h-4" />
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-              </Button>
-
-              {/* User Profile */}
-              <div className="flex items-center">
-                {mounted ? (
-                  <CustomUserButton />
-                ) : (
-                  <div className="w-8 h-8 bg-burgundy-200 rounded-full animate-pulse"></div>
+                {unreadNotifications !== undefined && unreadNotifications > 0 && (
+                  <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-semibold rounded-full">
+                    {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                  </span>
                 )}
-              </div>
+              </Button>
+            </Link>
+
+            {/* User Profile */}
+            <div className="flex items-center">
+              {mounted ? (
+                <CustomUserButton />
+              ) : (
+                <div className="w-8 h-8 bg-burgundy-200 rounded-full animate-pulse"></div>
+              )}
             </div>
           </div>
 
-          {/* Mobile Menu */}
-          <div className="md:hidden flex items-center space-x-2">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50"
-            >
-              <Bell className="w-4 h-4" />
-            </Button>
+              {/* Mobile Menu */}
+              <div className="md:hidden flex items-center gap-2 flex-shrink-0">
+            <Link href="/notifications">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-burgundy-700 hover:text-burgundy-900 hover:bg-burgundy-50 relative"
+              >
+                <Bell className="w-4 h-4" />
+                {unreadNotifications !== undefined && unreadNotifications > 0 && (
+                  <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-semibold rounded-full">
+                    {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                  </span>
+                )}
+              </Button>
+            </Link>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -159,54 +116,22 @@ export default function DashboardNavbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="text-burgundy-900">Navigation</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-burgundy-900">Quick Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 
                 <DropdownMenuItem asChild>
                   <Link href="/" className="flex items-center">
                     <Home className="w-4 h-4 mr-2" />
-                    Home
+                    Back to Home
                   </Link>
                 </DropdownMenuItem>
                 
                 <DropdownMenuItem asChild>
-                  <Link href="/shops" className="flex items-center">
-                    <ShoppingBag className="w-4 h-4 mr-2" />
-                    Shops
+                  <Link href="/settings" className="flex items-center">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Settings
                   </Link>
                 </DropdownMenuItem>
-
-                {isAdmin && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel className="text-burgundy-900">Admin</DropdownMenuLabel>
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin/users" className="flex items-center">
-                        <Users className="w-4 h-4 mr-2" />
-                        Users
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/vendor/shops" className="flex items-center">
-                        <Store className="w-4 h-4 mr-2" />
-                        Shop Approvals
-                      </Link>
-                    </DropdownMenuItem>
-                  </>
-                )}
-
-                {isVendor && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel className="text-burgundy-900">Vendor</DropdownMenuLabel>
-                    <DropdownMenuItem asChild>
-                      <Link href="/vendor/shops" className="flex items-center">
-                        <Store className="w-4 h-4 mr-2" />
-                        My Shops
-                      </Link>
-                    </DropdownMenuItem>
-                  </>
-                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

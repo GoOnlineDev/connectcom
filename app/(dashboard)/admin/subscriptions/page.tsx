@@ -222,15 +222,15 @@ export default function AdminSubscriptionsPage() {
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-burgundy">Subscription Management</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-burgundy">Subscription Management</h1>
           <p className="text-burgundy/70 mt-2">
             Manage subscription packages, pricing, and user limits
           </p>
         </div>
         
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <Button
             onClick={handleInitializePackages}
             variant="outline"
@@ -271,7 +271,7 @@ export default function AdminSubscriptionsPage() {
 
         {/* Packages Tab */}
         <TabsContent value="packages" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
             {/* Package List */}
             <div className="space-y-6">
               <div className="flex items-center justify-between">
@@ -621,7 +621,7 @@ export default function AdminSubscriptionsPage() {
 
         {/* Statistics Tab */}
         <TabsContent value="statistics" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
             <Card className="border-burgundy/20">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">

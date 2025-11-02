@@ -112,8 +112,8 @@ export default function CustomUserButton({ className, isMobile }: UserButtonProp
     if (isCustomer) {
       return [
         {
-          label: 'Dashboard',
-          href: '/dashboard',
+          label: 'Customer Dashboard',
+          href: '/customer',
           icon: Home,
         },
         {

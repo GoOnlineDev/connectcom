@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 import ConvexClientProvider from '@/providers/convexProviderWithClerk'
 import SWRProvider from '@/providers/swr-provider'
+import { Toaster } from '@/components/ui/toaster'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,9 +16,23 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#7C2D32',
+}
+
 export const metadata: Metadata = {
-  title: "ConnectCom",
-  description: "ConnectCom is a platform for connecting people",
+  title: "ConnectCom - Uganda's Marketplace",
+  description: "Connect with local businesses, shops, and services across Uganda",
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'ConnectCom',
+  },
   icons: {
     icon: [
       { url: '/favicon/favicon.ico', sizes: 'any' },
@@ -34,11 +49,10 @@ export const metadata: Metadata = {
       {
         rel: 'mask-icon',
         url: '/favicon/favicon.svg',
-        color: '#8b0000',
+        color: '#7C2D32',
       },
     ],
   },
-  manifest: '/favicon/site.webmanifest',
 };
 
 export default function RootLayout({
@@ -49,8 +63,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="msapplication-TileColor" content="#8b0000" />
-        <meta name="theme-color" content="#8b0000" />
+        <meta name="application-name" content="ConnectCom" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="ConnectCom" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#7C2D32" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="theme-color" content="#7C2D32" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -59,6 +80,7 @@ export default function RootLayout({
           <ConvexClientProvider>
             <SWRProvider>
               {children}
+              <Toaster />
             </SWRProvider>
           </ConvexClientProvider>
         </ClerkProvider>

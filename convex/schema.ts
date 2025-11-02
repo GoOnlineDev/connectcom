@@ -254,4 +254,74 @@ export default defineSchema({
   .index("by_created_at", ["createdAt"])
   .index("by_updated_at", ["updatedAt"]),
 
+  // Messages table for user-to-user messaging
+  messages: defineTable({
+    senderId: v.string(), // Clerk user ID of sender
+    recipientId: v.string(), // Clerk user ID of recipient
+    content: v.string(), // Message content
+    isRead: v.boolean(), // Whether message has been read
+    createdAt: v.number(), // Timestamp
+  })
+  .index("by_sender", ["senderId"])
+  .index("by_recipient", ["recipientId"])
+  .index("by_created_at", ["createdAt"]),
+
+  // User settings table
+  userSettings: defineTable({
+    userId: v.string(), // Clerk user ID
+    // Notification settings
+    emailNotifications: v.optional(v.boolean()),
+    pushNotifications: v.optional(v.boolean()),
+    marketingEmails: v.optional(v.boolean()),
+    // Privacy settings
+    profileVisibility: v.optional(v.string()), // "public", "private", "friends"
+    showEmail: v.optional(v.boolean()),
+    showPhone: v.optional(v.boolean()),
+    // App preferences
+    theme: v.optional(v.string()), // "light", "dark", "auto"
+    language: v.optional(v.string()),
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+  .index("by_userId", ["userId"]),
+
+  // Support tickets/help requests
+  supportTickets: defineTable({
+    userId: v.string(), // Clerk user ID
+    subject: v.string(),
+    message: v.string(),
+    category: v.string(), // "general", "technical", "billing", "feature_request"
+    status: v.string(), // "open", "in_progress", "resolved", "closed"
+    priority: v.optional(v.string()), // "low", "medium", "high", "urgent"
+    adminNotes: v.optional(v.string()),
+    resolvedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+  .index("by_userId", ["userId"])
+  .index("by_status", ["status"])
+  .index("by_category", ["category"])
+  .index("by_created_at", ["createdAt"]),
+
+  // Notifications table
+  notifications: defineTable({
+    userId: v.string(), // Clerk user ID of recipient
+    type: v.string(), // "message", "shop_update", "review", "order", "system"
+    title: v.string(), // Notification title
+    message: v.string(), // Notification message
+    isRead: v.boolean(), // Whether notification has been read
+    link: v.optional(v.string()), // Optional link to related content
+    // Related entity references
+    relatedId: v.optional(v.string()), // ID of related entity (message, shop, etc.)
+    relatedType: v.optional(v.string()), // Type of related entity
+    // Metadata
+    metadata: v.optional(v.any()), // Additional data specific to notification type
+    createdAt: v.number(), // Timestamp
+  })
+  .index("by_userId", ["userId"])
+  .index("by_userId_and_isRead", ["userId", "isRead"])
+  .index("by_created_at", ["createdAt"])
+  .index("by_userId_and_created", ["userId", "createdAt"]),
+
 }); 
