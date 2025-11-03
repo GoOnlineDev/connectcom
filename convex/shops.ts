@@ -363,11 +363,13 @@ export const searchShops = query({
   },
 });
 
-// Update shop basic details (description, contact info, etc.)
+// Update shop basic details (description, contact info, images, etc.)
 export const updateShop = mutation({
   args: {
     shopId: v.id("shops"),
     description: v.optional(v.string()),
+    shopImageUrl: v.optional(v.string()),
+    shopLogoUrl: v.optional(v.string()),
     contactInfo: v.optional(
       v.object({
         email: v.optional(v.string()),
@@ -389,6 +391,12 @@ export const updateShop = mutation({
     const update: any = { updatedAt: Date.now() };
     if (args.description !== undefined) {
       update.description = args.description;
+    }
+    if (args.shopImageUrl !== undefined) {
+      update.shopImageUrl = args.shopImageUrl;
+    }
+    if (args.shopLogoUrl !== undefined) {
+      update.shopLogoUrl = args.shopLogoUrl;
     }
     if (args.contactInfo !== undefined) {
       // Merge contact info with existing to preserve fields not provided

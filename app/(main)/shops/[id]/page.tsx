@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/components/ui/use-toast';
-import { ProductImageUploadButton } from '@/utils/uploadthing';
+import { ProductImageUploadButton, UploadButton } from '@/utils/uploadthing';
 import { ItemDetailModal } from '@/components/ui/item-detail-modal';
 import { ProductDetailContent } from '@/components/product-detail-content';
 import { ServiceDetailContent } from '@/components/service-detail-content';
@@ -75,6 +75,8 @@ export default function ShopPage({ params }: ShopPageProps) {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<Id<"products"> | Id<"services"> | null>(null);
   const [selectedItemType, setSelectedItemType] = useState<"product_shop" | "service_shop" | null>(null);
+  const [isImageUploading, setIsImageUploading] = useState(false);
+  const [isLogoUploading, setIsLogoUploading] = useState(false);
   
   const { user } = useUser();
   const { toast } = useToast();
@@ -464,7 +466,7 @@ export default function ShopPage({ params }: ShopPageProps) {
       {/* Shop Hero Section */}
       <div className="relative w-full bg-white shadow-sm">
         {/* Banner Image */}
-        <div className="w-full h-64 md:h-80 bg-gradient-to-br from-beige-100 to-beige-300 relative flex items-center justify-center overflow-hidden">
+        <div className="w-full h-64 md:h-80 bg-gradient-to-br from-beige-100 to-beige-300 relative flex items-center justify-center overflow-hidden group">
           {shopData.shopImageUrl ? (
             <img
               src={shopData.shopImageUrl}
@@ -478,18 +480,136 @@ export default function ShopPage({ params }: ShopPageProps) {
           )}
           {/* Overlay for darkening image for text readability */}
           <div className="absolute inset-0 bg-black/20" />
+          
+          {/* Image Upload Button (only visible in edit mode for owner) */}
+          {isEditMode && isOwner && isVendor && (
+            <div className="absolute top-4 right-4 z-20">
+              <UploadButton
+                endpoint="shopImageUploader"
+                onClientUploadComplete={async (res) => {
+                  if (res && res[0]?.url) {
+                    try {
+                      const result = await updateShop({ 
+                        shopId: resolvedParams.id as Id<"shops">, 
+                        shopImageUrl: res[0].url 
+                      });
+                      if (result.success) {
+                        toast({ title: "Success", description: "Shop image updated successfully" });
+                      } else {
+                        toast({ title: "Error", description: result.error || "Failed to update shop image", variant: "destructive" });
+                      }
+                    } catch (error) {
+                      toast({ title: "Error", description: "Failed to update shop image", variant: "destructive" });
+                    }
+                  }
+                  setIsImageUploading(false);
+                }}
+                onUploadError={(error) => {
+                  toast({ title: "Error", description: error.message || "Failed to upload image", variant: "destructive" });
+                  setIsImageUploading(false);
+                }}
+                onUploadBegin={() => {
+                  setIsImageUploading(true);
+                }}
+                appearance={{
+                  button: `bg-white/90 hover:bg-white text-burgundy-700 border border-burgundy-300 shadow-md backdrop-blur-sm ${isImageUploading ? 'opacity-50 cursor-not-allowed' : ''}`,
+                  allowedContent: "hidden",
+                }}
+              >
+                {isImageUploading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-burgundy-600 mr-2"></div>
+                    Uploading...
+                  </>
+                ) : (
+                  <>
+                    <ImageIcon className="w-4 h-4 mr-2" />
+                    {shopData.shopImageUrl ? 'Change Image' : 'Upload Image'}
+                  </>
+                )}
+              </UploadButton>
+            </div>
+          )}
+          
+          {/* Logo Upload (only visible in edit mode for owner) */}
+          {isEditMode && isOwner && isVendor && (
+            <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-20">
+              <div className="relative">
+                {shopData.shopLogoUrl && (
+                  <img
+                    src={shopData.shopLogoUrl}
+                    alt="Shop Logo"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-burgundy-300 shadow-lg"
+                  />
+                )}
+                <UploadButton
+                  endpoint="shopImageUploader"
+                  onClientUploadComplete={async (res) => {
+                    if (res && res[0]?.url) {
+                      try {
+                        const result = await updateShop({ 
+                          shopId: resolvedParams.id as Id<"shops">, 
+                          shopLogoUrl: res[0].url 
+                        });
+                        if (result.success) {
+                          toast({ title: "Success", description: "Shop logo updated successfully" });
+                        } else {
+                          toast({ title: "Error", description: result.error || "Failed to update shop logo", variant: "destructive" });
+                        }
+                      } catch (error) {
+                        toast({ title: "Error", description: "Failed to update shop logo", variant: "destructive" });
+                      }
+                    }
+                    setIsLogoUploading(false);
+                  }}
+                  onUploadError={(error) => {
+                    toast({ title: "Error", description: error.message || "Failed to upload logo", variant: "destructive" });
+                    setIsLogoUploading(false);
+                  }}
+                  onUploadBegin={() => {
+                    setIsLogoUploading(true);
+                  }}
+                  appearance={{
+                    button: "w-20 h-20 rounded-full bg-white/90 hover:bg-white border-2 border-burgundy-300 flex items-center justify-center shadow-lg backdrop-blur-sm transition-all hover:scale-105 p-0",
+                    allowedContent: "hidden",
+                  }}
+                  className={isLogoUploading ? "opacity-50 cursor-not-allowed" : ""}
+                >
+                  {isLogoUploading ? (
+                    <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center z-10">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    </div>
+                  ) : shopData.shopLogoUrl ? null : (
+                    <Upload className="w-8 h-8 text-burgundy-600" />
+                  )}
+                </UploadButton>
+              </div>
+            </div>
+          )}
+          {!isEditMode && shopData.shopLogoUrl && (
+            <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-20">
+              <img
+                src={shopData.shopLogoUrl}
+                alt="Shop Logo"
+                className="w-20 h-20 rounded-full border-4 border-white shadow-lg object-cover"
+              />
+            </div>
+          )}
+          
           {/* Shop Title Overlay */}
           <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-2">{shopData.shopName}</h1>
-            {shopData.categories && shopData.categories.length > 0 && (
-              <div className="flex flex-wrap gap-2 justify-center">
-                {shopData.categories.map((category) => (
-                  <Badge key={category} variant="outline" className="text-xs border-white/40 text-white bg-black/30">
-                    {category}
-                  </Badge>
-                ))}
-              </div>
-            )}
+            <div className="relative">
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-2">{shopData.shopName}</h1>
+              {shopData.categories && shopData.categories.length > 0 && (
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {shopData.categories.map((category) => (
+                    <Badge key={category} variant="outline" className="text-xs border-white/40 text-white bg-black/30">
+                      {category}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="container mx-auto px-4 lg:px-6 py-6 lg:py-8">
