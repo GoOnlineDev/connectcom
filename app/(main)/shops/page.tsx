@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { slugify } from '@/lib/utils';
@@ -11,8 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, MapPin, Clock, Phone, Store, ShoppingBag } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export default function ShopsPage() {
+// Client component that uses useSearchParams
+function ShopsPageClient() {
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -345,5 +347,45 @@ export default function ShopsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+// Loading fallback component
+function ShopsPageSkeleton() {
+  return (
+    <div className="min-h-screen bg-beige-50">
+      <div className="container mx-auto px-4 py-6">
+        <div className="bg-white rounded-xl shadow-sm p-4 mb-6 border border-burgundy-200">
+          <Skeleton className="h-11 w-full max-w-2xl mx-auto" />
+        </div>
+        <div className="bg-white rounded-xl shadow-sm p-5 mb-6 border border-burgundy-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="bg-white rounded-lg border border-beige-200 overflow-hidden">
+              <Skeleton className="h-40 w-full" />
+              <div className="p-4 space-y-2">
+                <Skeleton className="h-5 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function ShopsPage() {
+  return (
+    <Suspense fallback={<ShopsPageSkeleton />}>
+      <ShopsPageClient />
+    </Suspense>
   );
 }
