@@ -512,80 +512,61 @@ export default function ShopPage({ params }: ShopPageProps) {
                   setIsImageUploading(true);
                 }}
                 appearance={{
-                  button: `bg-white/90 hover:bg-white text-burgundy-700 border border-burgundy-300 shadow-md backdrop-blur-sm ${isImageUploading ? 'opacity-50 cursor-not-allowed' : ''}`,
+                  button: "bg-white/90 hover:bg-white text-burgundy-700 border border-burgundy-300 shadow-md backdrop-blur-sm",
                   allowedContent: "hidden",
                 }}
-              >
-                {isImageUploading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-burgundy-600 mr-2"></div>
-                    Uploading...
-                  </>
-                ) : (
-                  <>
-                    <ImageIcon className="w-4 h-4 mr-2" />
-                    {shopData.shopImageUrl ? 'Change Image' : 'Upload Image'}
-                  </>
-                )}
-              </UploadButton>
+                className={isImageUploading ? "opacity-50 cursor-not-allowed" : ""}
+              />
             </div>
           )}
           
-          {/* Logo Upload (only visible in edit mode for owner) */}
-          {isEditMode && isOwner && isVendor && (
-            <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-20">
-              <div className="relative">
-                {shopData.shopLogoUrl && (
-                  <img
-                    src={shopData.shopLogoUrl}
-                    alt="Shop Logo"
-                    className="w-20 h-20 rounded-full object-cover border-2 border-burgundy-300 shadow-lg"
-                  />
-                )}
-                <UploadButton
-                  endpoint="shopImageUploader"
-                  onClientUploadComplete={async (res) => {
-                    if (res && res[0]?.url) {
-                      try {
-                        const result = await updateShop({ 
-                          shopId: resolvedParams.id as Id<"shops">, 
-                          shopLogoUrl: res[0].url 
-                        });
-                        if (result.success) {
-                          toast({ title: "Success", description: "Shop logo updated successfully" });
-                        } else {
-                          toast({ title: "Error", description: result.error || "Failed to update shop logo", variant: "destructive" });
+              {/* Logo Upload (only visible in edit mode for owner) */}
+              {isEditMode && isOwner && isVendor && (
+                <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-20">
+                  <div className="relative">
+                    {shopData.shopLogoUrl && (
+                      <img
+                        src={shopData.shopLogoUrl}
+                        alt="Shop Logo"
+                        className="w-20 h-20 rounded-full object-cover border-2 border-burgundy-300 shadow-lg"
+                      />
+                    )}
+                    <UploadButton
+                      endpoint="shopImageUploader"
+                      onClientUploadComplete={async (res) => {
+                        if (res && res[0]?.url) {
+                          try {
+                            const result = await updateShop({ 
+                              shopId: resolvedParams.id as Id<"shops">, 
+                              shopLogoUrl: res[0].url 
+                            });
+                            if (result.success) {
+                              toast({ title: "Success", description: "Shop logo updated successfully" });
+                            } else {
+                              toast({ title: "Error", description: result.error || "Failed to update shop logo", variant: "destructive" });
+                            }
+                          } catch (error) {
+                            toast({ title: "Error", description: "Failed to update shop logo", variant: "destructive" });
+                          }
                         }
-                      } catch (error) {
-                        toast({ title: "Error", description: "Failed to update shop logo", variant: "destructive" });
-                      }
-                    }
-                    setIsLogoUploading(false);
-                  }}
-                  onUploadError={(error) => {
-                    toast({ title: "Error", description: error.message || "Failed to upload logo", variant: "destructive" });
-                    setIsLogoUploading(false);
-                  }}
-                  onUploadBegin={() => {
-                    setIsLogoUploading(true);
-                  }}
-                  appearance={{
-                    button: "w-20 h-20 rounded-full bg-white/90 hover:bg-white border-2 border-burgundy-300 flex items-center justify-center shadow-lg backdrop-blur-sm transition-all hover:scale-105 p-0",
-                    allowedContent: "hidden",
-                  }}
-                  className={isLogoUploading ? "opacity-50 cursor-not-allowed" : ""}
-                >
-                  {isLogoUploading ? (
-                    <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center z-10">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                    </div>
-                  ) : shopData.shopLogoUrl ? null : (
-                    <Upload className="w-8 h-8 text-burgundy-600" />
-                  )}
-                </UploadButton>
-              </div>
-            </div>
-          )}
+                        setIsLogoUploading(false);
+                      }}
+                      onUploadError={(error) => {
+                        toast({ title: "Error", description: error.message || "Failed to upload logo", variant: "destructive" });
+                        setIsLogoUploading(false);
+                      }}
+                      onUploadBegin={() => {
+                        setIsLogoUploading(true);
+                      }}
+                      appearance={{
+                        button: "w-20 h-20 rounded-full bg-white/90 hover:bg-white border-2 border-burgundy-300 flex items-center justify-center shadow-lg backdrop-blur-sm transition-all hover:scale-105 p-0",
+                        allowedContent: "hidden",
+                      }}
+                      className={isLogoUploading ? "opacity-50 cursor-not-allowed" : ""}
+                    />
+                  </div>
+                </div>
+              )}
           {!isEditMode && shopData.shopLogoUrl && (
             <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-20">
               <img
@@ -1205,7 +1186,7 @@ export default function ShopPage({ params }: ShopPageProps) {
                                   id="contactPhone" 
                                   value={contactDraft.phone} 
                                   onChange={(e) => setContactDraft({...contactDraft, phone: e.target.value})} 
-                                  placeholder="Phone number" 
+                                  placeholder="+256 700 000000" 
                                   className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                                 />
                               </div>

@@ -430,7 +430,7 @@ export default function ShopOnboardingPage() {
                 name="contactInfo.phone" 
                 value={shopData.contactInfo.phone} 
                 onChange={handleInputChange} 
-                placeholder="+1234567890"
+                placeholder="+256 700 000000"
                 className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
@@ -481,7 +481,7 @@ export default function ShopOnboardingPage() {
                 name="physicalLocation" 
                 value={shopData.physicalLocation} 
                 onChange={handleInputChange} 
-                placeholder="123 Main St, City, Country"
+                placeholder="e.g. 123 Kampala Road, Kampala, Uganda"
                 className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
               <p className="text-xs text-burgundy-600 mt-2">Leave blank if you don't have a physical location.</p>

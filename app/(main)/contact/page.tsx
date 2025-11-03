@@ -205,9 +205,7 @@ export default function ContactPage() {
                     <div>
                       <p className="text-sm font-medium text-burgundy-900">Address</p>
                       <p className="text-burgundy-700">
-                        123 Commerce Street<br />
-                        San Francisco, CA 94103<br />
-                        United States
+                        Kampala, Uganda
                       </p>
                     </div>
                   </div>
