@@ -247,7 +247,6 @@ export default function ShopOnboardingPage() {
                   appearance={{
                     button: "bg-burgundy-600 text-white hover:bg-burgundy-700 border-burgundy-600",
                     allowedContent: "text-burgundy-700",
-                    label: "text-burgundy-900",
                   }}
                 />
               </div>

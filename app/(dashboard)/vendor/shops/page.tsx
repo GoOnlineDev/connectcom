@@ -10,13 +10,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Store, Package, Calendar, Clock, MapPin, Mail, Phone, Globe, PlusCircle, AlertCircle } from "lucide-react";
+import { Store, Package, Calendar, Clock, MapPin, Mail, Phone, Globe, PlusCircle, AlertCircle, Search, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
 import { slugify } from "@/lib/utils";
 
 export default function VendorShopsPage() {
   const { user, isLoaded: isUserLoaded } = useUser();
   const [clerkId, setClerkId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
   
   // Set Clerk ID when user is loaded
   useEffect(() => {
@@ -48,10 +50,24 @@ export default function VendorShopsPage() {
     );
   }
   
+  // Filter shops by search term
+  const filterShopsBySearch = (shopList: any[]) => {
+    if (!searchTerm.trim()) return shopList;
+    const searchLower = searchTerm.toLowerCase();
+    return shopList.filter(shop => 
+      shop.shopName.toLowerCase().includes(searchLower) ||
+      shop.description?.toLowerCase().includes(searchLower) ||
+      shop.categories?.some((cat: string) => cat.toLowerCase().includes(searchLower)) ||
+      shop.contactInfo?.email?.toLowerCase().includes(searchLower) ||
+      shop.contactInfo?.phone?.includes(searchTerm)
+    );
+  };
+
   // Filter shops by status
-  const pendingShops = shops.filter(shop => shop.status === "pending_approval");
-  const activeShops = shops.filter(shop => shop.status === "active");
-  const inactiveShops = shops.filter(shop => shop.status !== "active" && shop.status !== "pending_approval");
+  const allFilteredShops = filterShopsBySearch(shops);
+  const pendingShops = filterShopsBySearch(shops.filter(shop => shop.status === "pending_approval"));
+  const activeShops = filterShopsBySearch(shops.filter(shop => shop.status === "active"));
+  const inactiveShops = filterShopsBySearch(shops.filter(shop => shop.status !== "active" && shop.status !== "pending_approval"));
   
   // Handle case when user has no shops
   if (shops.length === 0) {
@@ -202,18 +218,48 @@ export default function VendorShopsPage() {
   
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-burgundy">My Shops</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h1 className="text-2xl font-bold text-burgundy-900">My Shops</h1>
         <Link href="/onboarding/shop">
           <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
             <PlusCircle className="mr-2 h-4 w-4" /> Create Shop
           </Button>
         </Link>
       </div>
+
+      {/* Search Bar */}
+      <Card className="bg-white border-burgundy-200 mb-6">
+        <CardContent className="pt-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 w-5 h-5" />
+            <Input
+              type="text"
+              placeholder="Search shops by name, description, category, email, or phone..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-10 border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 hover:text-burgundy-800 transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+          {searchTerm && (
+            <p className="text-sm text-burgundy-700 mt-2">
+              Found {allFilteredShops.length} shop{allFilteredShops.length !== 1 ? 's' : ''} matching "{searchTerm}"
+            </p>
+          )}
+        </CardContent>
+      </Card>
       
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="mb-6">
-          <TabsTrigger value="all">All Shops ({shops.length})</TabsTrigger>
+          <TabsTrigger value="all">All Shops ({allFilteredShops.length})</TabsTrigger>
           <TabsTrigger value="active">Active ({activeShops.length})</TabsTrigger>
           <TabsTrigger value="pending">Pending ({pendingShops.length})</TabsTrigger>
           {inactiveShops.length > 0 && (
@@ -222,7 +268,18 @@ export default function VendorShopsPage() {
         </TabsList>
         
         <TabsContent value="all" className="space-y-6">
-          {shops.map(renderShopCard)}
+          {allFilteredShops.length > 0 ? (
+            allFilteredShops.map(renderShopCard)
+          ) : (
+            <Card className="bg-white">
+              <CardContent className="pt-6 pb-6 flex flex-col items-center justify-center text-center">
+                <AlertCircle className="h-8 w-8 text-amber-500 mb-3" />
+                <p className="text-gray-600">
+                  {searchTerm ? `No shops found matching "${searchTerm}"` : "You don't have any shops yet."}
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
         
         <TabsContent value="active" className="space-y-6">
@@ -233,7 +290,7 @@ export default function VendorShopsPage() {
               <CardContent className="pt-6 pb-6 flex flex-col items-center justify-center text-center">
                 <AlertCircle className="h-8 w-8 text-amber-500 mb-3" />
                 <p className="text-gray-600">
-                  You don't have any active shops. Your shops may be pending approval.
+                  {searchTerm ? `No active shops found matching "${searchTerm}"` : "You don't have any active shops. Your shops may be pending approval."}
                 </p>
               </CardContent>
             </Card>
@@ -248,7 +305,7 @@ export default function VendorShopsPage() {
               <CardContent className="pt-6 pb-6 flex flex-col items-center justify-center text-center">
                 <AlertCircle className="h-8 w-8 text-green-500 mb-3" />
                 <p className="text-gray-600">
-                  You don't have any shops pending approval.
+                  {searchTerm ? `No pending shops found matching "${searchTerm}"` : "You don't have any shops pending approval."}
                 </p>
               </CardContent>
             </Card>
@@ -257,7 +314,18 @@ export default function VendorShopsPage() {
         
         {inactiveShops.length > 0 && (
           <TabsContent value="inactive" className="space-y-6">
-            {inactiveShops.map(renderShopCard)}
+            {inactiveShops.length > 0 ? (
+              inactiveShops.map(renderShopCard)
+            ) : (
+              <Card className="bg-white">
+                <CardContent className="pt-6 pb-6 flex flex-col items-center justify-center text-center">
+                  <AlertCircle className="h-8 w-8 text-amber-500 mb-3" />
+                  <p className="text-gray-600">
+                    {searchTerm ? `No inactive shops found matching "${searchTerm}"` : "No inactive shops."}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
         )}
       </Tabs>

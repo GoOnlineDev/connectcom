@@ -324,4 +324,53 @@ export default defineSchema({
   .index("by_created_at", ["createdAt"])
   .index("by_userId_and_created", ["userId", "createdAt"]),
 
+  // Orders table
+  orders: defineTable({
+    userId: v.string(), // Clerk user ID of the customer
+    shopId: v.id("shops"), // Shop that the order is placed with
+    orderNumber: v.string(), // Unique order number (e.g., "ORD-20240101-001")
+    status: v.string(), // "pending", "confirmed", "processing", "shipped", "delivered", "cancelled"
+    // Customer information
+    customerName: v.string(),
+    customerEmail: v.string(),
+    customerPhone: v.string(),
+    // Shipping/Delivery information
+    deliveryAddress: v.string(),
+    deliveryCity: v.string(),
+    deliveryNotes: v.optional(v.string()),
+    // Order items (stored as an array of objects)
+    items: v.array(v.object({
+      itemType: v.string(), // "product" or "service"
+      itemId: v.union(v.id("products"), v.id("services")),
+      itemName: v.string(),
+      quantity: v.number(),
+      price: v.number(), // Price per item in shillings
+      total: v.number(), // Total for this item (price * quantity) in shillings
+      serviceDetails: v.optional(v.object({
+        selectedDate: v.optional(v.string()),
+        selectedTime: v.optional(v.string()),
+        notes: v.optional(v.string()),
+      })),
+    })),
+    // Totals
+    subtotal: v.number(), // Sum of all item totals in shillings
+    totalAmount: v.number(), // Final total in shillings (could include shipping, taxes, etc.)
+    // Payment information
+    paymentMethod: v.optional(v.string()), // "cash", "mobile_money", "bank_transfer", etc.
+    paymentStatus: v.optional(v.string()), // "pending", "paid", "failed"
+    // Notes
+    customerNotes: v.optional(v.string()), // Customer's notes/comments
+    shopNotes: v.optional(v.string()), // Shop owner's internal notes
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+  .index("by_userId", ["userId"])
+  .index("by_shopId", ["shopId"])
+  .index("by_orderNumber", ["orderNumber"])
+  .index("by_status", ["status"])
+  .index("by_shopId_and_status", ["shopId", "status"])
+  .index("by_userId_and_created", ["userId", "createdAt"])
+  .index("by_created_at", ["createdAt"]),
+
 }); 

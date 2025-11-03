@@ -7,14 +7,16 @@ import { api } from "@/convex/_generated/api";
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Store, Package, Calendar, TrendingUp, AlertCircle } from "lucide-react";
+import { Store, Package, Calendar, TrendingUp, AlertCircle, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { slugify } from "@/lib/utils";
 
 export default function VendorDashboardPage() {
   const { user, isLoaded: isUserLoaded } = useUser();
   const [clerkId, setClerkId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
   
   // Set Clerk ID when user is loaded
   useEffect(() => {
@@ -102,6 +104,19 @@ export default function VendorDashboardPage() {
   
   // Count of pending shops
   const pendingShops = shops.filter(shop => shop.status === "pending_approval").length;
+
+  // Filter shops by search term
+  const filteredShops = shops.filter(shop => {
+    if (!searchTerm.trim()) return true;
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      shop.shopName.toLowerCase().includes(searchLower) ||
+      shop.description?.toLowerCase().includes(searchLower) ||
+      shop.categories?.some((cat: string) => cat.toLowerCase().includes(searchLower)) ||
+      shop.contactInfo?.email?.toLowerCase().includes(searchLower) ||
+      shop.contactInfo?.phone?.includes(searchTerm)
+    );
+  });
   
   return (
     <div>
@@ -177,9 +192,38 @@ export default function VendorDashboardPage() {
             <CardTitle className="text-lg text-burgundy">My Shops</CardTitle>
             <CardDescription>Manage your shops and view their status</CardDescription>
           </CardHeader>
-          <CardContent className="max-h-64 overflow-y-auto">
-            <div className="space-y-4">
-              {shops.map(shop => (
+          <CardContent>
+            {/* Search Bar */}
+            <div className="mb-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 w-4 h-4" />
+                <Input
+                  type="text"
+                  placeholder="Search shops..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-10 border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500 text-sm"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 hover:text-burgundy-800 transition-colors"
+                    aria-label="Clear search"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              {searchTerm && (
+                <p className="text-xs text-burgundy-700 mt-2">
+                  {filteredShops.length} shop{filteredShops.length !== 1 ? 's' : ''} found
+                </p>
+              )}
+            </div>
+            
+            <div className="max-h-64 overflow-y-auto space-y-4">
+              {filteredShops.length > 0 ? (
+                filteredShops.map(shop => (
                 <div key={shop._id} className="flex items-center p-3 border rounded-lg hover:bg-gray-50">
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-4">
                     {shop.shopLogoUrl ? (
@@ -214,7 +258,14 @@ export default function VendorDashboardPage() {
                     </Button>
                   </Link>
                 </div>
-              ))}
+              ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-sm text-gray-600">
+                    {searchTerm ? `No shops found matching "${searchTerm}"` : "No shops found"}
+                  </p>
+                </div>
+              )}
             </div>
           </CardContent>
           <CardFooter className="border-t pt-4">

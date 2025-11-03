@@ -917,7 +917,7 @@ export default function ShopPage({ params }: ShopPageProps) {
                                   {shopData.shopType === 'product_shop' ? (
                                     <div className="grid grid-cols-2 gap-4">
                                       <div>
-                                        <Label htmlFor="itemPrice" className="text-burgundy-900">Price (UGX)</Label>
+                                        <Label htmlFor="itemPrice" className="text-burgundy-900">Price (UG)</Label>
                                         <Input
                                           id="itemPrice"
                                           type="number"
@@ -1497,7 +1497,7 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
                       {shopType === 'product_shop' && 'price' in item && item.price && (
                         <div className="absolute top-2 right-2">
                           <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700">
-                            {`UGX ${(item.price).toLocaleString()}`}
+                            {`UG ${item.price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
                           </Badge>
                         </div>
                       )}

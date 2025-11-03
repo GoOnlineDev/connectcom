@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
+import { CheckoutDialog } from '@/components/checkout-dialog';
 import { 
   ShoppingCart, 
   Trash2, 
@@ -72,6 +73,8 @@ export default function CartPage() {
   const { user } = useUser();
   const { toast } = useToast();
   const [updatingItems, setUpdatingItems] = useState<Set<string>>(new Set());
+  const [checkoutShopId, setCheckoutShopId] = useState<Id<"shops"> | null>(null);
+  const [checkoutDialogOpen, setCheckoutDialogOpen] = useState(false);
 
   // Fetch cart data
   const cartItems = useQuery(api.carts.getUserCart);
@@ -193,8 +196,10 @@ export default function CartPage() {
     }
   };
 
-  const formatPrice = (priceInCents: number) => {
-    return `$${(priceInCents / 100).toFixed(2)}`;
+  const formatPrice = (price: number) => {
+    // Format as Ugandan Shillings (UG)
+    // Price is already in shillings, no conversion needed
+    return `UG ${price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
   };
 
   // Loading state
@@ -344,112 +349,124 @@ export default function CartPage() {
 
                 <CardContent className="space-y-3 sm:space-y-4">
                   {shopGroup.items.map((item: CartItemWithDetails) => (
-                    <div key={item._id} className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-3 sm:p-4 bg-beige-100/50 rounded-lg border border-beige-200">
+                    <div key={item._id} className="flex gap-4 p-4 bg-white rounded-lg border border-beige-200 hover:border-burgundy-300 hover:shadow-sm transition-all">
                       {/* Item Image */}
-                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center flex-shrink-0 border border-beige-300 mx-auto sm:mx-0">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center flex-shrink-0 border border-beige-300 overflow-hidden">
                         {item.itemType === "product" && item.itemDetails.imageUrls && item.itemDetails.imageUrls.length > 0 ? (
                           <img
                             src={item.itemDetails.imageUrls[0]}
                             alt={item.itemDetails.name}
-                            className="w-full h-full object-cover rounded-lg"
+                            className="w-full h-full object-cover"
                           />
                         ) : (
                           <div className="text-burgundy-400">
                             {item.itemType === "product" ? (
-                              <Package className="w-7 h-7 sm:w-8 sm:h-8" />
+                              <Package className="w-8 h-8 sm:w-10 sm:h-10" />
                             ) : (
-                              <Store className="w-7 h-7 sm:w-8 sm:h-8" />
+                              <Store className="w-8 h-8 sm:w-10 sm:h-10" />
                             )}
                           </div>
                         )}
                       </div>
 
                       {/* Item Details */}
-                      <div className="flex-1 min-w-0 text-center sm:text-left">
-                        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-2 sm:gap-0">
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-burgundy-900 truncate text-base sm:text-lg mb-1">
+                      <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <h3 className="font-semibold text-burgundy-900 text-base sm:text-lg leading-tight">
                               {item.itemDetails.name}
                             </h3>
-                            {item.itemDetails.description && (
-                              <p className="text-xs sm:text-sm text-burgundy-700 line-clamp-2">
-                                {item.itemDetails.description}
-                              </p>
-                            )}
+                            <Badge variant="outline" className="border-burgundy-300 text-burgundy-700 text-xs shrink-0">
+                              {item.itemType === "product" ? "Product" : "Service"}
+                            </Badge>
+                          </div>
+                          
+                          {item.itemDetails.description && (
+                            <p className="text-xs sm:text-sm text-burgundy-700 line-clamp-2 mb-2">
+                              {item.itemDetails.description}
+                            </p>
+                          )}
 
-                            {/* Service Details */}
-                            {item.itemType === "service" && item.serviceDetails && (
-                              <div className="mt-1.5 space-y-0.5 text-xs sm:text-sm text-burgundy-700">
-                                {item.serviceDetails.selectedDate && (
-                                  <div className="flex items-center justify-center sm:justify-start gap-1.5">
-                                    <Calendar className="w-3 h-3" />
-                                    <span>{item.serviceDetails.selectedDate}</span>
-                                  </div>
-                                )}
-                                {item.serviceDetails.selectedTime && (
-                                  <div className="flex items-center justify-center sm:justify-start gap-1.5">
-                                    <Clock className="w-3 h-3" />
-                                    <span>{item.serviceDetails.selectedTime}</span>
-                                  </div>
-                                )}
-                                {item.serviceDetails.notes && (
-                                  <div className="flex items-center justify-center sm:justify-start gap-1.5">
-                                    <FileText className="w-3 h-3" />
-                                    <span className="truncate max-w-[150px] sm:max-w-none">{item.serviceDetails.notes}</span>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-
-                            {/* Price */}
-                            <div className="mt-2 sm:mt-3">
-                              {item.itemType === "product" ? (
-                                <div className="text-base sm:text-lg font-bold text-burgundy-900">
-                                  {formatPrice(item.itemDetails.price || 0)}
-                                  <span className="text-xs sm:text-sm font-normal text-burgundy-700 ml-1">each</span>
+                          {/* Service Details */}
+                          {item.itemType === "service" && item.serviceDetails && (
+                            <div className="mt-2 space-y-1 text-xs text-burgundy-700">
+                              {item.serviceDetails.selectedDate && (
+                                <div className="flex items-center gap-1.5">
+                                  <Calendar className="w-3.5 h-3.5 text-burgundy-600" />
+                                  <span>{item.serviceDetails.selectedDate}</span>
                                 </div>
-                              ) : (
-                                <div className="text-xs sm:text-sm text-burgundy-700">
-                                  {item.itemDetails.pricing || "Contact for pricing"}
+                              )}
+                              {item.serviceDetails.selectedTime && (
+                                <div className="flex items-center gap-1.5">
+                                  <Clock className="w-3.5 h-3.5 text-burgundy-600" />
+                                  <span>{item.serviceDetails.selectedTime}</span>
+                                </div>
+                              )}
+                              {item.serviceDetails.notes && (
+                                <div className="flex items-start gap-1.5">
+                                  <FileText className="w-3.5 h-3.5 text-burgundy-600 mt-0.5 shrink-0" />
+                                  <span className="line-clamp-2">{item.serviceDetails.notes}</span>
                                 </div>
                               )}
                             </div>
+                          )}
+
+                          {/* Price */}
+                          <div className="mt-2">
+                            {item.itemType === "product" ? (
+                              <div className="flex items-baseline gap-2">
+                                <span className="text-base sm:text-lg font-bold text-burgundy-900">
+                                  {formatPrice(item.itemDetails.price || 0)}
+                                </span>
+                                <span className="text-xs text-burgundy-600">each</span>
+                              </div>
+                            ) : (
+                              <div className="text-sm font-medium text-burgundy-700">
+                                {item.itemDetails.pricing || "Contact for pricing"}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Actions and Controls */}
+                        <div className="flex flex-col items-end gap-3 sm:ml-4">
+                          {/* Action Buttons */}
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              className="w-8 h-8 p-0 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                              onClick={() => handleMoveToWishlist(item._id)}
+                              title="Move to wishlist"
+                            >
+                              <Heart className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="outline"
+                              className="w-8 h-8 p-0 border-red-200 text-red-600 hover:bg-red-50"
+                              onClick={() => handleRemoveItem(item._id)}
+                              title="Remove from cart"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
                           </div>
 
-                          {/* Actions */}
-                          <div className="flex flex-col items-center sm:items-end gap-2 sm:ml-4 mt-3 sm:mt-0">
-                            <div className="flex items-center gap-2">
-                              <Button
-                                size="icon"
-                                className="w-8 h-8 p-0"
-                                onClick={() => handleMoveToWishlist(item._id)}
-                              >
-                                <Heart className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="outline"
-                                className="w-8 h-8 p-0 border-red-200 text-red-600 hover:bg-red-50"
-                                onClick={() => handleRemoveItem(item._id)}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-
-                            {/* Quantity Controls */}
-                            {item.itemType === "product" && (
-                              <div className="flex items-center gap-1 sm:gap-2 mt-2">
+                          {/* Quantity Controls */}
+                          {item.itemType === "product" && (
+                            <div className="flex flex-col items-end gap-2">
+                              <div className="flex items-center gap-2">
                                 <Button
                                   size="icon"
                                   variant="outline"
                                   onClick={() => handleQuantityUpdate(item._id, item.quantity - 1)}
                                   disabled={item.quantity <= 1 || updatingItems.has(item._id)}
-                                  className="w-7 h-7 sm:w-8 sm:h-8 p-0 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                                  className="w-8 h-8 p-0 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 disabled:opacity-50"
                                 >
-                                  <Minus className="w-3 h-3" />
+                                  <Minus className="w-4 h-4" />
                                 </Button>
                                 
-                                <span className="w-7 sm:w-8 text-center font-semibold text-burgundy-900 text-sm">
+                                <span className="w-10 text-center font-semibold text-burgundy-900 text-sm">
                                   {updatingItems.has(item._id) ? "..." : item.quantity}
                                 </span>
                                 
@@ -458,26 +475,40 @@ export default function CartPage() {
                                   variant="outline"
                                   onClick={() => handleQuantityUpdate(item._id, item.quantity + 1)}
                                   disabled={updatingItems.has(item._id)}
-                                  className="w-7 h-7 sm:w-8 sm:h-8 p-0 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                                  className="w-8 h-8 p-0 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 disabled:opacity-50"
                                 >
-                                  <Plus className="w-3 h-3" />
+                                  <Plus className="w-4 h-4" />
                                 </Button>
                               </div>
-                            )}
 
-                            {/* Item Total */}
-                            {item.itemType === "product" && (
-                              <div className="text-center sm:text-right mt-2 sm:mt-3">
-                                <div className="font-bold text-burgundy-900 text-base sm:text-lg">
+                              {/* Item Total */}
+                              <div className="text-right">
+                                <div className="text-xs text-burgundy-600 mb-0.5">Subtotal</div>
+                                <div className="font-bold text-burgundy-900 text-lg">
                                   {formatPrice(item.itemTotal)}
                                 </div>
                               </div>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
                   ))}
+                  
+                  {/* Checkout Button for this Shop */}
+                  <div className="pt-4 border-t border-beige-200 mt-4">
+                    <Button
+                      onClick={() => {
+                        setCheckoutShopId(shopGroup.shop._id);
+                        setCheckoutDialogOpen(true);
+                      }}
+                      className="w-full bg-burgundy-600 hover:bg-burgundy-700 text-white h-11 text-base font-semibold"
+                      size="lg"
+                    >
+                      <CreditCard className="w-5 h-5 mr-2" />
+                      Checkout from {shopGroup.shop.shopName}
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -485,53 +516,54 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <Card className="border border-burgundy-200 lg:sticky lg:top-24">
-              <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="text-lg sm:text-xl text-burgundy-900">Order Summary</CardTitle>
+            <Card className="border border-burgundy-200 bg-white lg:sticky lg:top-24 shadow-sm">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-bold text-burgundy-900">Order Summary</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 sm:space-y-4">
-                <div className="space-y-1.5 sm:space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-burgundy-700 text-sm">Products ({cartSummary.totalProducts})</span>
-                    <span className="font-semibold text-burgundy-900 text-sm">
+              <CardContent className="space-y-4">
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-burgundy-700">Products ({cartSummary.totalProducts})</span>
+                    <span className="font-semibold text-burgundy-900">
                       {formatPrice(cartSummary.totalAmount)}
                     </span>
                   </div>
                   
                   {cartSummary.totalServices > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-burgundy-700 text-sm">Services ({cartSummary.totalServices})</span>
-                      <span className="text-sm text-burgundy-600">Contact for pricing</span>
+                    <div className="flex justify-between items-center py-2 border-t border-beige-200">
+                      <span className="text-burgundy-700">Services ({cartSummary.totalServices})</span>
+                      <span className="text-sm text-burgundy-600 italic">Contact for pricing</span>
                     </div>
                   )}
 
-                  <div className="flex justify-between text-xs text-burgundy-600">
+                  <div className="flex justify-between text-xs text-burgundy-600 pt-2 border-t border-beige-200">
                     <span>From {cartSummary.shopCount} {cartSummary.shopCount === 1 ? 'shop' : 'shops'}</span>
                   </div>
                 </div>
 
                 <Separator className="bg-burgundy-200" />
 
-                <div className="flex justify-between font-bold text-base sm:text-lg text-burgundy-900">
+                <div className="flex justify-between items-center font-bold text-lg text-burgundy-900 py-2">
                   <span>Total</span>
-                  <span>{formatPrice(cartSummary.totalAmount)}</span>
+                  <span className="text-xl">{formatPrice(cartSummary.totalAmount)}</span>
                 </div>
 
                 {cartSummary.totalServices > 0 && (
-                  <p className="text-xs text-burgundy-600 pt-1">
-                    * Services require direct contact with shops for pricing and booking
-                  </p>
+                  <div className="bg-burgundy-50 border border-burgundy-200 rounded-lg p-3">
+                    <p className="text-xs text-burgundy-700 leading-relaxed">
+                      * Services require direct contact with shops for pricing and booking
+                    </p>
+                  </div>
                 )}
 
-                <div className="space-y-2 pt-3 sm:pt-4">
-                  <Button variant="primary" className="w-full" size="lg">
-                    <CreditCard className="w-4 h-4 mr-2" />
-                    Proceed to Checkout
-                  </Button>
+                <div className="space-y-3 pt-2">
+                  <p className="text-xs text-burgundy-600 text-center mb-2">
+                    Checkout items from each shop separately
+                  </p>
                   
                   <Button 
                     variant="outline" 
-                    className="w-full"
+                    className="w-full border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 h-11 text-base"
                     size="lg"
                     asChild
                   >
@@ -541,9 +573,9 @@ export default function CartPage() {
                   </Button>
                 </div>
 
-                <div className="pt-3 sm:pt-4 border-t border-burgundy-100 mt-4 sm:mt-5">
-                  <h4 className="font-semibold text-burgundy-900 mb-1.5 text-sm sm:text-base">Need Help?</h4>
-                  <p className="text-xs text-burgundy-700">
+                <div className="pt-4 border-t border-beige-200 mt-4">
+                  <h4 className="font-semibold text-burgundy-900 mb-2 text-sm">Need Help?</h4>
+                  <p className="text-xs text-burgundy-700 leading-relaxed">
                     Contact the shops directly for service bookings or product inquiries.
                   </p>
                 </div>
@@ -552,6 +584,41 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      {/* Checkout Dialog */}
+      {checkoutShopId && (() => {
+        type ShopGroup = {
+          shop: {
+            _id: Id<"shops">;
+            shopName: string;
+            shopLogoUrl?: string;
+            shopType: string;
+          };
+          items: CartItemWithDetails[];
+        };
+        
+        const shopGroup = Object.entries(itemsByShop).find(([id]) => id === checkoutShopId);
+        if (!shopGroup) return null;
+        const [, group] = shopGroup as [string, ShopGroup];
+        const shopItems = group.items;
+        const shopTotal = shopItems.reduce((sum, item) => sum + item.itemTotal, 0);
+        const shopCartItemIds = shopItems.map(item => item._id);
+
+        return (
+          <CheckoutDialog
+            open={checkoutDialogOpen}
+            onOpenChange={setCheckoutDialogOpen}
+            shopId={checkoutShopId}
+            shopName={group.shop.shopName}
+            cartItemIds={shopCartItemIds}
+            totalAmount={shopTotal}
+            onSuccess={() => {
+              // Refresh cart data by refetching queries
+              // The queries will automatically update when cart items are removed
+            }}
+          />
+        );
+      })()}
     </div>
   );
 }

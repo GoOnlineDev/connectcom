@@ -129,8 +129,10 @@ export default function WishlistPage() {
     }
   };
 
-  const formatPrice = (priceInCents: number) => {
-    return `$${(priceInCents / 100).toFixed(2)}`;
+  const formatPrice = (price: number) => {
+    // Format as Ugandan Shillings (UG)
+    // Price is already in shillings, no conversion needed
+    return `UG ${price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
   };
 
   // Loading state
@@ -310,33 +312,33 @@ export default function WishlistPage() {
         ) : (
           <div className={
             viewMode === 'grid' 
-              ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
-              : "space-y-3 sm:space-y-4"
+              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
+              : "space-y-4"
           }>
             {wishlistItems.map((item) => (
               <Card 
                 key={item._id} 
-                className={`border border-burgundy-200 hover:shadow-md transition-shadow ${
-                  viewMode === 'list' ? 'flex-row flex-wrap sm:flex-nowrap' : ''
+                className={`border border-burgundy-200 hover:shadow-lg hover:border-burgundy-300 transition-all bg-white ${
+                  viewMode === 'list' ? 'flex gap-4 p-4' : ''
                 }`}
               >
                 {viewMode === 'grid' ? (
                   // Grid View
                   <>
                     {/* Item Image */}
-                    <div className="relative h-40 sm:h-48 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg border border-beige-300 overflow-hidden">
+                    <div className="relative h-48 sm:h-56 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg overflow-hidden">
                       {item.itemType === "product" && item.itemDetails.imageUrls && item.itemDetails.imageUrls.length > 0 ? (
                         <img
                           src={item.itemDetails.imageUrls[0]}
                           alt={item.itemDetails.name}
-                          className="w-full h-full object-cover rounded-t-lg"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="flex items-center justify-center h-full">
                           {item.itemType === "product" ? (
-                            <Package className="w-10 h-10 sm:w-12 sm:h-12 text-burgundy-400" />
+                            <Package className="w-12 h-12 sm:w-16 sm:h-16 text-burgundy-400" />
                           ) : (
-                            <Store className="w-10 h-10 sm:w-12 sm:h-12 text-burgundy-400" />
+                            <Store className="w-12 h-12 sm:w-16 sm:h-16 text-burgundy-400" />
                           )}
                         </div>
                       )}
@@ -344,9 +346,9 @@ export default function WishlistPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
 
                       {/* Price Badge */}
-                      {item.itemType === "product" && (
-                        <div className="absolute top-2 right-2">
-                          <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700 text-xs sm:text-sm px-2 py-0.5 sm:px-2.5 sm:py-1">
+                      {item.itemType === "product" && item.itemDetails.price && (
+                        <div className="absolute top-3 right-3">
+                          <Badge className="bg-burgundy-600 text-white text-sm font-semibold px-3 py-1">
                             {formatPrice(item.itemDetails.price)}
                           </Badge>
                         </div>
@@ -357,25 +359,25 @@ export default function WishlistPage() {
                         size="icon"
                         variant="outline"
                         onClick={() => handleRemoveFromWishlist(item.itemId)}
-                        className="absolute top-2 left-2 w-8 h-8 p-0 bg-white/90 hover:bg-white border-red-200 text-red-600 hover:bg-red-50"
+                        className="absolute top-3 left-3 w-9 h-9 p-0 bg-white/95 hover:bg-white border-red-200 text-red-600 hover:bg-red-50 shadow-sm"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
 
-                    <CardHeader className="pb-2 sm:pb-3">
-                      <CardTitle className="text-base sm:text-lg font-bold text-burgundy-900 line-clamp-1">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base sm:text-lg font-bold text-burgundy-900 line-clamp-2 mb-2">
                         {item.itemDetails.name}
                       </CardTitle>
-                      <CardDescription className="line-clamp-2 text-burgundy-700 text-xs sm:text-sm">
+                      <CardDescription className="line-clamp-2 text-burgundy-700 text-sm min-h-[2.5rem]">
                         {item.itemDetails.description || 'No description available'}
                       </CardDescription>
                     </CardHeader>
 
-                    <CardContent className="pt-0 pb-3 sm:pb-4">
+                    <CardContent className="pt-0 pb-4 space-y-3">
                       {/* Shop Info */}
-                      <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-beige-100 to-beige-200 rounded flex items-center justify-center border border-beige-300">
+                      <div className="flex items-center gap-2 pb-2 border-b border-beige-200">
+                        <div className="w-6 h-6 bg-gradient-to-br from-beige-100 to-beige-200 rounded flex items-center justify-center border border-beige-300 shrink-0">
                           {item.shopDetails.shopLogoUrl ? (
                             <img
                               src={item.shopDetails.shopLogoUrl}
@@ -383,18 +385,18 @@ export default function WishlistPage() {
                               className="w-full h-full object-cover rounded"
                             />
                           ) : (
-                            <Store className="w-2.5 h-2.5 sm:w-3 h-3 text-burgundy-400" />
+                            <Store className="w-3.5 h-3.5 text-burgundy-400" />
                           )}
                         </div>
-                        <span className="text-xs sm:text-sm text-burgundy-700 truncate">
+                        <span className="text-sm text-burgundy-700 truncate flex-1">
                           {item.shopDetails.shopName}
                         </span>
                       </div>
 
                       {/* Service Pricing */}
                       {item.itemType === "service" && (
-                        <div className="mb-3 sm:mb-4">
-                          <p className="text-xs sm:text-sm text-burgundy-700">
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium text-burgundy-900">
                             {item.itemDetails.pricing || "Contact for pricing"}
                           </p>
                           {item.itemDetails.duration && (
@@ -406,23 +408,21 @@ export default function WishlistPage() {
                       )}
 
                       {/* Actions */}
-                      <div className="flex gap-2 sm:gap-3">
+                      <div className="flex gap-2 pt-2">
                         <Button
                           onClick={() => handleAddToCart(item)}
-                          className="flex-1 h-9 sm:h-10 text-sm sm:text-base"
-                          size="sm"
+                          className="flex-1 bg-burgundy-600 hover:bg-burgundy-700 text-white h-10 text-sm"
                         >
-                          <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
+                          <ShoppingCart className="w-4 h-4 mr-2" />
                           Add to Cart
                         </Button>
                         <Button
                           asChild
                           variant="outline"
-                          className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 h-9 sm:h-10 text-sm sm:text-base w-fit"
-                          size="sm"
+                          className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 h-10 px-3"
                         >
                           <Link href={`/shops/${item.shopId}`}>
-                            View Shop
+                            View
                           </Link>
                         </Button>
                       </div>
@@ -430,80 +430,108 @@ export default function WishlistPage() {
                   </>
                 ) : (
                   // List View
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-3 sm:p-4">
+                  <>
                     {/* Item Image */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center flex-shrink-0 border border-beige-300 mx-auto sm:mx-0">
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-beige-100 to-beige-200 rounded-lg flex items-center justify-center flex-shrink-0 border border-beige-300 overflow-hidden">
                       {item.itemType === "product" && item.itemDetails.imageUrls && item.itemDetails.imageUrls.length > 0 ? (
                         <img
                           src={item.itemDetails.imageUrls[0]}
                           alt={item.itemDetails.name}
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="text-burgundy-400">
                           {item.itemType === "product" ? (
-                            <Package className="w-8 h-8" />
+                            <Package className="w-10 h-10 sm:w-12 sm:h-12" />
                           ) : (
-                            <Store className="w-8 h-8" />
+                            <Store className="w-10 h-10 sm:w-12 sm:h-12" />
                           )}
                         </div>
                       )}
                     </div>
 
                     {/* Item Details */}
-                    <div className="flex-1 min-w-0 text-center sm:text-left">
-                      <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-1.5 sm:gap-0">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-burgundy-900 truncate text-base sm:text-lg mb-1">
+                    <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <h3 className="font-semibold text-burgundy-900 text-base sm:text-lg leading-tight">
                             {item.itemDetails.name}
                           </h3>
-                          <p className="text-xs sm:text-sm text-burgundy-700 line-clamp-2">
-                            {item.itemDetails.description || 'No description available'}
-                          </p>
+                          <Badge variant="outline" className="border-burgundy-300 text-burgundy-700 text-xs shrink-0">
+                            {item.itemType === "product" ? "Product" : "Service"}
+                          </Badge>
+                        </div>
+                        
+                        <p className="text-sm text-burgundy-700 line-clamp-2 mb-2">
+                          {item.itemDetails.description || 'No description available'}
+                        </p>
 
-                          {/* Shop Info */}
-                          <div className="flex items-center justify-center sm:justify-start gap-1.5 mt-2">
-                            <Store className="w-3 h-3 text-burgundy-400" />
-                            <span className="text-xs text-burgundy-600 truncate">
-                              {item.shopDetails.shopName}
-                            </span>
-                          </div>
-
-                          {/* Price/Pricing */}
-                          <div className="mt-2 sm:mt-3">
-                            {item.itemType === "product" ? (
-                              <div className="text-base sm:text-lg font-bold text-burgundy-900">
-                                {formatPrice(item.itemDetails.price)}
-                              </div>
+                        {/* Shop Info */}
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-5 h-5 bg-gradient-to-br from-beige-100 to-beige-200 rounded flex items-center justify-center border border-beige-300 shrink-0">
+                            {item.shopDetails.shopLogoUrl ? (
+                              <img
+                                src={item.shopDetails.shopLogoUrl}
+                                alt={item.shopDetails.shopName}
+                                className="w-full h-full object-cover rounded"
+                              />
                             ) : (
-                              <div className="text-xs sm:text-sm text-burgundy-700">
-                                {item.itemDetails.pricing || "Contact for pricing"}
-                              </div>
+                              <Store className="w-3 h-3 text-burgundy-400" />
                             )}
                           </div>
+                          <span className="text-sm text-burgundy-600 truncate">
+                            {item.shopDetails.shopName}
+                          </span>
                         </div>
 
-                        {/* Actions */}
-                        <div className="flex flex-col items-center sm:items-end gap-2 sm:ml-4 mt-3 sm:mt-0">
+                        {/* Price/Pricing */}
+                        <div>
+                          {item.itemType === "product" && item.itemDetails.price ? (
+                            <div className="text-lg font-bold text-burgundy-900">
+                              {formatPrice(item.itemDetails.price)}
+                            </div>
+                          ) : (
+                            <div className="text-sm font-medium text-burgundy-700">
+                              {item.itemDetails.pricing || "Contact for pricing"}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-col items-end gap-2 sm:ml-4">
+                        <div className="flex items-center gap-2">
                           <Button
                             size="icon"
                             variant="outline"
                             onClick={() => handleRemoveFromWishlist(item.itemId)}
-                            className="w-8 h-8 p-0 border-red-200 text-red-600 hover:bg-red-50"
+                            className="w-9 h-9 p-0 border-red-200 text-red-600 hover:bg-red-50"
+                            title="Remove from wishlist"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                           <Button
                             size="icon"
                             onClick={() => handleAddToCart(item)}
-                            className="bg-burgundy-600 hover:bg-burgundy-700 text-white w-8 h-8"
+                            className="bg-burgundy-600 hover:bg-burgundy-700 text-white w-9 h-9"
+                            title="Add to cart"
                           >
-                            <Plus className="w-4 h-4" />
+                            <ShoppingCart className="w-4 h-4" />
                           </Button>
                         </div>
+                        <Button
+                          asChild
+                          variant="outline"
+                          className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 h-9 text-sm"
+                          size="sm"
+                        >
+                          <Link href={`/shops/${item.shopId}`}>
+                            View Shop
+                          </Link>
+                        </Button>
                       </div>
                     </div>
-                  </div>
+                  </>
                 )}
               </Card>
             ))}

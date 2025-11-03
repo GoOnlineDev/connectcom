@@ -345,7 +345,7 @@ export function ProductDetailContent({
             <h1 className="text-3xl font-bold text-burgundy-900 mb-2">{product.name}</h1>
             <div className="flex items-center gap-4 mb-4">
               <div className="text-3xl font-bold text-burgundy-700">
-                {`UGX ${product.price.toLocaleString()}`}
+                {`UG ${product.price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
               </div>
               {reviewStats && reviewStats.totalReviews > 0 && (
                 <StarRatingDisplay 
