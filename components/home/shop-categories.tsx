@@ -1,8 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCategories, useShops } from '@/hooks/useData';
+import { useCategories, useShops, useShopsByCategory } from '@/hooks/useData';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // Category icons mapping
@@ -99,48 +100,144 @@ export default function ShopCategories() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
       {categoryStats.map((category: any, index: number) => (
-        <Link 
-          href={`/categories/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
-          key={category.name}
-          className="group bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg animate-fade-in"
-          style={{ animationDelay: `${index * 0.1}s` }}
-        >
-          <div className="flex flex-col h-full">
-            <div className="relative h-28 sm:h-32 overflow-hidden">
-              <Image
-                src="/logo.png"
-                alt={category.name}
-                fill
-                className="object-contain transition-transform duration-500 group-hover:scale-110 p-4"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-burgundy/70 via-burgundy/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+        <CategoryCard 
+          key={category.name} 
+          category={category} 
+          index={index}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Individual category card component with slideshow
+function CategoryCard({ category, index }: { category: any; index: number }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Fetch shops for this category
+  const { data: categoryShops, isLoading } = useShopsByCategory(category.name, 10);
+  
+  // Filter shops that have images
+  const shopsWithImages = categoryShops?.filter((shop: any) => 
+    shop.shopImageUrl || shop.shopLogoUrl
+  ) || [];
+
+  // Auto-loop slideshow
+  useEffect(() => {
+    if (shopsWithImages.length === 0) return;
+    
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % shopsWithImages.length);
+    }, 3500); // Change every 3.5 seconds
+    
+    return () => clearInterval(interval);
+  }, [shopsWithImages.length]);
+
+  const hasShopsWithImages = shopsWithImages.length > 0;
+  const showSlideshow = !isLoading && hasShopsWithImages;
+
+  return (
+    <Link 
+      href={`/categories/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+      className="group bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-lg animate-fade-in"
+      style={{ animationDelay: `${index * 0.1}s` }}
+    >
+      <div className="flex flex-col h-full">
+        {/* Slideshow or Fallback */}
+        <div className="relative h-28 sm:h-32 overflow-hidden bg-gradient-to-br from-beige-100 to-beige-200">
+          {showSlideshow ? (
+            <>
+              {/* Shop Images Slideshow */}
+              {shopsWithImages.map((shop: any, idx: number) => (
+                <div
+                  key={shop._id}
+                  className={`absolute inset-0 transition-opacity duration-700 ${
+                    idx === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                  }`}
+                >
+                  {shop.shopImageUrl ? (
+                    <Image
+                      src={shop.shopImageUrl}
+                      alt={shop.shopName}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                    />
+                  ) : shop.shopLogoUrl ? (
+                    <Image
+                      src={shop.shopLogoUrl}
+                      alt={shop.shopName}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 bg-gradient-to-t from-burgundy-900/40 via-burgundy-900/20 to-transparent"></div>
+                </div>
+              ))}
               
-              {/* Category icon in a circle */}
-              <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center text-burgundy shadow-sm transform transition-transform group-hover:rotate-12">
+              {/* Navigation Dots - only show if more than 1 shop */}
+              {shopsWithImages.length > 1 && (
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
+                  {shopsWithImages.map((_: any, idx: number) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentIndex(idx);
+                      }}
+                      className={`rounded-full border-2 transition-all ${
+                        idx === currentIndex 
+                          ? 'bg-white border-white w-1.5 h-1.5' 
+                          : 'bg-white/40 border-white/60 hover:bg-white/60 w-1.5 h-1.5'
+                      }`}
+                      aria-label={`Go to slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              {/* Fallback - Category icon centered */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-burgundy/10 flex items-center justify-center text-burgundy-700 group-hover:scale-110 transition-transform duration-300">
+                  {category.icon}
+                </div>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-burgundy-900/30 via-transparent to-transparent"></div>
+            </>
+          )}
+          
+          {/* Category icon overlay in top-right corner */}
+          {showSlideshow && (
+            <div className="absolute top-2 right-2 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-burgundy-700 shadow-sm z-20 transform transition-transform group-hover:rotate-12">
+              <div className="w-3 h-3 sm:w-4 sm:h-4">
                 {category.icon}
               </div>
             </div>
-            
-            <div className="p-3 flex flex-col justify-between flex-grow bg-gradient-to-b from-white to-beige/30">
-              <div>
-                <h3 className="text-base font-semibold text-burgundy group-hover:text-burgundy-light transition-colors line-clamp-1">
-                  {category.name}
-                </h3>
-                <p className="text-xs text-burgundy/70 mt-0.5">{category.shopCount} shop{category.shopCount !== 1 ? 's' : ''}</p>
-              </div>
-              
-              <div className="mt-2 pt-2 border-t border-burgundy/10">
-                <span className="text-xs font-medium text-burgundy/80 flex items-center">
-                  Browse Category
-                  <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </span>
-              </div>
-            </div>
+          )}
+        </div>
+        
+        {/* Category Info */}
+        <div className="p-3 flex flex-col justify-between flex-grow bg-gradient-to-b from-white to-beige/30">
+          <div>
+            <h3 className="text-sm sm:text-base font-semibold text-burgundy-900 group-hover:text-burgundy-800 transition-colors line-clamp-1">
+              {category.name}
+            </h3>
+            <p className="text-xs text-burgundy-700 mt-0.5">{category.shopCount} shop{category.shopCount !== 1 ? 's' : ''}</p>
           </div>
-        </Link>
-      ))}
-    </div>
+          
+          <div className="mt-2 pt-2 border-t border-burgundy-200">
+            <span className="text-xs font-medium text-burgundy-800 flex items-center">
+              Browse Category
+              <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 } 

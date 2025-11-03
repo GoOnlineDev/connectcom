@@ -43,19 +43,20 @@ export default function HowItWorks() {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
       {steps.map((step) => (
-        <div key={step.id} className="bg-white p-6 rounded-lg shadow-md border-burgundy/10 hover:border-burgundy/30 border transition-all">
-          <div className="w-16 h-16 bg-burgundy/10 rounded-full flex items-center justify-center mb-4">
-            {step.icon}
-          </div>
-          <div className="flex items-center mb-4">
-            <div className="w-8 h-8 bg-burgundy text-white rounded-full flex items-center justify-center font-semibold mr-3">
-              {step.id}
+        <div key={step.id} className="bg-white p-4 md:p-6 rounded-lg shadow-sm border border-burgundy-200 hover:border-burgundy-300 hover:shadow-md transition-all">
+          <div className="flex items-start gap-3 mb-3">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-burgundy-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <div className="w-6 h-6 md:w-8 md:h-8 bg-burgundy-600 text-white rounded-full flex items-center justify-center text-xs md:text-sm font-bold">
+                {step.id}
+              </div>
             </div>
-            <h3 className="text-xl font-semibold text-burgundy">{step.title}</h3>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm md:text-base lg:text-lg font-semibold text-burgundy-900 mb-1 line-clamp-1">{step.title}</h3>
+              <p className="text-xs md:text-sm text-burgundy-700 line-clamp-3">{step.description}</p>
+            </div>
           </div>
-          <p className="text-burgundy/80">{step.description}</p>
         </div>
       ))}
     </div>

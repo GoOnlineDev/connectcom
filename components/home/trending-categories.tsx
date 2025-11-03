@@ -3,54 +3,109 @@
 import Link from 'next/link';
 import { useCategories, useShops } from '@/hooks/useData';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Smartphone,
+  Shirt,
+  Home,
+  Heart,
+  Gamepad2,
+  Dumbbell,
+  UtensilsCrossed,
+  BookOpen,
+  ShoppingBag,
+  Music,
+  Car,
+  Camera,
+  Baby,
+  Flower2,
+  Wrench,
+  Stethoscope,
+  LucideIcon,
+} from 'lucide-react';
 
-// Category icons mapping
-const categoryIcons = {
-  "Electronics": (
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-    </svg>
-  ),
-  "Fashion": (
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-    </svg>
-  ),
-  "Home & Garden": (
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-    </svg>
-  ),
-  "Beauty & Health": (
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-    </svg>
-  ),
-  "Toys & Games": (
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  ),
-  "Sports & Outdoors": (
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-    </svg>
-  ),
-  "Food & Beverages": (
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-    </svg>
-  ),
-  "Books & Media": (
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-    </svg>
-  ),
-  "default": (
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-    </svg>
-  )
+// Category icons with colors - using component types instead of ReactNode
+type IconConfig = {
+  IconComponent: LucideIcon;
+  bgColor: string;
+  iconColor: string;
+};
+
+const categoryIcons: Record<string, IconConfig> = {
+  "Electronics": {
+    IconComponent: Smartphone,
+    bgColor: "bg-gradient-to-br from-blue-500 to-blue-600",
+    iconColor: "text-white"
+  },
+  "Fashion": {
+    IconComponent: Shirt,
+    bgColor: "bg-gradient-to-br from-pink-500 to-rose-600",
+    iconColor: "text-white"
+  },
+  "Home & Garden": {
+    IconComponent: Home,
+    bgColor: "bg-gradient-to-br from-green-500 to-emerald-600",
+    iconColor: "text-white"
+  },
+  "Beauty & Health": {
+    IconComponent: Heart,
+    bgColor: "bg-gradient-to-br from-red-500 to-pink-600",
+    iconColor: "text-white"
+  },
+  "Toys & Games": {
+    IconComponent: Gamepad2,
+    bgColor: "bg-gradient-to-br from-purple-500 to-indigo-600",
+    iconColor: "text-white"
+  },
+  "Sports & Outdoors": {
+    IconComponent: Dumbbell,
+    bgColor: "bg-gradient-to-br from-orange-500 to-red-600",
+    iconColor: "text-white"
+  },
+  "Food & Beverages": {
+    IconComponent: UtensilsCrossed,
+    bgColor: "bg-gradient-to-br from-amber-500 to-orange-600",
+    iconColor: "text-white"
+  },
+  "Books & Media": {
+    IconComponent: BookOpen,
+    bgColor: "bg-gradient-to-br from-indigo-500 to-blue-600",
+    iconColor: "text-white"
+  },
+  "Automotive": {
+    IconComponent: Car,
+    bgColor: "bg-gradient-to-br from-gray-600 to-gray-800",
+    iconColor: "text-white"
+  },
+  "Photography": {
+    IconComponent: Camera,
+    bgColor: "bg-gradient-to-br from-teal-500 to-cyan-600",
+    iconColor: "text-white"
+  },
+  "Baby & Kids": {
+    IconComponent: Baby,
+    bgColor: "bg-gradient-to-br from-yellow-400 to-amber-500",
+    iconColor: "text-white"
+  },
+  "Flowers": {
+    IconComponent: Flower2,
+    bgColor: "bg-gradient-to-br from-pink-400 to-rose-500",
+    iconColor: "text-white"
+  },
+  "Tools & Hardware": {
+    IconComponent: Wrench,
+    bgColor: "bg-gradient-to-br from-slate-600 to-slate-800",
+    iconColor: "text-white"
+  },
+  "Medical": {
+    IconComponent: Stethoscope,
+    bgColor: "bg-gradient-to-br from-emerald-500 to-teal-600",
+    iconColor: "text-white"
+  },
+  "Music": {
+    IconComponent: Music,
+    bgColor: "bg-gradient-to-br from-violet-500 to-purple-600",
+    iconColor: "text-white"
+  },
 };
 
 export default function TrendingCategories() {
@@ -75,16 +130,125 @@ export default function TrendingCategories() {
     return null;
   }
 
+  // Category name variations mapping - maps any variation to a standard category name
+  const categoryNameMap: Record<string, string> = {
+    // Electronics variations
+    'electronics': 'Electronics',
+    'electronic': 'Electronics',
+    'tech': 'Electronics',
+    'technology': 'Electronics',
+    
+    // Fashion variations
+    'fashion': 'Fashion',
+    'clothing': 'Fashion',
+    'apparel': 'Fashion',
+    'wear': 'Fashion',
+    'style': 'Fashion',
+    
+    // Home & Garden variations
+    'home & garden': 'Home & Garden',
+    'home and garden': 'Home & Garden',
+    'home': 'Home & Garden',
+    'garden': 'Home & Garden',
+    'furniture': 'Home & Garden',
+    
+    // Beauty & Health variations
+    'beauty & health': 'Beauty & Health',
+    'beauty and health': 'Beauty & Health',
+    'beauty': 'Beauty & Health',
+    'health': 'Beauty & Health',
+    'cosmetics': 'Beauty & Health',
+    'wellness': 'Beauty & Health',
+    
+    // Toys & Games variations
+    'toys & games': 'Toys & Games',
+    'toys and games': 'Toys & Games',
+    'toys': 'Toys & Games',
+    'games': 'Toys & Games',
+    'gaming': 'Toys & Games',
+    
+    // Sports & Outdoors variations
+    'sports & outdoors': 'Sports & Outdoors',
+    'sports and outdoors': 'Sports & Outdoors',
+    'sports': 'Sports & Outdoors',
+    'outdoor': 'Sports & Outdoors',
+    'fitness': 'Sports & Outdoors',
+    'exercise': 'Sports & Outdoors',
+    
+    // Food & Beverages variations
+    'food & beverages': 'Food & Beverages',
+    'food and beverages': 'Food & Beverages',
+    'food': 'Food & Beverages',
+    'beverage': 'Food & Beverages',
+    'beverages': 'Food & Beverages',
+    'restaurant': 'Food & Beverages',
+    'dining': 'Food & Beverages',
+    
+    // Books & Media variations
+    'books & media': 'Books & Media',
+    'books and media': 'Books & Media',
+    'books': 'Books & Media',
+    'book': 'Books & Media',
+    'media': 'Books & Media',
+    'reading': 'Books & Media',
+  };
+
+  // Helper function to normalize and map category names
+  const normalizeCategory = (name: string): string => {
+    const normalized = name.toLowerCase().trim().replace(/\s+/g, ' ');
+    return categoryNameMap[normalized] || name;
+  };
+
+  // Helper function to get icon config
+  const getIconConfig = (categoryName: string): IconConfig => {
+    // Normalize and map the category name
+    const mappedName = normalizeCategory(categoryName);
+    
+    // Try exact match with mapped name
+    if (categoryIcons[mappedName]) {
+      return categoryIcons[mappedName];
+    }
+    
+    // Try case-insensitive match with original name
+    const caseInsensitiveMatch = Object.keys(categoryIcons).find(
+      key => key.toLowerCase() === categoryName.toLowerCase()
+    );
+    
+    if (caseInsensitiveMatch) {
+      return categoryIcons[caseInsensitiveMatch];
+    }
+    
+    // Try partial matching
+    const categoryLower = categoryName.toLowerCase();
+    for (const [key, config] of Object.entries(categoryIcons)) {
+      const keyLower = key.toLowerCase();
+      
+      // Check if either contains the other
+      if (categoryLower.includes(keyLower) || keyLower.includes(categoryLower)) {
+        return config;
+      }
+    }
+    
+    // Default fallback
+    return {
+      IconComponent: ShoppingBag,
+      bgColor: "bg-gradient-to-br from-burgundy-800 to-burgundy-900",
+      iconColor: "text-white"
+    };
+  };
+
   // Calculate shop count for each category and sort by popularity
   const categoryStats = categories.map((category: string) => {
     const shopCount = allShops.filter((shop: any) => 
       shop.categories?.includes(category)
     ).length;
     
+    const iconConfig = getIconConfig(category);
+    
     return {
       name: category,
       shopCount,
-      icon: categoryIcons[category as keyof typeof categoryIcons] || categoryIcons.default
+      ...iconConfig
     };
   })
   .filter((cat: any) => cat.shopCount > 0) // Only show categories with shops
@@ -93,26 +257,29 @@ export default function TrendingCategories() {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {categoryStats.map((category: any, index: number) => (
-        <Link 
-          href={`/categories/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
-          key={category.name}
-          className="group bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in"
-          style={{ animationDelay: `${index * 0.1}s` }}
-        >
-          <div className="flex items-center justify-center mb-3">
-            <div className="text-burgundy group-hover:text-burgundy-light transition-colors">
-              {category.icon}
+      {categoryStats.map((category: any, index: number) => {
+        const Icon = category.IconComponent;
+        return (
+          <Link 
+            href={`/categories/${category.name.toLowerCase().replace(/\s+/g, '-')}`} 
+            key={category.name}
+            className="group bg-white rounded-xl p-5 shadow-sm hover:shadow-lg border border-beige-200 hover:border-burgundy-800 transition-all duration-300 animate-fade-in hover:-translate-y-1"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <div className="flex items-center justify-center mb-4">
+              <div className={`${category.bgColor} rounded-full p-3 shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                <Icon className={`w-7 h-7 ${category.iconColor}`} />
+              </div>
             </div>
-          </div>
-          <h3 className="text-sm font-semibold text-burgundy-900 text-center line-clamp-1 mb-1">
-            {category.name}
-          </h3>
-          <p className="text-xs text-burgundy-700 text-center">
-            {category.shopCount} shop{category.shopCount !== 1 ? 's' : ''}
-          </p>
-        </Link>
-      ))}
+            <h3 className="text-sm font-bold text-burgundy-900 text-center line-clamp-1 mb-2 group-hover:text-burgundy-800 transition-colors">
+              {category.name}
+            </h3>
+            <p className="text-xs text-burgundy-700 text-center font-medium">
+              {category.shopCount} shop{category.shopCount !== 1 ? 's' : ''}
+            </p>
+          </Link>
+        );
+      })}
     </div>
   );
 }

@@ -116,32 +116,41 @@ export default function CategoryPageClient({ categoryName }: CategoryPageClientP
 
       <div className="container mx-auto px-4 py-8">
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 border border-beige-200">
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
+        <div className="bg-white rounded-xl shadow-sm p-5 md:p-6 mb-8 border border-burgundy-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
             {/* Search */}
-            <div className="flex-1 min-w-[300px]">
+            <div className="md:col-span-2 lg:col-span-2">
               <label className="block text-sm font-medium text-burgundy-900 mb-2">
                 Search Shops
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 w-5 h-5 z-10" />
                 <Input
                   type="text"
                   placeholder="Search shops by name or description..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-beige-300 focus:border-burgundy-500 focus:ring-burgundy-500"
+                  className="pl-10 pr-10 border-beige-300 focus:border-burgundy-500 focus:ring-burgundy-500 h-10 text-sm"
                 />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 hover:text-burgundy-800 text-xl leading-none"
+                    aria-label="Clear search"
+                  >
+                    ×
+                  </button>
+                )}
               </div>
             </div>
 
             {/* Shop Type Filter */}
-            <div className="min-w-[200px]">
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-burgundy-900 mb-2">
                 Shop Type
               </label>
               <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="border-beige-300 focus:border-burgundy-500 focus:ring-burgundy-500">
+                <SelectTrigger className="w-full border-beige-300 focus:border-burgundy-500 focus:ring-burgundy-500 h-10 text-sm">
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
                 <SelectContent>
@@ -153,12 +162,12 @@ export default function CategoryPageClient({ categoryName }: CategoryPageClientP
             </div>
 
             {/* Sort */}
-            <div className="min-w-[200px]">
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-burgundy-900 mb-2">
                 Sort By
               </label>
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="border-beige-300 focus:border-burgundy-500 focus:ring-burgundy-500">
+                <SelectTrigger className="w-full border-beige-300 focus:border-burgundy-500 focus:ring-burgundy-500 h-10 text-sm">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -168,15 +177,21 @@ export default function CategoryPageClient({ categoryName }: CategoryPageClientP
                 </SelectContent>
               </Select>
             </div>
+          </div>
 
-            {/* Clear Filters */}
-            <div className="flex gap-2">
-              <Button onClick={clearFilters} variant="outline" className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 hover:border-burgundy-400">
+          {/* Clear Filters Button */}
+          {(searchTerm || selectedType !== 'all' || sortBy !== 'newest') && (
+            <div className="mt-4 pt-4 border-t border-beige-200">
+              <Button 
+                onClick={clearFilters} 
+                variant="outline" 
+                className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 hover:border-burgundy-400 h-9 text-sm"
+              >
                 <Filter className="w-4 h-4 mr-2" />
-                Clear Filters
+                Clear All Filters
               </Button>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Related Categories */}

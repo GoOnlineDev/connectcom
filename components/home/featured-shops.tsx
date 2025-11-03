@@ -14,18 +14,13 @@ export default function FeaturedShops() {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 gap-4 md:flex md:space-x-4 md:gap-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-x-0">
         {Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="bg-white rounded-lg shadow-sm border border-beige-200">
-            <Skeleton className="h-48 w-full rounded-t-lg" />
-            <div className="p-4">
-              <Skeleton className="h-6 w-3/4 mb-2" />
-              <Skeleton className="h-4 w-full mb-2" />
-              <Skeleton className="h-4 w-2/3 mb-3" />
-              <div className="flex justify-between">
-                <Skeleton className="h-3 w-16" />
-                <Skeleton className="h-6 w-20" />
-              </div>
+            <Skeleton className="h-32 md:h-40 lg:h-48 w-full rounded-t-lg" />
+            <div className="p-3 md:p-4">
+              <Skeleton className="h-4 md:h-5 w-3/4 mb-2" />
+              <Skeleton className="h-3 w-1/2" />
             </div>
           </div>
         ))}
@@ -47,7 +42,7 @@ export default function FeaturedShops() {
 
   return (
     <div
-      className="flex space-x-4 overflow-x-auto snap-x snap-mandatory pb-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-x-0"
+      className="flex space-x-4 overflow-x-auto snap-x snap-mandatory pb-4 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-x-0 lg:overflow-x-visible"
       style={{
         scrollbarWidth: 'none', // Firefox
         msOverflowStyle: 'none', // IE 10+
@@ -65,7 +60,7 @@ export default function FeaturedShops() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
           viewport={{ once: true, amount: 0.3 }}
-          className="min-w-[80%] md:min-w-[calc(50%-8px)] lg:min-w-0 lg:w-auto snap-center block"
+          className="min-w-[calc(50%-8px)] md:min-w-[calc(50%-8px)] lg:min-w-0 snap-center block"
         >
           <Link 
             href={`/shops/${shop._id}/${slugify(shop.shopName)}`} 
@@ -73,27 +68,27 @@ export default function FeaturedShops() {
           >
             <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">
             {/* Shop Image */}
-            <div className="relative h-48 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg">
+            <div className="relative h-32 md:h-40 lg:h-48 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg overflow-hidden">
               {shop.shopImageUrl ? (
                 <img
                   src={shop.shopImageUrl}
                   alt={shop.shopName}
-                  className="w-full h-full object-cover rounded-t-lg"
+                  className="w-full h-full object-cover"
                 />
               ) : shop.shopLogoUrl ? (
                 <img
                   src={shop.shopLogoUrl}
                   alt={shop.shopName}
-                  className="w-full h-full object-cover rounded-t-lg"
+                  className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="flex items-center justify-center h-full">
-                  <Store className="w-16 h-16 text-burgundy-400" />
+                  <Store className="w-12 h-12 md:w-16 md:h-16 text-burgundy-400" />
                 </div>
               )}
               {/* Shop Type Badge */}
-              <div className="absolute top-3 right-3">
-                <Badge variant={shop.shopType === 'product_shop' ? 'default' : 'secondary'} className="bg-burgundy-600 text-white">
+              <div className="absolute top-2 right-2">
+                <Badge variant={shop.shopType === 'product_shop' ? 'default' : 'secondary'} className="bg-burgundy-600 text-white text-xs px-2 py-0.5">
                   {shop.shopType === 'product_shop' ? (
                     <>
                       <ShoppingBag className="w-3 h-3 mr-1" /> Products
@@ -106,50 +101,27 @@ export default function FeaturedShops() {
                 </Badge>
               </div>
             </div>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg font-bold text-burgundy-900 line-clamp-1">
+            <CardHeader className="pb-2 px-4 pt-3">
+              <CardTitle className="text-base md:text-lg font-bold text-burgundy-900 line-clamp-1">
                 {shop.shopName}
               </CardTitle>
-              {shop.description && (
-                <CardDescription className="line-clamp-2 text-burgundy-700">
-                  {shop.description}
-                </CardDescription>
-              )}
             </CardHeader>
-            <CardContent className="pt-0">
-              {/* Categories */}
+            <CardContent className="pt-0 px-4 pb-4">
+              {/* Categories - Only show if exists */}
               {shop.categories && shop.categories.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {shop.categories.slice(0, 2).map((cat: string) => (
-                    <Badge key={cat} variant="outline" className="text-xs border-burgundy-300 text-burgundy-700">
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {shop.categories.slice(0, 1).map((cat: string) => (
+                    <Badge key={cat} variant="outline" className="text-xs border-burgundy-300 text-burgundy-700 px-2 py-0.5">
                       {cat}
                     </Badge>
                   ))}
-                  {shop.categories.length > 2 && (
-                    <Badge variant="outline" className="text-xs border-burgundy-300 text-burgundy-700">
-                      +{shop.categories.length - 2} more
+                  {shop.categories.length > 1 && (
+                    <Badge variant="outline" className="text-xs border-burgundy-300 text-burgundy-700 px-2 py-0.5">
+                      +{shop.categories.length - 1}
                     </Badge>
                   )}
                 </div>
               )}
-              {/* Contact Info */}
-              <div className="space-y-2 text-sm text-burgundy-700">
-                {shop.contactInfo?.phone && (
-                  <div className="flex items-center gap-2">
-                    <span className="truncate">{shop.contactInfo.phone}</span>
-                  </div>
-                )}
-                {shop.physicalLocation && (
-                  <div className="flex items-center gap-2">
-                    <span className="truncate">
-                      {typeof shop.physicalLocation === 'string' 
-                        ? shop.physicalLocation 
-                        : 'Physical Location Available'
-                      }
-                    </span>
-                  </div>
-                )}
-              </div>
             </CardContent>
           </Card>
         </Link>

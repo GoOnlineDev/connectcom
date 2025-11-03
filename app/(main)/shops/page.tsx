@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { slugify } from '@/lib/utils';
 import { useFeaturedShops, useCategories, useSearchShops } from '@/hooks/useData';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,9 +13,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Search, MapPin, Clock, Phone, Store, ShoppingBag } from 'lucide-react';
 
 export default function ShopsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const searchParams = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
+
+  // Update search term when URL param changes
+  useEffect(() => {
+    const urlSearch = searchParams.get('search');
+    if (urlSearch) {
+      setSearchTerm(urlSearch);
+    }
+  }, [searchParams]);
 
   // Fetch featured shops for the hero carousel
   const featuredShops = useFeaturedShops(6);
@@ -118,47 +128,78 @@ export default function ShopsPage() {
       )}
 
       <div className="container mx-auto px-4 py-6">
+        {/* Search Bar */}
+        <div className="bg-white rounded-xl shadow-sm p-4 mb-6 border border-burgundy-200">
+          <div className="relative max-w-2xl mx-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 w-5 h-5 z-10" />
+            <Input
+              type="text"
+              placeholder="Search shops by name or description..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-10 border-beige-300 focus:border-burgundy-500 focus:ring-burgundy-500 h-11 text-base"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-burgundy-600 hover:text-burgundy-800 text-xl leading-none"
+                aria-label="Clear search"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Filters */}
-        <div className="bg-white rounded-xl shadow-xl p-5 mb-6 border border-burgundy-200 sm:flex sm:flex-wrap sm:justify-between sm:items-end gap-3">
-          <div className="flex-1 min-w-[180px] mb-3 sm:mb-0">
-            <label className="block text-xs font-medium text-burgundy-900 mb-1">
-              Category
-            </label>
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500 bg-white shadow-sm h-9 text-sm">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {allCategories.data?.map((category: string) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="bg-white rounded-xl shadow-sm p-5 mb-6 border border-burgundy-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
+            <div className="min-w-0">
+              <label className="block text-sm font-medium text-burgundy-900 mb-2">
+                Category
+              </label>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-full border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500 bg-white shadow-sm h-10 text-sm">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {allCategories.data?.map((category: string) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="flex-1 min-w-[180px] mb-3 sm:mb-0">
-            <label className="block text-xs font-medium text-burgundy-900 mb-1">
-              Shop Type
-            </label>
-            <Select value={selectedType} onValueChange={setSelectedType}>
-              <SelectTrigger className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500 bg-white shadow-sm h-9 text-sm">
-                <SelectValue placeholder="All Types" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="product_shop">Product Shops</SelectItem>
-                <SelectItem value="service_shop">Service Shops</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+            <div className="min-w-0">
+              <label className="block text-sm font-medium text-burgundy-900 mb-2">
+                Shop Type
+              </label>
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger className="w-full border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500 bg-white shadow-sm h-10 text-sm">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="product_shop">Product Shops</SelectItem>
+                  <SelectItem value="service_shop">Service Shops</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="w-full sm:w-auto flex gap-2 mt-2 sm:mt-0">
-            <Button onClick={clearFilters} variant="outline" className="flex-1 sm:flex-none border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 hover:border-burgundy-400 shadow-sm h-9 text-sm">
-              Clear Filters
-            </Button>
+            <div className="flex gap-2">
+              {(selectedCategory !== 'all' || selectedType !== 'all' || searchTerm) && (
+                <Button 
+                  onClick={clearFilters} 
+                  variant="outline" 
+                  className="flex-1 border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 hover:border-burgundy-400 shadow-sm h-10 text-sm"
+                >
+                  Clear Filters
+                </Button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -203,22 +244,22 @@ export default function ShopsPage() {
                 <Link 
                   key={shop._id} 
                   href={`/shops/${shop._id}/${slugify(shop.shopName)}`}
-                  className="block transform transition-transform hover:scale-105"
+                  className="block group"
                 >
-                  <Card className="h-full hover:shadow-lg transition-shadow border-beige-200">
+                  <Card className="h-full border-beige-200 transition-all duration-300 hover:shadow-xl hover:shadow-burgundy/10 hover:border-burgundy-300 group-hover:-translate-y-1">
                     {/* Shop Logo */}
                     <div className="relative h-40 bg-gradient-to-br from-beige-100 to-beige-200 rounded-t-lg overflow-hidden">
                       {shop.shopImageUrl ? (
                         <img
                           src={shop.shopImageUrl}
                           alt={shop.shopName}
-                          className="w-full h-full object-cover rounded-t-lg"
+                          className="w-full h-full object-cover rounded-t-lg group-hover:scale-110 transition-transform duration-300"
                         />
                       ) : shop.shopLogoUrl ? (
                         <img
                           src={shop.shopLogoUrl}
                           alt={shop.shopName}
-                          className="w-full h-full object-cover rounded-t-lg"
+                          className="w-full h-full object-cover rounded-t-lg group-hover:scale-110 transition-transform duration-300"
                         />
                       ) : (
                         <div className="flex items-center justify-center h-full">
@@ -229,7 +270,7 @@ export default function ShopsPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                       {/* Shop Type Badge */}
                       <div className="absolute top-2 right-2">
-                        <Badge variant={shop.shopType === 'product_shop' ? 'default' : 'secondary'} className="bg-burgundy-600 text-white text-xs">
+                        <Badge variant={shop.shopType === 'product_shop' ? 'default' : 'secondary'} className="bg-burgundy-600 text-white text-xs shadow-md">
                           {shop.shopType === 'product_shop' ? (
                             <>
                               <ShoppingBag className="w-3 h-3 mr-1" /> Products
@@ -242,39 +283,39 @@ export default function ShopsPage() {
                         </Badge>
                       </div>
                     </div>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-lg font-bold text-burgundy-900 line-clamp-1">
+                    <CardHeader className="pb-3 bg-white">
+                      <CardTitle className="text-lg font-bold text-burgundy-900 line-clamp-1 group-hover:text-burgundy-700 transition-colors">
                         {shop.shopName}
                       </CardTitle>
                       
                     </CardHeader>
-                    <CardContent className="pt-0">
+                    <CardContent className="pt-0 bg-white">
                       {/* Categories */}
                       {shop.categories && shop.categories.length > 0 && (
                         <div className="flex flex-wrap gap-1 mb-3">
                           {shop.categories.slice(0, 2).map((category: string) => (
-                            <Badge key={category} variant="outline" className="text-xs border-burgundy-300 text-burgundy-700">
+                            <Badge key={category} variant="outline" className="text-xs border-burgundy-300 text-burgundy-800 bg-burgundy/5">
                               {category}
                             </Badge>
                           ))}
                           {shop.categories.length > 2 && (
-                            <Badge variant="outline" className="text-xs border-burgundy-300 text-burgundy-700">
+                            <Badge variant="outline" className="text-xs border-burgundy-300 text-burgundy-800 bg-burgundy/5">
                               +{shop.categories.length - 2} more
                             </Badge>
                           )}
                         </div>
                       )}
                       {/* Contact Info */}
-                      <div className="space-y-2 text-sm text-burgundy-700">
+                      <div className="space-y-2 text-sm">
                         {shop.contactInfo?.phone && (
-                          <div className="flex items-center gap-2">
-                            <Phone className="w-4 h-4" />
+                          <div className="flex items-center gap-2 text-burgundy-800">
+                            <Phone className="w-4 h-4 text-burgundy-600 flex-shrink-0" />
                             <span className="truncate">{shop.contactInfo.phone}</span>
                           </div>
                         )}
                         {shop.physicalLocation && (
-                          <div className="flex items-center gap-2">
-                            <MapPin className="w-4 h-4" />
+                          <div className="flex items-center gap-2 text-burgundy-800">
+                            <MapPin className="w-4 h-4 text-burgundy-600 flex-shrink-0" />
                             <span className="truncate">
                               {typeof shop.physicalLocation === 'string' 
                                 ? shop.physicalLocation 
@@ -284,8 +325,8 @@ export default function ShopsPage() {
                           </div>
                         )}
                         {shop.operatingHours && (
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
+                          <div className="flex items-center gap-2 text-burgundy-800">
+                            <Clock className="w-4 h-4 text-burgundy-600 flex-shrink-0" />
                             <span className="truncate">
                               {typeof shop.operatingHours === 'string' 
                                 ? shop.operatingHours 
