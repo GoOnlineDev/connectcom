@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -525,9 +525,9 @@ function TicketCard({
 }: { 
   ticket: any; 
   onSelect: () => void;
-  getStatusBadge: (status: string) => JSX.Element;
-  getPriorityBadge: (priority?: string) => JSX.Element | null;
-  getCategoryBadge: (category: string) => JSX.Element;
+  getStatusBadge: (status: string) => React.ReactElement;
+  getPriorityBadge: (priority?: string) => React.ReactElement | null;
+  getCategoryBadge: (category: string) => React.ReactElement;
 }) {
   return (
     <Card 
