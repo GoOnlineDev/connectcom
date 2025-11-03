@@ -90,7 +90,7 @@ export default function VendorDashboardPage() {
           </CardContent>
           <CardFooter>
             <Link href="/onboarding/shop">
-              <Button className="bg-burgundy hover:bg-burgundy-dark text-white">
+              <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
                 Create Shop
               </Button>
             </Link>
@@ -222,7 +222,7 @@ export default function VendorDashboardPage() {
               <Button variant="outline" className="text-burgundy">View All Shops</Button>
             </Link>
             <Link href="/onboarding/shop" className="ml-auto">
-              <Button className="bg-burgundy hover:bg-burgundy-dark text-white">Add New Shop</Button>
+              <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">Add New Shop</Button>
             </Link>
           </CardFooter>
         </Card>

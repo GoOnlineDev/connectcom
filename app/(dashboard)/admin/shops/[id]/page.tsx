@@ -507,14 +507,14 @@ export default function AdminShopDetailsPage({ params }: AdminShopDetailsPagePro
 
                 {/* Admin Notes */}
                 <div>
-                  <label className="text-sm font-medium text-burgundy mb-2 block">
+                  <label className="text-sm font-medium text-burgundy-900 mb-2 block">
                     Admin Notes (optional)
                   </label>
                   <Textarea
                     placeholder="Add notes about this status change..."
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
-                    className="border-burgundy/20 focus:border-burgundy"
+                    className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                     rows={3}
                   />
                 </div>
@@ -522,7 +522,7 @@ export default function AdminShopDetailsPage({ params }: AdminShopDetailsPagePro
                 {/* Existing Admin Notes */}
                 {shop.adminNotes && (
                   <div>
-                    <label className="text-sm font-medium text-burgundy mb-2 block">
+                    <label className="text-sm font-medium text-burgundy-900 mb-2 block">
                       Previous Admin Notes
                     </label>
                     <div className="bg-burgundy/5 border border-burgundy/20 rounded-md p-3">

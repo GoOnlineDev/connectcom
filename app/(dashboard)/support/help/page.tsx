@@ -110,7 +110,7 @@ export default function HelpCenterPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/support/contact">
-                <Button className="w-full sm:w-auto bg-burgundy text-white hover:bg-burgundy-dark">
+                <Button className="w-full sm:w-auto bg-burgundy-600 text-white hover:bg-burgundy-700">
                   Contact Support
                 </Button>
               </Link>

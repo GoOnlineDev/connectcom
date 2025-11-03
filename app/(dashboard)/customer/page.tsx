@@ -169,7 +169,7 @@ export default function CustomerDashboardPage() {
           </CardContent>
           <div className="px-6 pb-6">
             <Link href="/customer/orders">
-              <Button className="w-full bg-burgundy hover:bg-burgundy-dark text-white">
+              <Button className="w-full bg-burgundy-600 text-white hover:bg-burgundy-700">
                 View Cart
               </Button>
             </Link>

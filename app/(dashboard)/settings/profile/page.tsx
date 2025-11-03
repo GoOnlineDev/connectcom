@@ -113,7 +113,7 @@ export default function ProfileSettingsPage() {
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="email" className="text-burgundy">
+              <Label htmlFor="email" className="text-burgundy-900">
                 Email Address
               </Label>
               <Input
@@ -128,7 +128,7 @@ export default function ProfileSettingsPage() {
             </div>
 
             <div>
-              <Label htmlFor="role" className="text-burgundy">
+              <Label htmlFor="role" className="text-burgundy-900">
                 Role
               </Label>
               <Input
@@ -143,7 +143,7 @@ export default function ProfileSettingsPage() {
             </div>
 
             <div>
-              <Label htmlFor="firstName" className="text-burgundy">
+              <Label htmlFor="firstName" className="text-burgundy-900">
                 First Name
               </Label>
               <Input
@@ -151,12 +151,12 @@ export default function ProfileSettingsPage() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Enter first name"
-                className="border-burgundy/20 focus:border-burgundy"
+                className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
 
             <div>
-              <Label htmlFor="lastName" className="text-burgundy">
+              <Label htmlFor="lastName" className="text-burgundy-900">
                 Last Name
               </Label>
               <Input
@@ -164,12 +164,12 @@ export default function ProfileSettingsPage() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="Enter last name"
-                className="border-burgundy/20 focus:border-burgundy"
+                className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
 
             <div>
-              <Label htmlFor="phoneNumber" className="text-burgundy">
+              <Label htmlFor="phoneNumber" className="text-burgundy-900">
                 Phone Number
               </Label>
               <Input
@@ -177,12 +177,12 @@ export default function ProfileSettingsPage() {
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 placeholder="+256 783 618441"
-                className="border-burgundy/20 focus:border-burgundy"
+                className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
 
             <div>
-              <Label htmlFor="location" className="text-burgundy">
+              <Label htmlFor="location" className="text-burgundy-900">
                 Location
               </Label>
               <Input
@@ -190,7 +190,7 @@ export default function ProfileSettingsPage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="Enter your location"
-                className="border-burgundy/20 focus:border-burgundy"
+                className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
           </div>
@@ -206,7 +206,7 @@ export default function ProfileSettingsPage() {
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="bg-burgundy text-white hover:bg-burgundy-dark"
+              className="bg-burgundy-600 text-white hover:bg-burgundy-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="h-4 w-4 mr-2" />
               {isSaving ? "Saving..." : "Save Changes"}

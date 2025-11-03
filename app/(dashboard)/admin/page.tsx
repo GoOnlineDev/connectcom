@@ -96,7 +96,7 @@ export default function AdminDashboardPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-burgundy">Admin Dashboard</h1>
-        <Badge className="bg-burgundy text-white hover:bg-burgundy-dark hover:text-white">
+        <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700">
           Admin Mode
         </Badge>
       </div>

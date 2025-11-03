@@ -147,7 +147,7 @@ export default function CustomerOrdersPage() {
               Start adding items to your cart to proceed with checkout.
             </p>
             <Link href="/shops">
-              <Button className="bg-burgundy hover:bg-burgundy-dark text-white">
+              <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
                 Browse Shops
               </Button>
             </Link>
@@ -174,7 +174,7 @@ export default function CustomerOrdersPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-burgundy">Shopping Cart</h1>
-        <Badge className="bg-burgundy text-white">
+        <Badge className="bg-burgundy-600 text-white">
           {cart.length} {cart.length === 1 ? "item" : "items"}
         </Badge>
       </div>
@@ -307,7 +307,7 @@ export default function CustomerOrdersPage() {
               </div>
               
               <Button
-                className="w-full bg-burgundy hover:bg-burgundy-dark text-white mt-4"
+                className="w-full bg-burgundy-600 text-white hover:bg-burgundy-700 mt-4"
                 size="lg"
                 disabled
               >

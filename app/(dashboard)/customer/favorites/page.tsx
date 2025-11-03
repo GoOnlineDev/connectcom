@@ -131,7 +131,7 @@ export default function CustomerFavoritesPage() {
               Start adding items to your favorites to save them for later.
             </p>
             <Link href="/shops">
-              <Button className="bg-burgundy hover:bg-burgundy-dark text-white">
+              <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
                 Browse Shops
               </Button>
             </Link>
@@ -145,7 +145,7 @@ export default function CustomerFavoritesPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-burgundy">My Favorites</h1>
-        <Badge className="bg-burgundy text-white">
+        <Badge className="bg-burgundy-600 text-white">
           {wishlist.length} {wishlist.length === 1 ? "item" : "items"}
         </Badge>
       </div>
@@ -218,7 +218,7 @@ export default function CustomerFavoritesPage() {
                 <div className="flex gap-2">
                   <Button
                     onClick={() => handleAddToCart(item)}
-                    className="flex-1 bg-burgundy hover:bg-burgundy-dark text-white text-sm"
+                    className="flex-1 bg-burgundy-600 text-white hover:bg-burgundy-700 text-sm"
                     size="sm"
                   >
                     <ShoppingCart className="h-4 w-4 mr-1" />

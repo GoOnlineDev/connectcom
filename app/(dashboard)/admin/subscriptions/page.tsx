@@ -245,7 +245,7 @@ export default function AdminSubscriptionsPage() {
               resetForm();
               setIsCreatingPackage(true);
             }}
-            className="bg-burgundy hover:bg-burgundy-dark"
+            className="bg-burgundy-600 text-white hover:bg-burgundy-700"
           >
             <Plus className="w-4 h-4 mr-2" />
             Create Package
@@ -312,7 +312,7 @@ export default function AdminSubscriptionsPage() {
                     </p>
                     <Button
                       onClick={handleInitializePackages}
-                      className="bg-burgundy hover:bg-burgundy-dark"
+                      className="bg-burgundy-600 text-white hover:bg-burgundy-700"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Initialize Default Packages
@@ -441,38 +441,38 @@ export default function AdminSubscriptionsPage() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="packageName" className="text-burgundy">Package Name</Label>
+                        <Label htmlFor="packageName" className="text-burgundy-900">Package Name</Label>
                         <Input
                           id="packageName"
                           value={packageForm.packageName}
                           onChange={(e) => setPackageForm(prev => ({ ...prev, packageName: e.target.value }))}
                           placeholder="e.g., premium"
                           disabled={!isCreatingPackage}
-                          className="border-burgundy/30 focus:border-burgundy"
+                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                         />
                       </div>
                       
                       <div>
-                        <Label htmlFor="displayName" className="text-burgundy">Display Name</Label>
+                        <Label htmlFor="displayName" className="text-burgundy-900">Display Name</Label>
                         <Input
                           id="displayName"
                           value={packageForm.displayName}
                           onChange={(e) => setPackageForm(prev => ({ ...prev, displayName: e.target.value }))}
                           placeholder="e.g., Premium"
-                          className="border-burgundy/30 focus:border-burgundy"
+                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <Label htmlFor="description" className="text-burgundy">Description</Label>
+                      <Label htmlFor="description" className="text-burgundy-900">Description</Label>
                       <Textarea
                         id="description"
                         value={packageForm.description}
                         onChange={(e) => setPackageForm(prev => ({ ...prev, description: e.target.value }))}
                         placeholder="Package description..."
                         rows={3}
-                        className="border-burgundy/30 focus:border-burgundy"
+                        className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                       />
                     </div>
                   </div>
@@ -481,17 +481,17 @@ export default function AdminSubscriptionsPage() {
 
                   {/* Pricing */}
                   <div className="space-y-4">
-                    <h4 className="font-semibold text-burgundy">Pricing</h4>
+                    <h4 className="font-semibold text-burgundy-900">Pricing</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="price" className="text-burgundy">Price (cents)</Label>
+                        <Label htmlFor="price" className="text-burgundy-900">Price (cents)</Label>
                         <Input
                           id="price"
                           type="number"
                           value={packageForm.price}
                           onChange={(e) => setPackageForm(prev => ({ ...prev, price: parseInt(e.target.value) || 0 }))}
                           placeholder="0"
-                          className="border-burgundy/30 focus:border-burgundy"
+                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                         />
                         <div className="text-xs text-burgundy/70 mt-1">
                           Display: {packageForm.price === 0 ? 'Free' : `$${(packageForm.price / 100).toFixed(2)}/month`}
@@ -499,13 +499,13 @@ export default function AdminSubscriptionsPage() {
                       </div>
                       
                       <div>
-                        <Label htmlFor="currency" className="text-burgundy">Currency</Label>
+                        <Label htmlFor="currency" className="text-burgundy-900">Currency</Label>
                         <Input
                           id="currency"
                           value={packageForm.currency}
                           onChange={(e) => setPackageForm(prev => ({ ...prev, currency: e.target.value }))}
                           placeholder="USD"
-                          className="border-burgundy/30 focus:border-burgundy"
+                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                         />
                       </div>
                     </div>
@@ -515,41 +515,41 @@ export default function AdminSubscriptionsPage() {
 
                   {/* Limits */}
                   <div className="space-y-4">
-                    <h4 className="font-semibold text-burgundy">Limits</h4>
+                    <h4 className="font-semibold text-burgundy-900">Limits</h4>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <Label htmlFor="maxShops" className="text-burgundy">Max Shops</Label>
+                        <Label htmlFor="maxShops" className="text-burgundy-900">Max Shops</Label>
                         <Input
                           id="maxShops"
                           type="number"
                           value={packageForm.maxShops}
                           onChange={(e) => setPackageForm(prev => ({ ...prev, maxShops: parseInt(e.target.value) || 1 }))}
                           min="1"
-                          className="border-burgundy/30 focus:border-burgundy"
+                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                         />
                       </div>
                       
                       <div>
-                        <Label htmlFor="maxShelvesPerShop" className="text-burgundy">Shelves/Shop</Label>
+                        <Label htmlFor="maxShelvesPerShop" className="text-burgundy-900">Shelves/Shop</Label>
                         <Input
                           id="maxShelvesPerShop"
                           type="number"
                           value={packageForm.maxShelvesPerShop}
                           onChange={(e) => setPackageForm(prev => ({ ...prev, maxShelvesPerShop: parseInt(e.target.value) || 1 }))}
                           min="1"
-                          className="border-burgundy/30 focus:border-burgundy"
+                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                         />
                       </div>
                       
                       <div>
-                        <Label htmlFor="maxItemsPerShelf" className="text-burgundy">Items/Shelf</Label>
+                        <Label htmlFor="maxItemsPerShelf" className="text-burgundy-900">Items/Shelf</Label>
                         <Input
                           id="maxItemsPerShelf"
                           type="number"
                           value={packageForm.maxItemsPerShelf}
                           onChange={(e) => setPackageForm(prev => ({ ...prev, maxItemsPerShelf: parseInt(e.target.value) || 1 }))}
                           min="1"
-                          className="border-burgundy/30 focus:border-burgundy"
+                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                         />
                       </div>
                     </div>
@@ -559,21 +559,21 @@ export default function AdminSubscriptionsPage() {
 
                   {/* Features */}
                   <div className="space-y-4">
-                    <h4 className="font-semibold text-burgundy">Features</h4>
+                    <h4 className="font-semibold text-burgundy-900">Features</h4>
                     
                     <div className="flex gap-2">
                       <Input
                         value={newFeature}
                         onChange={(e) => setNewFeature(e.target.value)}
                         placeholder="Add a feature..."
-                        className="border-burgundy/30 focus:border-burgundy"
+                        className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                         onKeyPress={(e) => e.key === 'Enter' && handleAddFeature()}
                       />
                       <Button
                         type="button"
                         onClick={handleAddFeature}
                         size="sm"
-                        className="bg-burgundy hover:bg-burgundy-dark"
+                        className="bg-burgundy-600 text-white hover:bg-burgundy-700"
                       >
                         <Plus className="w-4 h-4" />
                       </Button>
@@ -607,7 +607,7 @@ export default function AdminSubscriptionsPage() {
                     </Button>
                     <Button
                       onClick={handleSavePackage}
-                      className="flex-1 bg-burgundy hover:bg-burgundy-dark"
+                      className="flex-1 bg-burgundy-600 text-white hover:bg-burgundy-700"
                       disabled={!packageForm.packageName || !packageForm.displayName}
                     >
                       {isCreatingPackage ? 'Create Package' : 'Update Package'}

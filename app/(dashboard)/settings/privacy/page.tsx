@@ -95,11 +95,11 @@ export default function PrivacySettingsPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="profile-visibility" className="text-burgundy font-medium">
+            <Label htmlFor="profile-visibility" className="text-burgundy-900 font-medium">
               Profile Visibility
             </Label>
             <Select value={profileVisibility} onValueChange={setProfileVisibility}>
-              <SelectTrigger id="profile-visibility" className="border-burgundy/20">
+              <SelectTrigger id="profile-visibility" className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -115,7 +115,7 @@ export default function PrivacySettingsPage() {
 
           <div className="flex items-center justify-between py-4 border-t border-burgundy/20">
             <div className="flex-1">
-              <Label htmlFor="show-email" className="text-burgundy font-medium">
+              <Label htmlFor="show-email" className="text-burgundy-900 font-medium">
                 Show Email Address
               </Label>
               <p className="text-sm text-burgundy/60 mt-1">
@@ -126,7 +126,7 @@ export default function PrivacySettingsPage() {
               type="button"
               onClick={() => setShowEmail(!showEmail)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                showEmail ? "bg-burgundy" : "bg-burgundy/30"
+                showEmail ? "bg-burgundy-600" : "bg-burgundy-300"
               }`}
             >
               <span
@@ -139,7 +139,7 @@ export default function PrivacySettingsPage() {
 
           <div className="flex items-center justify-between py-4 border-t border-burgundy/20">
             <div className="flex-1">
-              <Label htmlFor="show-phone" className="text-burgundy font-medium">
+              <Label htmlFor="show-phone" className="text-burgundy-900 font-medium">
                 Show Phone Number
               </Label>
               <p className="text-sm text-burgundy/60 mt-1">
@@ -150,7 +150,7 @@ export default function PrivacySettingsPage() {
               type="button"
               onClick={() => setShowPhone(!showPhone)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                showPhone ? "bg-burgundy" : "bg-burgundy/30"
+                showPhone ? "bg-burgundy-600" : "bg-burgundy-300"
               }`}
             >
               <span
@@ -162,11 +162,11 @@ export default function PrivacySettingsPage() {
           </div>
 
           <div className="space-y-2 pt-4 border-t border-burgundy/20">
-            <Label htmlFor="theme" className="text-burgundy font-medium">
+            <Label htmlFor="theme" className="text-burgundy-900 font-medium">
               Theme
             </Label>
             <Select value={theme} onValueChange={setTheme}>
-              <SelectTrigger id="theme" className="border-burgundy/20">
+              <SelectTrigger id="theme" className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -191,7 +191,7 @@ export default function PrivacySettingsPage() {
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="bg-burgundy text-white hover:bg-burgundy-dark"
+              className="bg-burgundy-600 text-white hover:bg-burgundy-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="h-4 w-4 mr-2" />
               {isSaving ? "Saving..." : "Save Changes"}

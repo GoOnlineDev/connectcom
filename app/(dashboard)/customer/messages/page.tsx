@@ -128,7 +128,7 @@ export default function CustomerMessagesPage() {
                           <div className="flex items-center justify-between">
                             <p className="font-medium text-burgundy truncate">{conv.userName}</p>
                             {conv.unreadCount > 0 && (
-                              <Badge className="bg-burgundy text-white text-xs">
+                              <Badge className="bg-burgundy-600 text-white text-xs">
                                 {conv.unreadCount}
                               </Badge>
                             )}
@@ -199,7 +199,7 @@ export default function CustomerMessagesPage() {
                         <div
                           className={`max-w-[70%] rounded-lg px-4 py-2 ${
                             msg.isFromCurrentUser
-                              ? "bg-burgundy text-white"
+                              ? "bg-burgundy-600 text-white"
                               : "bg-burgundy/10 text-burgundy"
                           }`}
                         >
@@ -224,7 +224,7 @@ export default function CustomerMessagesPage() {
                       onChange={(e) => setMessageContent(e.target.value)}
                       placeholder="Type your message..."
                       rows={3}
-                      className="flex-1 border-burgundy/20 focus:border-burgundy resize-none"
+                      className="flex-1 border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500 resize-none"
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();
@@ -235,9 +235,9 @@ export default function CustomerMessagesPage() {
                     <Button
                       onClick={handleSendMessage}
                       disabled={isSending || !messageContent.trim()}
-                      className="bg-burgundy text-white hover:bg-burgundy/90 self-end"
+                      className="bg-burgundy-600 text-white hover:bg-burgundy-700 disabled:opacity-50 disabled:cursor-not-allowed self-end"
                     >
-                      <Send className="h-4 w-4 text-white" />
+                      <Send className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>

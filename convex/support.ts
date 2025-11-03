@@ -55,6 +55,41 @@ export const createSupportTicket = mutation({
       updatedAt: currentTime,
     });
     
+    // Notify all admins about the new ticket
+    const admins = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("role"), "admin"))
+      .collect();
+    
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    
+    const userName = user 
+      ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email
+      : "User";
+    
+    // Create notifications for all admins
+    for (const admin of admins) {
+      await ctx.db.insert("notifications", {
+        userId: admin.clerkId,
+        type: "system",
+        title: "New Support Ticket",
+        message: `${userName} submitted a support ticket: "${args.subject.trim()}"`,
+        isRead: false,
+        link: `/admin/support`,
+        relatedId: ticketId,
+        relatedType: "support_ticket",
+        metadata: {
+          ticketId: ticketId,
+          category: args.category,
+          priority: args.priority || "medium",
+        },
+        createdAt: currentTime,
+      });
+    }
+    
     return ticketId;
   },
 });

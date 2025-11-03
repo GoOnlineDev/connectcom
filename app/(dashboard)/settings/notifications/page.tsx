@@ -92,7 +92,7 @@ export default function NotificationSettingsPage() {
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between py-4 border-b border-burgundy/20">
             <div className="flex-1">
-              <Label htmlFor="email-notifications" className="text-burgundy font-medium">
+              <Label htmlFor="email-notifications" className="text-burgundy-900 font-medium">
                 Email Notifications
               </Label>
               <p className="text-sm text-burgundy/60 mt-1">
@@ -103,7 +103,7 @@ export default function NotificationSettingsPage() {
               type="button"
               onClick={() => setEmailNotifications(!emailNotifications)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                emailNotifications ? "bg-burgundy" : "bg-burgundy/30"
+                emailNotifications ? "bg-burgundy-600" : "bg-burgundy-300"
               }`}
             >
               <span
@@ -116,7 +116,7 @@ export default function NotificationSettingsPage() {
 
           <div className="flex items-center justify-between py-4 border-b border-burgundy/20">
             <div className="flex-1">
-              <Label htmlFor="push-notifications" className="text-burgundy font-medium">
+              <Label htmlFor="push-notifications" className="text-burgundy-900 font-medium">
                 Push Notifications
               </Label>
               <p className="text-sm text-burgundy/60 mt-1">
@@ -127,7 +127,7 @@ export default function NotificationSettingsPage() {
               type="button"
               onClick={() => setPushNotifications(!pushNotifications)}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                pushNotifications ? "bg-burgundy" : "bg-burgundy/30"
+                pushNotifications ? "bg-burgundy-600" : "bg-burgundy-300"
               }`}
             >
               <span
@@ -140,7 +140,7 @@ export default function NotificationSettingsPage() {
 
           <div className="flex items-center justify-between py-4">
             <div className="flex-1">
-              <Label htmlFor="marketing-emails" className="text-burgundy font-medium">
+              <Label htmlFor="marketing-emails" className="text-burgundy-900 font-medium">
                 Marketing Emails
               </Label>
               <p className="text-sm text-burgundy/60 mt-1">
@@ -173,7 +173,7 @@ export default function NotificationSettingsPage() {
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="bg-burgundy text-white hover:bg-burgundy-dark"
+              className="bg-burgundy-600 text-white hover:bg-burgundy-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="h-4 w-4 mr-2" />
               {isSaving ? "Saving..." : "Save Changes"}

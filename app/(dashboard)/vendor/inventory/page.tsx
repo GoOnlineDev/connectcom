@@ -56,7 +56,7 @@ export default function VendorInventoryPage() {
               Create a shop first to manage your inventory.
             </p>
             <Link href="/onboarding/shop">
-              <Button className="bg-burgundy hover:bg-burgundy-dark text-white">
+              <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
                 Create Shop
               </Button>
             </Link>
@@ -72,7 +72,7 @@ export default function VendorInventoryPage() {
         <h1 className="text-2xl font-bold text-burgundy">Inventory Management</h1>
         <div className="flex gap-2">
           <Link href="/vendor/inventory/products/new">
-            <Button className="bg-burgundy hover:bg-burgundy-dark text-white">
+            <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
               <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Button>

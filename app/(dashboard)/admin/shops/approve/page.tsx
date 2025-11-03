@@ -219,7 +219,7 @@ export default function ShopApprovalPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-burgundy">Shop Approvals</h1>
-        <Badge className="bg-burgundy text-white hover:bg-burgundy-dark hover:text-white">
+        <Badge className="bg-burgundy-600 text-white hover:bg-burgundy-700">
           {pendingShops.length} Pending Approval
         </Badge>
       </div>
@@ -318,7 +318,7 @@ export default function ShopApprovalPage() {
                         <h3 className="text-sm font-semibold text-burgundy/70 uppercase mb-2">Admin Notes</h3>
                         <Textarea 
                           placeholder="Add notes about this shop (required for rejection)"
-                          className="min-h-[120px] border-burgundy/20 focus:border-burgundy"
+                          className="min-h-[120px] border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                           value={adminNotes[shop._id] || ""}
                           onChange={(e) => setAdminNotes(prev => ({ ...prev, [shop._id]: e.target.value }))}
                         />
@@ -339,7 +339,7 @@ export default function ShopApprovalPage() {
                     <Button 
                       onClick={() => handleApprove(shop._id)}
                       disabled={processingShops[shop._id]}
-                      className="bg-burgundy hover:bg-burgundy-dark text-white"
+                      className="bg-burgundy-600 text-white hover:bg-burgundy-700"
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />
                       Approve

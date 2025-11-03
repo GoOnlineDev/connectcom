@@ -142,6 +142,12 @@ export default function DashboardSidebar({ className }: SidebarProps) {
       href: '/admin/messages',
       icon: MessageSquare,
     },
+    {
+      title: 'Support Tickets',
+      href: '/admin/support',
+      icon: FileText,
+      badge: 'New',
+    },
   ];
 
   // Vendor navigation items

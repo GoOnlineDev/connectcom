@@ -106,7 +106,7 @@ export default function AdminUsersPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-burgundy">User Management</h1>
         <Link href="/admin/users/new">
-          <Button className="bg-burgundy hover:bg-burgundy-dark text-white">
+          <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
             <UserPlus className="h-4 w-4 mr-2" />
             Add User
           </Button>
@@ -119,7 +119,7 @@ export default function AdminUsersPage() {
           <Search className="absolute left-3 top-3 h-4 w-4 text-burgundy/60" />
           <Input
             placeholder="Search users..."
-            className="pl-10 border-burgundy/20 focus:border-burgundy"
+            className="pl-10 border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -128,7 +128,7 @@ export default function AdminUsersPage() {
           value={roleFilter}
           onValueChange={setRoleFilter}
         >
-          <SelectTrigger className="w-full md:w-[180px] border-burgundy/20 focus:border-burgundy">
+          <SelectTrigger className="w-full md:w-[180px] border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500">
             <SelectValue placeholder="Filter by role" />
           </SelectTrigger>
           <SelectContent>

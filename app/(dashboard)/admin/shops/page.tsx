@@ -225,14 +225,14 @@ export default function AdminShopsPage() {
           <Search className="absolute left-3 top-3 h-4 w-4 text-burgundy/60" />
           <Input
             placeholder="Search shops..."
-            className="pl-10 border-burgundy/20 focus:border-burgundy"
+            className="pl-10 border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="border-burgundy/20 focus:border-burgundy">
+          <SelectTrigger className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -245,7 +245,7 @@ export default function AdminShopsPage() {
         </Select>
         
         <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger className="border-burgundy/20 focus:border-burgundy">
+          <SelectTrigger className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500">
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
           <SelectContent>
@@ -256,7 +256,7 @@ export default function AdminShopsPage() {
         </Select>
         
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="border-burgundy/20 focus:border-burgundy">
+          <SelectTrigger className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500">
             <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
           <SelectContent>

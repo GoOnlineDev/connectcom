@@ -60,7 +60,7 @@ export default function VendorShopsPage() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-burgundy">My Shops</h1>
           <Link href="/onboarding/shop">
-            <Button className="bg-burgundy hover:bg-burgundy-dark text-white">
+            <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
               <PlusCircle className="mr-2 h-4 w-4" /> Create Shop
             </Button>
           </Link>
@@ -74,7 +74,7 @@ export default function VendorShopsPage() {
               You haven't created any shops yet. Create your first shop to start selling products or services.
             </p>
             <Link href="/onboarding/shop">
-              <Button className="bg-burgundy hover:bg-burgundy-dark text-white">
+              <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
                 Create Your First Shop
               </Button>
             </Link>
@@ -205,7 +205,7 @@ export default function VendorShopsPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-burgundy">My Shops</h1>
         <Link href="/onboarding/shop">
-          <Button className="bg-burgundy hover:bg-burgundy-dark text-white">
+          <Button className="bg-burgundy-600 text-white hover:bg-burgundy-700">
             <PlusCircle className="mr-2 h-4 w-4" /> Create Shop
           </Button>
         </Link>

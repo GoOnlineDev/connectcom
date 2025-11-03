@@ -93,11 +93,11 @@ export default function ContactSupportPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="category" className="text-burgundy">
+                <Label htmlFor="category" className="text-burgundy-900">
                   Category
                 </Label>
                 <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger id="category" className="border-burgundy/20">
+                  <SelectTrigger id="category" className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -111,11 +111,11 @@ export default function ContactSupportPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="priority" className="text-burgundy">
+                <Label htmlFor="priority" className="text-burgundy-900">
                   Priority
                 </Label>
                 <Select value={priority} onValueChange={setPriority}>
-                  <SelectTrigger id="priority" className="border-burgundy/20">
+                  <SelectTrigger id="priority" className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -129,7 +129,7 @@ export default function ContactSupportPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subject" className="text-burgundy">
+              <Label htmlFor="subject" className="text-burgundy-900">
                 Subject *
               </Label>
               <Input
@@ -138,12 +138,12 @@ export default function ContactSupportPage() {
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="Brief description of your issue"
                 required
-                className="border-burgundy/20 focus:border-burgundy"
+                className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="message" className="text-burgundy">
+              <Label htmlFor="message" className="text-burgundy-900">
                 Message *
               </Label>
               <Textarea
@@ -153,7 +153,7 @@ export default function ContactSupportPage() {
                 placeholder="Please provide details about your issue or question..."
                 rows={8}
                 required
-                className="border-burgundy/20 focus:border-burgundy"
+                className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
 
@@ -169,7 +169,7 @@ export default function ContactSupportPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-burgundy text-white hover:bg-burgundy-dark"
+                className="bg-burgundy-600 text-white hover:bg-burgundy-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="h-4 w-4 mr-2" />
                 {isSubmitting ? "Submitting..." : "Submit Ticket"}

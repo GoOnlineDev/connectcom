@@ -87,7 +87,7 @@ export default function ReportIssuePage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="subject" className="text-burgundy">
+              <Label htmlFor="subject" className="text-burgundy-900">
                 Issue Summary *
               </Label>
               <Input
@@ -96,12 +96,12 @@ export default function ReportIssuePage() {
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="Brief description of the issue"
                 required
-                className="border-burgundy/20 focus:border-burgundy"
+                className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="message" className="text-burgundy">
+              <Label htmlFor="message" className="text-burgundy-900">
                 Details *
               </Label>
               <Textarea
@@ -111,7 +111,7 @@ export default function ReportIssuePage() {
                 placeholder="Please describe the issue in detail, including steps to reproduce, expected behavior, and actual behavior..."
                 rows={10}
                 required
-                className="border-burgundy/20 focus:border-burgundy"
+                className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
               <p className="text-xs text-burgundy/60">
                 Include steps to reproduce the issue, what you expected to happen, and what actually happened.
@@ -130,7 +130,7 @@ export default function ReportIssuePage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-burgundy text-white hover:bg-burgundy-dark"
+                className="bg-burgundy-600 text-white hover:bg-burgundy-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="h-4 w-4 mr-2" />
                 {isSubmitting ? "Submitting..." : "Submit Report"}

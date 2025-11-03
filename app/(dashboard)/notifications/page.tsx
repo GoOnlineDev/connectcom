@@ -208,7 +208,7 @@ export default function NotificationsPage() {
                               {notification.title}
                             </h4>
                             {!notification.isRead && (
-                              <Badge className="bg-burgundy text-white text-xs">New</Badge>
+                              <Badge className="bg-burgundy-600 text-white text-xs">New</Badge>
                             )}
                           </div>
                           <p className="text-sm text-burgundy/70 mb-2">
