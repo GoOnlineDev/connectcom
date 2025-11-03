@@ -66,7 +66,7 @@ export function ProductDetailContent({
   const updateReview = useMutation(api.reviews.updateProductReview);
   const deleteReview = useMutation(api.reviews.deleteProductReview);
   
-  const isInWishlist = productData.data?.isInWishlist;
+  const isInWishlist = productData.data?.isInWishlist ?? false;
 
   // Loading state
   if (productData.isLoading || !productData.data) {
@@ -149,6 +149,8 @@ export function ProductDetailContent({
       }
 
       if (result.success) {
+        // Refetch product data to update wishlist status
+        // The useProductWithReviews hook should automatically refetch
         toast({
           title: isInWishlist ? "Removed from wishlist" : "Added to wishlist",
           description: `${product.name} has been ${isInWishlist ? 'removed from' : 'added to'} your wishlist`,
@@ -295,13 +297,13 @@ export function ProductDetailContent({
                   <>
                     <button
                       onClick={() => setSelectedImageIndex(prev => prev > 0 ? prev - 1 : images.length - 1)}
-                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-burgundy-900/80 text-white p-2 rounded-full hover:bg-burgundy-900 transition-colors shadow-lg"
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setSelectedImageIndex(prev => prev < images.length - 1 ? prev + 1 : 0)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-burgundy-900/80 text-white p-2 rounded-full hover:bg-burgundy-900 transition-colors shadow-lg"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </button>
@@ -413,9 +415,9 @@ export function ProductDetailContent({
               <Button
                 onClick={handleToggleWishlist}
                 variant="outline"
-                className="border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50"
+                className={`border-burgundy-600 ${isInWishlist ? 'bg-burgundy-50 text-burgundy-700' : 'text-burgundy-700'} hover:bg-burgundy-50`}
               >
-                <Heart className={`w-4 h-4 ${isInWishlist ? 'fill-current' : ''}`} />
+                <Heart className={`w-4 h-4 ${isInWishlist ? 'fill-current text-burgundy-600' : ''}`} />
               </Button>
               <Button
                 onClick={handleShare}
@@ -482,19 +484,20 @@ export function ProductDetailContent({
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label className="text-white">Rating</Label>
+                      <Label className="text-burgundy-900">Rating</Label>
                       <div className="flex gap-1 mt-2">
                         <StarRating interactive={true} rating={reviewStars} onRatingChange={setReviewStars} size="lg" />
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="reviewComment" className="text-white">Comment (Optional)</Label>
+                      <Label htmlFor="reviewComment" className="text-burgundy-900">Comment (Optional)</Label>
                       <Textarea
                         id="reviewComment"
                         value={reviewComment}
                         onChange={(e) => setReviewComment(e.target.value)}
                         placeholder="Tell others about your experience..."
                         rows={4}
+                        className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                       />
                     </div>
                   </div>

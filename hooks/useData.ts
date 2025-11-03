@@ -401,6 +401,11 @@ export const useProductWithReviews = (productId?: Id<"products">) => {
   const reviews = useProductReviews(productId, 10);
   const reviewStats = useProductReviewStats(productId);
   const userReview = useUserProductReview(productId);
+  const isInWishlist = useData(
+    productId ? `wishlist-item-${productId}` : null,
+    productId ? api.wishlists.isInWishlist : null,
+    productId ? { itemId: productId } : null
+  );
   
   if (!product.data) {
     return {
@@ -416,9 +421,10 @@ export const useProductWithReviews = (productId?: Id<"products">) => {
       reviews: reviews.data || [],
       reviewStats: reviewStats.data,
       userReview: userReview.data,
+      isInWishlist: isInWishlist.data || false,
     },
-    isLoading: product.isLoading || reviews.isLoading || reviewStats.isLoading,
-    error: product.error || reviews.error || reviewStats.error,
+    isLoading: product.isLoading || reviews.isLoading || reviewStats.isLoading || isInWishlist.isLoading,
+    error: product.error || reviews.error || reviewStats.error || isInWishlist.error,
   };
 };
 
@@ -428,6 +434,11 @@ export const useServiceWithReviews = (serviceId?: Id<"services">) => {
   const reviews = useServiceReviews(serviceId, 10);
   const reviewStats = useServiceReviewStats(serviceId);
   const userReview = useUserServiceReview(serviceId);
+  const isInWishlist = useData(
+    serviceId ? `wishlist-item-${serviceId}` : null,
+    serviceId ? api.wishlists.isInWishlist : null,
+    serviceId ? { itemId: serviceId } : null
+  );
   
   if (!service.data) {
     return {
@@ -443,8 +454,9 @@ export const useServiceWithReviews = (serviceId?: Id<"services">) => {
       reviews: reviews.data || [],
       reviewStats: reviewStats.data,
       userReview: userReview.data,
+      isInWishlist: isInWishlist.data || false,
     },
-    isLoading: service.isLoading || reviews.isLoading || reviewStats.isLoading,
-    error: service.error || reviews.error || reviewStats.error,
+    isLoading: service.isLoading || reviews.isLoading || reviewStats.isLoading || isInWishlist.isLoading,
+    error: service.error || reviews.error || reviewStats.error || isInWishlist.error,
   };
 };

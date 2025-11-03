@@ -68,7 +68,7 @@ export function ServiceDetailContent({
   const updateReview = useMutation(api.reviews.updateServiceReview);
   const deleteReview = useMutation(api.reviews.deleteServiceReview);
   
-  const isInWishlist = serviceData.data?.isInWishlist;
+  const isInWishlist = serviceData.data?.isInWishlist ?? false;
 
   // Loading state
   if (serviceData.isLoading || !serviceData.data) {
@@ -159,6 +159,8 @@ export function ServiceDetailContent({
       }
 
       if (result.success) {
+        // Refetch service data to update wishlist status
+        // The useServiceWithReviews hook should automatically refetch
         toast({
           title: isInWishlist ? "Removed from wishlist" : "Added to wishlist",
           description: `${service.name} has been ${isInWishlist ? 'removed from' : 'added to'} your wishlist`,
@@ -361,34 +363,37 @@ export function ServiceDetailContent({
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="date">Preferred Date</Label>
+                  <Label htmlFor="date" className="text-burgundy-900">Preferred Date</Label>
                   <Input
                     id="date"
                     type="date"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
                     min={new Date().toISOString().split('T')[0]}
+                    className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="time">Preferred Time</Label>
+                  <Label htmlFor="time" className="text-burgundy-900">Preferred Time</Label>
                   <Input
                     id="time"
                     type="time"
                     value={selectedTime}
                     onChange={(e) => setSelectedTime(e.target.value)}
+                    className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                   />
                 </div>
               </div>
               
               <div>
-                <Label htmlFor="notes">Additional Notes (Optional)</Label>
+                <Label htmlFor="notes" className="text-burgundy-900">Additional Notes (Optional)</Label>
                 <Textarea
                   id="notes"
                   value={bookingNotes}
                   onChange={(e) => setBookingNotes(e.target.value)}
                   placeholder="Any special requirements or notes..."
                   rows={3}
+                  className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                 />
               </div>
 
@@ -403,9 +408,9 @@ export function ServiceDetailContent({
                 <Button
                   onClick={handleToggleWishlist}
                   variant="outline"
-                  className="border-burgundy-600 text-burgundy-700 hover:bg-burgundy-50"
+                  className={`border-burgundy-600 ${isInWishlist ? 'bg-burgundy-50 text-burgundy-700' : 'text-burgundy-700'} hover:bg-burgundy-50`}
                 >
-                  <Heart className={`w-4 h-4 ${isInWishlist ? 'fill-current' : ''}`} />
+                  <Heart className={`w-4 h-4 ${isInWishlist ? 'fill-current text-burgundy-600' : ''}`} />
                 </Button>
                 <Button
                   onClick={handleShare}
@@ -505,19 +510,20 @@ export function ServiceDetailContent({
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label>Rating</Label>
+                      <Label className="text-burgundy-900">Rating</Label>
                       <div className="flex gap-1 mt-2">
                         <StarRating interactive={true} rating={reviewStars} onRatingChange={setReviewStars} size="lg" />
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="reviewComment">Comment (Optional)</Label>
+                      <Label htmlFor="reviewComment" className="text-burgundy-900">Comment (Optional)</Label>
                       <Textarea
                         id="reviewComment"
                         value={reviewComment}
                         onChange={(e) => setReviewComment(e.target.value)}
                         placeholder="Tell others about your experience..."
                         rows={4}
+                        className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                       />
                     </div>
                   </div>

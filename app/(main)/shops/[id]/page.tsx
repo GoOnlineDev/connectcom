@@ -574,13 +574,13 @@ export default function ShopPage({ params }: ShopPageProps) {
                           </CardHeader>
                           <CardContent className="pt-0">
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                              <div className="text-center p-3 bg-white/50 rounded-lg">
+                              <div className="text-center p-3 bg-white rounded-lg border border-burgundy-200">
                                 <div className="text-xl sm:text-2xl font-bold text-burgundy-700">
                                   {shelfLimits.currentShelfCount}/{shelfLimits.maxShelves}
                                 </div>
                                 <div className="text-burgundy-700 text-xs sm:text-sm font-medium">Shelves Used</div>
                               </div>
-                              <div className="text-center p-3 bg-white/50 rounded-lg">
+                              <div className="text-center p-3 bg-white rounded-lg border border-burgundy-200">
                                 <div className="text-base sm:text-lg font-semibold text-burgundy-700 capitalize">
                                   {shelfLimits.packageName}
                                 </div>
@@ -664,22 +664,24 @@ export default function ShopPage({ params }: ShopPageProps) {
                               </DialogHeader>
                               <div className="space-y-4">
                                 <div>
-                                  <Label htmlFor="shelfName" className="text-white">Shelf Name</Label>
+                                  <Label htmlFor="shelfName" className="text-burgundy-900">Shelf Name</Label>
                                   <Input
                                     id="shelfName"
                                     value={shelfName}
                                     onChange={(e) => setShelfName(e.target.value)}
                                     placeholder="e.g., Electronics, Clothing, Featured Items"
+                                    className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                                   />
                                 </div>
                                 <div>
-                                  <Label htmlFor="shelfDescription" className="text-white">Description (Optional)</Label>
+                                  <Label htmlFor="shelfDescription" className="text-burgundy-900">Description (Optional)</Label>
                                   <Textarea
                                     id="shelfDescription"
                                     value={shelfDescription}
                                     onChange={(e) => setShelfDescription(e.target.value)}
                                     placeholder="Describe what this shelf contains..."
                                     rows={3}
+                                    className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                                   />
                                 </div>
                               </div>
@@ -718,12 +720,12 @@ export default function ShopPage({ params }: ShopPageProps) {
                                 <div className="space-y-4 overflow-y-auto flex-1 pr-2 scrollbar-hide">
                                   {!isEditingItem && (
                                     <div>
-                                      <Label htmlFor="shelf" className="text-white">Select Shelf</Label>
+                                      <Label htmlFor="shelf" className="text-burgundy-900">Select Shelf</Label>
                                       <select
                                         id="shelf"
                                         value={selectedShelfId || ""}
                                         onChange={(e) => setSelectedShelfId(e.target.value as Id<"shelves">)}
-                                        className="w-full p-2 border rounded-md"
+                                        className="w-full p-2 border border-burgundy-300 rounded-md focus:border-burgundy-500 focus:ring-burgundy-500 text-burgundy-900"
                                       >
                                         <option value="">Choose a shelf...</option>
                                         {shelves.map((shelf) => (
@@ -735,28 +737,30 @@ export default function ShopPage({ params }: ShopPageProps) {
                                     </div>
                                   )}
                                   <div>
-                                    <Label htmlFor="itemName" className="text-white">{shopData.shopType === 'product_shop' ? 'Product' : 'Service'} Name</Label>
+                                    <Label htmlFor="itemName" className="text-burgundy-900">{shopData.shopType === 'product_shop' ? 'Product' : 'Service'} Name</Label>
                                     <Input
                                       id="itemName"
                                       value={itemName}
                                       onChange={(e) => setItemName(e.target.value)}
                                       placeholder={`Enter ${shopData.shopType === 'product_shop' ? 'product' : 'service'} name...`}
+                                      className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                                     />
                                   </div>
                                   <div>
-                                    <Label htmlFor="itemDescription" className="text-white">Description</Label>
+                                    <Label htmlFor="itemDescription" className="text-burgundy-900">Description</Label>
                                     <Textarea
                                       id="itemDescription"
                                       value={itemDescription}
                                       onChange={(e) => setItemDescription(e.target.value)}
                                       placeholder="Describe your item..."
                                       rows={3}
+                                      className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                                     />
                                   </div>
 
-                                                                    {/* Image Upload Section */}
+                                                                  {/* Image Upload Section */}
                                   <div>
-                                    <Label className="text-white">Images (Optional)</Label>
+                                    <Label className="text-burgundy-900">Images (Optional)</Label>
                                     <div className="space-y-4">
                                       <ProductImageUploadButton
                                         endpoint="productImageUploader"
@@ -812,7 +816,7 @@ export default function ShopPage({ params }: ShopPageProps) {
                                   {shopData.shopType === 'product_shop' ? (
                                     <div className="grid grid-cols-2 gap-4">
                                       <div>
-                                        <Label htmlFor="itemPrice" className="text-white">Price (UGX)</Label>
+                                        <Label htmlFor="itemPrice" className="text-burgundy-900">Price (UGX)</Label>
                                         <Input
                                           id="itemPrice"
                                           type="number"
@@ -820,37 +824,41 @@ export default function ShopPage({ params }: ShopPageProps) {
                                           value={itemPrice}
                                           onChange={(e) => setItemPrice(e.target.value)}
                                           placeholder="0"
+                                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                                         />
                                       </div>
                                       <div>
-                                        <Label htmlFor="itemQuantity" className="text-white">Quantity Available</Label>
+                                        <Label htmlFor="itemQuantity" className="text-burgundy-900">Quantity Available</Label>
                                         <Input
                                           id="itemQuantity"
                                           type="number"
                                           value={itemQuantity}
                                           onChange={(e) => setItemQuantity(e.target.value)}
                                           placeholder="Optional"
+                                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                                         />
                                       </div>
                                     </div>
                                   ) : (
                                     <div className="grid grid-cols-2 gap-4">
                                       <div>
-                                        <Label htmlFor="itemDuration" className="text-white">Duration</Label>
+                                        <Label htmlFor="itemDuration" className="text-burgundy-900">Duration</Label>
                                         <Input
                                           id="itemDuration"
                                           value={itemDuration}
                                           onChange={(e) => setItemDuration(e.target.value)}
                                           placeholder="e.g., 30 minutes, 2 hours"
+                                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                                         />
                                       </div>
                                       <div>
-                                        <Label htmlFor="itemPricing" className="text-white">Pricing</Label>
+                                        <Label htmlFor="itemPricing" className="text-burgundy-900">Pricing</Label>
                                         <Input
                                           id="itemPricing"
                                           value={itemPricing}
                                           onChange={(e) => setItemPricing(e.target.value)}
                                           placeholder="e.g., $50/hour, Contact for quote"
+                                          className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
                                         />
                                       </div>
                                     </div>
@@ -948,10 +956,17 @@ export default function ShopPage({ params }: ShopPageProps) {
                       )}
                       {isEditMode && isAboutEditing && isOwner && isVendor && (
                         <div className="space-y-2">
-                          <Label htmlFor="aboutDraft" className="text-white">About</Label>
-                          <Textarea id="aboutDraft" value={aboutDraft} onChange={(e) => setAboutDraft(e.target.value)} rows={5} placeholder="Tell customers about your shop..." />
+                          <Label htmlFor="aboutDraft" className="text-burgundy-900">About</Label>
+                          <Textarea 
+                            id="aboutDraft" 
+                            value={aboutDraft} 
+                            onChange={(e) => setAboutDraft(e.target.value)} 
+                            rows={5} 
+                            placeholder="Tell customers about your shop..." 
+                            className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
+                          />
                           <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => setAboutDraft(shopData.description || '')}>Reset</Button>
+                            <Button variant="outline" onClick={() => setAboutDraft(shopData.description || '')} className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50">Reset</Button>
                             <Button className="bg-burgundy-600 hover:bg-burgundy-700" onClick={saveAbout}>Save</Button>
                           </div>
                         </div>
@@ -1065,23 +1080,47 @@ export default function ShopPage({ params }: ShopPageProps) {
                           {isEditMode && isContactEditing && isOwner && isVendor && (
                             <div className="space-y-3">
                               <div>
-                                <Label htmlFor="contactPhone" className="text-white">Phone</Label>
-                                <Input id="contactPhone" value={contactDraft.phone} onChange={(e) => setContactDraft({...contactDraft, phone: e.target.value})} placeholder="Phone number" />
+                                <Label htmlFor="contactPhone" className="text-burgundy-900">Phone</Label>
+                                <Input 
+                                  id="contactPhone" 
+                                  value={contactDraft.phone} 
+                                  onChange={(e) => setContactDraft({...contactDraft, phone: e.target.value})} 
+                                  placeholder="Phone number" 
+                                  className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
+                                />
                               </div>
                               <div>
-                                <Label htmlFor="contactEmail" className="text-white">Email</Label>
-                                <Input id="contactEmail" value={contactDraft.email} onChange={(e) => setContactDraft({...contactDraft, email: e.target.value})} placeholder="Email address" />
+                                <Label htmlFor="contactEmail" className="text-burgundy-900">Email</Label>
+                                <Input 
+                                  id="contactEmail" 
+                                  value={contactDraft.email} 
+                                  onChange={(e) => setContactDraft({...contactDraft, email: e.target.value})} 
+                                  placeholder="Email address" 
+                                  className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
+                                />
                               </div>
                               <div>
-                                <Label htmlFor="contactWebsite" className="text-white">Website</Label>
-                                <Input id="contactWebsite" value={contactDraft.website} onChange={(e) => setContactDraft({...contactDraft, website: e.target.value})} placeholder="https://example.com" />
+                                <Label htmlFor="contactWebsite" className="text-burgundy-900">Website</Label>
+                                <Input 
+                                  id="contactWebsite" 
+                                  value={contactDraft.website} 
+                                  onChange={(e) => setContactDraft({...contactDraft, website: e.target.value})} 
+                                  placeholder="https://example.com" 
+                                  className="border-burgundy-300 focus:border-burgundy-500 focus:ring-burgundy-500"
+                                />
                               </div>
                               <div className="flex gap-2">
-                                <Button variant="outline" onClick={() => setContactDraft({
-                                  email: shopData.contactInfo?.email || '',
-                                  phone: shopData.contactInfo?.phone || '',
-                                  website: shopData.contactInfo?.website || '',
-                                })}>Reset</Button>
+                                <Button 
+                                  variant="outline" 
+                                  onClick={() => setContactDraft({
+                                    email: shopData.contactInfo?.email || '',
+                                    phone: shopData.contactInfo?.phone || '',
+                                    website: shopData.contactInfo?.website || '',
+                                  })}
+                                  className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50"
+                                >
+                                  Reset
+                                </Button>
                                 <Button className="bg-burgundy-600 hover:bg-burgundy-700" onClick={saveContact}>Save</Button>
                               </div>
                             </div>
@@ -1373,7 +1412,7 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
                               e.stopPropagation();
                               onEditItem(item, shelf._id);
                             }}
-                            className="h-7 w-7 p-0 bg-white/90 hover:bg-white border-burgundy/30"
+                            className="h-7 w-7 p-0 bg-white hover:bg-burgundy-50 border-burgundy-300 shadow-sm"
                           >
                             <Edit3 className="w-3 h-3 text-burgundy" />
                           </Button>
@@ -1394,8 +1433,8 @@ function ShelfComponent({ shelf, shopType, isEditMode, onDeleteShelf, onEditItem
 
                       {/* View Details Overlay - only visible when not in edit mode */}
                       {!isEditMode && (
-                        <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                          <Badge variant="outline" className="bg-white/90 text-burgundy-700 border-burgundy-300">
+                        <div className="absolute inset-0 bg-burgundy-900/0 hover:bg-burgundy-900/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                          <Badge variant="outline" className="bg-white text-burgundy-700 border-burgundy-300 shadow-md">
                             View Details
                           </Badge>
                         </div>
