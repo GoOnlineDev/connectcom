@@ -101,6 +101,7 @@ export const getUserTickets = query({
   args: {},
   returns: v.array(v.object({
     _id: v.id("supportTickets"),
+    _creationTime: v.number(),
     subject: v.string(),
     message: v.string(),
     category: v.string(),
@@ -134,6 +135,7 @@ export const getAllTickets = query({
   },
   returns: v.array(v.object({
     _id: v.id("supportTickets"),
+    _creationTime: v.number(),
     userId: v.string(),
     userName: v.string(),
     userEmail: v.string(),

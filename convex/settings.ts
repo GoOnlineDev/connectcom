@@ -27,6 +27,7 @@ export const getUserSettings = query({
   args: {},
   returns: v.union(v.null(), v.object({
     _id: v.id("userSettings"),
+    _creationTime: v.number(),
     userId: v.string(),
     emailNotifications: v.optional(v.boolean()),
     pushNotifications: v.optional(v.boolean()),
