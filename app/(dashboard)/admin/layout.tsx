@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Loader2 } from "lucide-react";
@@ -14,11 +14,17 @@ export default function AdminDashboardLayout({
 }) {
   const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
 
   // Get the current user from Convex to check their role
   const convexUser = useQuery(api.users.getCurrentUser);
+
+  const signInUrl = useMemo(() => {
+    const redirect = !pathname || pathname === "/" ? "/admin" : pathname;
+    return `/sign-in?redirect=${encodeURIComponent(redirect)}`;
+  }, [pathname]);
 
   useEffect(() => {
     // Wait until auth is loaded and Convex user data is available
@@ -26,20 +32,20 @@ export default function AdminDashboardLayout({
 
     // If not signed in, redirect to login
     if (!isSignedIn) {
-      router.push("/");
+      router.replace(signInUrl);
       return;
     }
 
     // Check if the user has the admin role
     if (convexUser && convexUser.role === "admin") {
       setIsAuthorized(true);
-    } else {
-      // Redirect to home or unauthorized page
-      router.push("/");
+      setIsChecking(false);
+      return;
     }
 
-    setIsChecking(false);
-  }, [isLoaded, isSignedIn, convexUser, router]);
+    // Redirect to home for unauthorized roles
+    router.replace("/");
+  }, [isLoaded, isSignedIn, convexUser, router, signInUrl]);
 
   // Show loading while checking authorization
   if (isChecking) {

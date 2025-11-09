@@ -1,8 +1,7 @@
 "use client";
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SignInButton, useAuth } from "@clerk/nextjs";
 import { usePathname } from 'next/navigation';
 import { Authenticated, Unauthenticated } from "convex/react";
 import { useCurrentUser, useCart, useWishlistCount } from '@/hooks/useData';
@@ -12,7 +11,6 @@ import { Button } from './ui/button';
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { isSignedIn } = useAuth();
   const { data: currentUser, isLoading: userLoading } = useCurrentUser();
   const { data: cart, isLoading: cartLoading } = useCart();
   const { data: wishlistCount, isLoading: wishlistLoading } = useWishlistCount();
@@ -30,6 +28,16 @@ const Navigation = () => {
 
   const getNavButtonVariant = (href: string): "default" | "ghost" => isActive(href) ? 'default' : 'ghost';
   const getNavButtonSize = (): "pill-sm" => 'pill-sm';
+
+  const authRedirect = useMemo(() => {
+    if (!pathname) return '/';
+    if (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) {
+      return '/';
+    }
+    return pathname || '/';
+  }, [pathname]);
+
+  const signInHref = `/sign-in?redirect=${encodeURIComponent(authRedirect)}`;
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-7xl z-50 transition-all duration-300 rounded-full bg-white/90 backdrop-blur-md shadow-lg border border-burgundy-100">
@@ -119,11 +127,11 @@ const Navigation = () => {
               <CustomUserButton />
             </Authenticated>
             <Unauthenticated>
-              <SignInButton mode="modal">
-                <Button className="px-6 py-2 w-auto text-md">
+              <Button asChild className="px-6 py-2 w-auto text-md">
+                <Link href={signInHref}>
                   Sign In
-                </Button>
-              </SignInButton>
+                </Link>
+              </Button>
             </Unauthenticated>
           </div>
 
@@ -154,11 +162,12 @@ const Navigation = () => {
               </Link>
 
               <Unauthenticated>
-                <SignInButton mode="modal">
-                  <button className="px-3 py-1 bg-burgundy-700 text-white text-xs rounded-full hover:bg-burgundy-800 transition-colors font-medium text-md">
-                    Sign In
-                  </button>
-                </SignInButton>
+                <Link
+                  href={signInHref}
+                  className="px-3 py-1 bg-burgundy-700 text-white text-xs rounded-full hover:bg-burgundy-800 transition-colors font-medium text-md"
+                >
+                  Sign In
+                </Link>
               </Unauthenticated>
               
               <Authenticated>

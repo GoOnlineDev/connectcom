@@ -1,4 +1,9 @@
-import React from 'react';
+"use client";
+
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
+import { Loader2 } from 'lucide-react';
 import DashboardNavbar from '@/components/dashboard/navbar';
 import DashboardSidebar from '@/components/dashboard/sidebar';
 import DashboardFooter from '@/components/dashboard/footer';
@@ -8,6 +13,36 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const { isLoaded, isSignedIn } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isChecking, setIsChecking] = useState(true);
+
+  const redirectPath = useMemo(() => {
+    if (!pathname || pathname === '/') return '/';
+    return pathname;
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (!isSignedIn) {
+      router.replace(`/sign-in?redirect=${encodeURIComponent(redirectPath)}`);
+      return;
+    }
+
+    setIsChecking(false);
+  }, [isLoaded, isSignedIn, router, redirectPath]);
+
+  if (isChecking) {
+    return (
+      <div className="min-h-screen bg-beige flex flex-col items-center justify-center">
+        <Loader2 className="h-10 w-10 text-burgundy animate-spin" />
+        <p className="mt-4 text-burgundy/80">Preparing your dashboard...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-beige flex flex-col">
       {/* Top Navigation */}
