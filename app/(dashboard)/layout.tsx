@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import { Loader2 } from 'lucide-react';
 import DashboardNavbar from '@/components/dashboard/navbar';
@@ -15,24 +15,18 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
-  const pathname = usePathname();
   const [isChecking, setIsChecking] = useState(true);
-
-  const redirectPath = useMemo(() => {
-    if (!pathname || pathname === '/') return '/';
-    return pathname;
-  }, [pathname]);
 
   useEffect(() => {
     if (!isLoaded) return;
 
     if (!isSignedIn) {
-      router.replace(`/sign-in?redirect=${encodeURIComponent(redirectPath)}`);
+      router.replace('/');
       return;
     }
 
     setIsChecking(false);
-  }, [isLoaded, isSignedIn, router, redirectPath]);
+  }, [isLoaded, isSignedIn, router]);
 
   if (isChecking) {
     return (

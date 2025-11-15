@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, FormEvent, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
@@ -36,6 +36,29 @@ interface ShopData {
 
 type ShopType = "product_shop" | "service_shop";
 
+const schedulePresets = [
+  {
+    label: "Weekdays · 9am-5pm",
+    value: "Mon-Fri: 9AM-5PM",
+    description: "Typical office hours",
+  },
+  {
+    label: "Week + Sat",
+    value: "Mon-Sat: 9AM-6PM",
+    description: "Extended retail hours",
+  },
+  {
+    label: "Everyday",
+    value: "Mon-Sun: 10AM-8PM",
+    description: "Daily availability",
+  },
+  {
+    label: "Appointments Only",
+    value: "By appointment · Mon-Fri",
+    description: "Flexible scheduling",
+  },
+] as const;
+
 export default function ShopOnboardingPage() {
   const router = useRouter();
   const { userId: clerkUserId, isSignedIn } = useAuth();
@@ -66,6 +89,22 @@ export default function ShopOnboardingPage() {
     physicalLocation: "",
     operatingHours: "",
   });
+
+  const primaryButtonClass = "px-8 py-4 text-base font-semibold rounded-xl";
+  const secondaryButtonClass = "px-6 py-4 text-base font-semibold rounded-xl";
+
+  useEffect(() => {
+    const primaryEmail = user?.emailAddresses?.[0]?.emailAddress;
+    if (primaryEmail && !shopData.contactInfo.email) {
+      setShopData((prev) => ({
+        ...prev,
+        contactInfo: {
+          ...prev.contactInfo,
+          email: primaryEmail,
+        },
+      }));
+    }
+  }, [user, shopData.contactInfo.email]);
 
   // Handle input changes with proper typing
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -200,6 +239,7 @@ export default function ShopOnboardingPage() {
                 placeholder="Enter your shop name"
                 className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
                 required
+                maxLength={500}
               />
             </div>
 
@@ -331,6 +371,7 @@ export default function ShopOnboardingPage() {
                 onClick={() => setStep(2)} 
                 variant="primary"
                 size="lg"
+                className={primaryButtonClass}
               >
                 Next: Shop Description →
               </Button>
@@ -358,6 +399,10 @@ export default function ShopOnboardingPage() {
                 rows={4}
                 required
               />
+              <div className="flex items-center justify-between mt-2 text-xs text-burgundy-600">
+                <span>Highlight what makes your shop unique.</span>
+                <span>{shopData.description.length}/500</span>
+              </div>
             </div>
             
             <div>
@@ -386,6 +431,7 @@ export default function ShopOnboardingPage() {
                 variant="outline" 
                 onClick={() => setStep(1)}
                 size="lg"
+                className={secondaryButtonClass}
               >
                 ← Back
               </Button>
@@ -393,6 +439,7 @@ export default function ShopOnboardingPage() {
                 onClick={() => setStep(3)} 
                 variant="primary"
                 size="lg"
+                className={primaryButtonClass}
               >
                 Next: Contact Information →
               </Button>
@@ -451,6 +498,7 @@ export default function ShopOnboardingPage() {
                 variant="outline" 
                 onClick={() => setStep(2)}
                 size="lg"
+                className={secondaryButtonClass}
               >
                 ← Back
               </Button>
@@ -458,6 +506,7 @@ export default function ShopOnboardingPage() {
                 onClick={() => setStep(4)} 
                 variant="primary"
                 size="lg"
+                className={primaryButtonClass}
               >
                 Next: Final Details →
               </Button>
@@ -497,6 +546,40 @@ export default function ShopOnboardingPage() {
                 className="mt-2 bg-white border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-500"
               />
               <p className="text-xs text-burgundy-600 mt-2">When are you available to serve customers?</p>
+              <div className="mt-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-burgundy-700 mb-2">
+                  Quick schedules
+                </p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {schedulePresets.map((preset) => {
+                    const isSelected = shopData.operatingHours === preset.value;
+                    return (
+                      <button
+                        key={preset.value}
+                        type="button"
+                        onClick={() =>
+                          setShopData((prev) => ({
+                            ...prev,
+                            operatingHours: preset.value,
+                          }))
+                        }
+                        className={`text-left rounded-xl border px-4 py-3 transition-all ${
+                          isSelected
+                            ? "border-burgundy-600 bg-burgundy-50 shadow-sm"
+                            : "border-burgundy-200 hover:border-burgundy-400 hover:bg-burgundy-50/60"
+                        }`}
+                      >
+                        <p className="text-sm font-semibold text-burgundy-900">
+                          {preset.label}
+                        </p>
+                        <p className="text-xs text-burgundy-700 mt-1">
+                          {preset.description}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
             
             <div className="flex justify-between mt-10 pt-6 border-t border-burgundy-200">
@@ -504,6 +587,7 @@ export default function ShopOnboardingPage() {
                 variant="outline" 
                 onClick={() => setStep(3)}
                 size="lg"
+                className={secondaryButtonClass}
               >
                 ← Back
               </Button>
@@ -512,6 +596,7 @@ export default function ShopOnboardingPage() {
                 variant="primary"
                 size="lg"
                 disabled={isSubmitting}
+                className={primaryButtonClass}
               >
                 {isSubmitting ? "Creating..." : "Create My Shop"}
               </Button>

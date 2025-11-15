@@ -297,9 +297,9 @@ export default function HeroSection() {
             <Button 
               variant="default"
               size="lg" 
-              className="px-6 py-6 text-base font-semibold rounded-lg !bg-burgundy-900 !text-white hover:!bg-burgundy-800 hover:!shadow-lg transition-all duration-300"
+              className="px-8 py-5 text-base font-semibold rounded-xl !bg-burgundy-900 !text-white hover:!bg-burgundy-800 hover:!shadow-lg transition-all duration-300"
             >
-              Start Shopping
+              Shop Now
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
@@ -307,9 +307,9 @@ export default function HeroSection() {
             <Button 
               variant="outline" 
               size="lg"
-              className="px-6 py-6 text-base font-semibold rounded-lg !border-2 !border-burgundy-900 !text-burgundy-900 hover:!bg-burgundy-50 hover:!text-burgundy-800 hover:!border-burgundy-800 transition-all duration-300"
+              className="px-8 py-5 text-base font-semibold rounded-xl !border-2 !border-burgundy-900 !text-burgundy-900 hover:!bg-burgundy-50 hover:!text-burgundy-800 hover:!border-burgundy-800 transition-all duration-300"
             >
-              Register Your Shop
+              Open a Shop
             </Button>
           </Link>
         </div>
