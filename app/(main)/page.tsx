@@ -5,6 +5,23 @@ import FeaturedShops from "@/components/home/featured-shops";
 import HowItWorks from "@/components/home/how-it-works";
 import Testimonials from "@/components/home/testimonials";
 import TrendingCategories from "@/components/home/trending-categories";
+import { constructMetadata } from "@/lib/seo";
+import { Metadata } from "next";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Home - Discover Uganda's Best Local Shops & Services",
+  description: "ConnectCom connects you with Uganda's finest local businesses. Browse products, services, and unique offerings from verified vendors across Kampala and beyond.",
+  keywords: [
+    'Uganda marketplace',
+    'online shopping Uganda',
+    'local businesses Kampala',
+    'buy products Uganda',
+    'Uganda vendors',
+    'African e-commerce',
+    'trusted shops Uganda',
+    'local services Uganda',
+  ],
+});
 
 export default function Home() {
   return (

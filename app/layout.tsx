@@ -5,6 +5,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import ConvexClientProvider from '@/providers/convexProviderWithClerk'
 import SWRProvider from '@/providers/swr-provider'
 import { Toaster } from '@/components/ui/toaster'
+import { constructMetadata, organizationSchema, websiteSchema } from '@/lib/seo'
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -29,33 +30,15 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "ConnectCom - Uganda's Marketplace",
-  description: "Connect with local businesses, shops, and services across Uganda",
+  ...constructMetadata({
+    title: "ConnectCom - Uganda's Premier Online Marketplace",
+    description: "Discover and shop from Uganda's best local businesses, products, and services. Connect with trusted vendors across Kampala and beyond.",
+  }),
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: 'ConnectCom',
-  },
-  icons: {
-    icon: [
-      { url: '/favicon/favicon.ico', sizes: 'any' },
-      { url: '/favicon/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
-      { url: '/favicon/web-app-manifest-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/favicon/web-app-manifest-512x512.png', sizes: '512x512', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/favicon/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-    other: [
-      {
-        rel: 'mask-icon',
-        url: '/favicon/favicon.svg',
-        color: '#7C2D32',
-      },
-    ],
   },
 };
 
@@ -76,6 +59,14 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#7C2D32" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="theme-color" content="#7C2D32" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
       </head>
       <body
         className={`${inter.variable} ${robotoMono.variable} antialiased`}
