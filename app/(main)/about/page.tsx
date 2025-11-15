@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import AboutUsStats from '@/components/home/homepage-stats'; // Renamed to AboutUsStats
 
 export default function AboutPage() {
@@ -13,15 +12,17 @@ export default function AboutPage() {
               Connecting independent shops with customers worldwide since 2023
             </p>
           </div>
-          
-          <div className="relative h-[400px] w-full mb-12">
-            <Image
-              src="/about-hero.jpg"
-              alt="ConnectCom Team"
-              fill
-              className="object-cover rounded-lg shadow-lg"
-              style={{ objectPosition: 'center' }}
-            />
+
+          <div className="bg-white border border-burgundy-100 rounded-2xl shadow-lg p-8 md:p-12 text-burgundy-700 space-y-6">
+            <p className="text-lg leading-relaxed">
+              We are a community-driven marketplace that helps Ugandan entrepreneurs launch and grow their online shops.
+              From Kampala to Gulu, our network of makers, service providers, and boutique brands uses ConnectCom to reach
+              customers without paying heavy marketplace taxes or agency fees.
+            </p>
+            <p className="text-md leading-relaxed">
+              Our marketplace champions transparency, fast onboarding, and honest storytelling—helping merchants build trust
+              with buyers nationwide.
+            </p>
           </div>
         </div>
       </section>
@@ -105,27 +106,20 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-16 px-4 bg-beige-100">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-12 text-center text-burgundy-900">Our Team</h2>
-          
-          <div className="grid md:grid-cols-4 gap-8">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-white p-6 rounded-lg shadow-md text-center border border-beige-200">
-                <div className="relative h-32 w-32 mx-auto mb-4">
-                  <Image
-                    src={`/team-member-${i}.jpg`}
-                    alt={`Team Member ${i}`}
-                    fill
-                    className="object-cover rounded-full"
-                  />
-                </div>
-                <h3 className="text-xl font-semibold text-burgundy-900">Team Member {i}</h3>
-                <p className="text-burgundy-700">Position</p>
-              </div>
-            ))}
-          </div>
+      {/* Additional Context */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-5xl mx-auto space-y-6 text-burgundy-700 leading-relaxed">
+          <h2 className="text-3xl font-bold text-burgundy-900">Built for Uganda&apos;s Next Generation of Online Sellers</h2>
+          <p>
+            ConnectCom is laser-focused on helping Ugandans list products and services in minutes. No coding, no marketing
+            jargon, just the tools and transparency you need to build trust online. Thousands of shoppers rely on ConnectCom
+            every week to discover salons, artisans, grocery shops, and service providers who speak their language and deliver
+            locally.
+          </p>
+          <p>
+            We provide detailed analytics, messaging tools, and marketing prompts that help owners grow repeat customers.
+            We believe that clear pricing, easy communication, and mobile-first design unlock real growth for small shops.
+          </p>
         </div>
       </section>
     </div>
