@@ -15,7 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { AlertCircle, Upload, Image as ImageIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { UploadButton } from "@/utils/uploadthing";
+import { ShopImageDropzone } from "@/components/upload/shop-image-dropzone";
+import { LogoUploadCircle } from "@/components/upload/logo-upload-circle";
 
 // Define interface for shop data structure
 interface ShopData {
@@ -70,8 +71,6 @@ export default function ShopOnboardingPage() {
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isImageUploading, setIsImageUploading] = useState(false);
-  const [isLogoUploading, setIsLogoUploading] = useState(false);
   
   // Shop details state with proper typing
   const [shopData, setShopData] = useState<ShopData>({
@@ -246,100 +245,37 @@ export default function ShopOnboardingPage() {
             {/* Shop Image Upload */}
             <div>
               <Label className="text-burgundy-900 font-medium">Shop Image (Optional)</Label>
-              <div className="mt-2 border-2 border-dashed border-burgundy-300 rounded-lg p-6 text-center hover:border-burgundy-500 hover:bg-burgundy-50 transition-colors">
-                {isImageUploading ? (
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-burgundy-600"></div>
-                    <span className="text-burgundy-700 text-sm">Uploading...</span>
-                  </div>
-                ) : shopData.shopImageUrl ? (
-                  <div className="flex flex-col items-center gap-2">
-                    <img
-                      src={shopData.shopImageUrl}
-                      alt="Shop Preview"
-                      className="max-h-32 rounded-lg border-2 border-burgundy-200"
-                    />
-                    <span className="text-burgundy-700 text-sm">Click to change image</span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-2">
-                    <ImageIcon className="w-8 h-8 text-burgundy-600" />
-                    <span className="text-burgundy-900 font-medium">Click to upload shop image</span>
-                    <span className="text-burgundy-700 text-sm">Max 4MB</span>
-                  </div>
-                )}
-                <UploadButton
-                  endpoint="shopImageUploader"
-                  onClientUploadComplete={(res) => {
-                    if (res && res[0]?.url) {
-                      setShopData((prev) => ({ ...prev, shopImageUrl: res[0].url }));
-                    }
-                    setIsImageUploading(false);
-                  }}
-                  onUploadError={(error) => {
-                    setError(error.message || "Image upload failed");
-                    setIsImageUploading(false);
-                  }}
-                  onUploadBegin={() => {
-                    setIsImageUploading(true);
-                  }}
-                  className="mt-2"
-                  appearance={{
-                    button: "bg-burgundy-600 text-white hover:bg-burgundy-700 border-burgundy-600",
-                    allowedContent: "text-burgundy-700",
-                  }}
-                />
-              </div>
+              <p className="text-xs text-burgundy-600 mt-1 mb-2">
+                Upload a banner image that represents your shop
+              </p>
+              <ShopImageDropzone
+                endpoint="shopImageUploader"
+                currentImageUrl={shopData.shopImageUrl}
+                onUploadComplete={(url) => {
+                  setShopData((prev) => ({ ...prev, shopImageUrl: url }));
+                }}
+                onUploadError={(error) => {
+                  setError(error.message || "Image upload failed");
+                }}
+              />
             </div>
             
             {/* Shop Logo Upload */}
             <div>
               <Label className="text-burgundy-900 font-medium">Shop Logo (Optional)</Label>
-              <div className="mt-2 flex items-center justify-center">
-                <div className="relative">
-                  {isLogoUploading ? (
-                    <div className="w-24 h-24 rounded-full border-2 border-dashed border-burgundy-300 flex items-center justify-center bg-burgundy-50">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-burgundy-600"></div>
-                    </div>
-                  ) : shopData.shopLogoUrl ? (
-                    <img
-                      src={shopData.shopLogoUrl}
-                      alt="Shop Logo"
-                      className="w-24 h-24 rounded-full object-cover border-2 border-burgundy-300"
-                    />
-                  ) : (
-                    <div className="w-24 h-24 rounded-full border-2 border-dashed border-burgundy-300 hover:border-burgundy-500 flex items-center justify-center bg-burgundy-50 hover:bg-burgundy-100 transition-colors">
-                      <Upload className="w-8 h-8 text-burgundy-600" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <UploadButton
-                      endpoint="shopImageUploader"
-                      onClientUploadComplete={(res) => {
-                        if (res && res[0]?.url) {
-                          setShopData((prev) => ({ ...prev, shopLogoUrl: res[0].url }));
-                        }
-                        setIsLogoUploading(false);
-                      }}
-                      onUploadError={(error) => {
-                        setError(error.message || "Logo upload failed");
-                        setIsLogoUploading(false);
-                      }}
-                      onUploadBegin={() => {
-                        setIsLogoUploading(true);
-                      }}
-                      appearance={{
-                        button: "w-24 h-24 rounded-full bg-transparent hover:bg-transparent border-0 shadow-none p-0",
-                        allowedContent: "hidden",
-                      }}
-                      className="opacity-0 absolute inset-0 cursor-pointer"
-                    />
-                  </div>
-                </div>
+              <div className="mt-4 flex justify-center">
+                <LogoUploadCircle
+                  endpoint="shopImageUploader"
+                  currentLogoUrl={shopData.shopLogoUrl}
+                  onUploadComplete={(url) => {
+                    setShopData((prev) => ({ ...prev, shopLogoUrl: url }));
+                  }}
+                  onUploadError={(error) => {
+                    setError(error.message || "Logo upload failed");
+                  }}
+                  size="lg"
+                />
               </div>
-              {!shopData.shopLogoUrl && (
-                <p className="text-xs text-burgundy-600 mt-2 text-center">Click to upload logo</p>
-              )}
             </div>
             
             <div>

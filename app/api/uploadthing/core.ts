@@ -1,9 +1,8 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
+import { auth } from "@clerk/nextjs/server";
 
 const f = createUploadthing();
-
-const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
@@ -19,24 +18,25 @@ export const ourFileRouter = {
     },
   })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       // This code runs on your server before upload
-      const user = await auth(req);
+      const { userId } = await auth();
 
       // If you throw, the user will not be able to upload
-      if (!user) throw new UploadThingError("Unauthorized");
+      if (!userId) throw new UploadThingError("Unauthorized");
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: user.id };
+      return { userId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.userId);
-
-      console.log("file url", file.ufsUrl);
-
+      // Removed console.logs for production optimization
+      
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId };
+      return { 
+        uploadedBy: metadata.userId,
+        imageUrl: file.ufsUrl
+      };
     }),
 
   // Product/Service image uploader for shop items
@@ -51,25 +51,24 @@ export const ourFileRouter = {
     },
   })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       // This code runs on your server before upload
-      const user = await auth(req);
+      const { userId } = await auth();
 
       // If you throw, the user will not be able to upload
-      if (!user) throw new UploadThingError("Unauthorized");
+      if (!userId) throw new UploadThingError("Unauthorized");
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: user.id };
+      return { userId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      console.log("Product/Service image upload complete for userId:", metadata.userId);
-      console.log("Product/Service image file url", file.url);
+      // Removed console.logs for production optimization
 
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
       return { 
         uploadedBy: metadata.userId,
-        imageUrl: file.url,
+        imageUrl: file.ufsUrl,
         fileName: file.name,
         fileSize: file.size
       };
@@ -85,17 +84,16 @@ export const ourFileRouter = {
       maxFileCount: 1,
     },
   })
-    .middleware(async ({ req }) => {
-      const user = await auth(req);
-      if (!user) throw new UploadThingError("Unauthorized");
-      return { userId: user.id };
+    .middleware(async () => {
+      const { userId } = await auth();
+      if (!userId) throw new UploadThingError("Unauthorized");
+      return { userId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Shop image upload complete for userId:", metadata.userId);
-      console.log("Shop image file url", file.url);
+      // Removed console.logs for production optimization
       return {
         uploadedBy: metadata.userId,
-        imageUrl: file.url,
+        imageUrl: file.ufsUrl,
         fileName: file.name,
         fileSize: file.size
       };

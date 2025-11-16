@@ -16,7 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/components/ui/use-toast';
-import { ProductImageUploadButton, UploadButton } from '@/utils/uploadthing';
+import { ProductImageUploadButton } from '@/utils/uploadthing';
+import { CustomUploadButton } from '@/components/upload/custom-upload-button';
 import { ItemDetailModal } from '@/components/ui/item-detail-modal';
 import { ProductDetailContent } from '@/components/product-detail-content';
 import { ServiceDetailContent } from '@/components/service-detail-content';
@@ -75,8 +76,6 @@ export default function ShopPage({ params }: ShopPageProps) {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<Id<"products"> | Id<"services"> | null>(null);
   const [selectedItemType, setSelectedItemType] = useState<"product_shop" | "service_shop" | null>(null);
-  const [isImageUploading, setIsImageUploading] = useState(false);
-  const [isLogoUploading, setIsLogoUploading] = useState(false);
   
   const { user } = useUser();
   const { toast } = useToast();
@@ -484,38 +483,28 @@ export default function ShopPage({ params }: ShopPageProps) {
           {/* Image Upload Button (only visible in edit mode for owner) */}
           {isEditMode && isOwner && isVendor && (
             <div className="absolute top-4 right-4 z-20">
-              <UploadButton
+              <CustomUploadButton
                 endpoint="shopImageUploader"
-                onClientUploadComplete={async (res) => {
-                  if (res && res[0]?.url) {
-                    try {
-                      const result = await updateShop({ 
-                        shopId: resolvedParams.id as Id<"shops">, 
-                        shopImageUrl: res[0].url 
-                      });
-                      if (result.success) {
-                        toast({ title: "Success", description: "Shop image updated successfully" });
-                      } else {
-                        toast({ title: "Error", description: result.error || "Failed to update shop image", variant: "destructive" });
-                      }
-                    } catch (error) {
-                      toast({ title: "Error", description: "Failed to update shop image", variant: "destructive" });
+                buttonText="Change Banner"
+                onUploadComplete={async (url) => {
+                  try {
+                    const result = await updateShop({ 
+                      shopId: resolvedParams.id as Id<"shops">, 
+                      shopImageUrl: url 
+                    });
+                    if (result.success) {
+                      toast({ title: "Success", description: "Shop image updated successfully" });
+                    } else {
+                      toast({ title: "Error", description: result.error || "Failed to update shop image", variant: "destructive" });
                     }
+                  } catch (error) {
+                    toast({ title: "Error", description: "Failed to update shop image", variant: "destructive" });
                   }
-                  setIsImageUploading(false);
                 }}
                 onUploadError={(error) => {
                   toast({ title: "Error", description: error.message || "Failed to upload image", variant: "destructive" });
-                  setIsImageUploading(false);
                 }}
-                onUploadBegin={() => {
-                  setIsImageUploading(true);
-                }}
-                appearance={{
-                  button: "bg-white/90 hover:bg-white text-burgundy-700 border border-burgundy-300 shadow-md backdrop-blur-sm",
-                  allowedContent: "hidden",
-                }}
-                className={isImageUploading ? "opacity-50 cursor-not-allowed" : ""}
+                className="bg-white/90 hover:bg-white text-burgundy-700 border border-burgundy-300 shadow-md backdrop-blur-sm"
               />
             </div>
           )}
@@ -531,38 +520,28 @@ export default function ShopPage({ params }: ShopPageProps) {
                         className="w-20 h-20 rounded-full object-cover border-2 border-burgundy-300 shadow-lg"
                       />
                     )}
-                    <UploadButton
+                    <CustomUploadButton
                       endpoint="shopImageUploader"
-                      onClientUploadComplete={async (res) => {
-                        if (res && res[0]?.url) {
-                          try {
-                            const result = await updateShop({ 
-                              shopId: resolvedParams.id as Id<"shops">, 
-                              shopLogoUrl: res[0].url 
-                            });
-                            if (result.success) {
-                              toast({ title: "Success", description: "Shop logo updated successfully" });
-                            } else {
-                              toast({ title: "Error", description: result.error || "Failed to update shop logo", variant: "destructive" });
-                            }
-                          } catch (error) {
-                            toast({ title: "Error", description: "Failed to update shop logo", variant: "destructive" });
+                      buttonText="Change Logo"
+                      onUploadComplete={async (url) => {
+                        try {
+                          const result = await updateShop({ 
+                            shopId: resolvedParams.id as Id<"shops">, 
+                            shopLogoUrl: url 
+                          });
+                          if (result.success) {
+                            toast({ title: "Success", description: "Shop logo updated successfully" });
+                          } else {
+                            toast({ title: "Error", description: result.error || "Failed to update shop logo", variant: "destructive" });
                           }
+                        } catch (error) {
+                          toast({ title: "Error", description: "Failed to update shop logo", variant: "destructive" });
                         }
-                        setIsLogoUploading(false);
                       }}
                       onUploadError={(error) => {
                         toast({ title: "Error", description: error.message || "Failed to upload logo", variant: "destructive" });
-                        setIsLogoUploading(false);
                       }}
-                      onUploadBegin={() => {
-                        setIsLogoUploading(true);
-                      }}
-                      appearance={{
-                        button: "w-20 h-20 rounded-full bg-white/90 hover:bg-white border-2 border-burgundy-300 flex items-center justify-center shadow-lg backdrop-blur-sm transition-all hover:scale-105 p-0",
-                        allowedContent: "hidden",
-                      }}
-                      className={isLogoUploading ? "opacity-50 cursor-not-allowed" : ""}
+                      className="w-20 h-20 rounded-full bg-white/90 hover:bg-white border-2 border-burgundy-300 flex items-center justify-center shadow-lg backdrop-blur-sm transition-all hover:scale-105"
                     />
                   </div>
                 </div>
