@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { Id } from '@/convex/_generated/dataModel';
+import { slugify } from '@/lib/utils';
 
 export default function WishlistPage() {
   const { user } = useUser();
@@ -421,7 +422,7 @@ export default function WishlistPage() {
                           variant="outline"
                           className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 h-10 px-3"
                         >
-                          <Link href={`/shops/${item.shopId}`}>
+                          <Link href={`/shops/${item.shopId}/${slugify(item.shopDetails.shopName)}`}>
                             View
                           </Link>
                         </Button>
@@ -525,7 +526,7 @@ export default function WishlistPage() {
                           className="border-burgundy-300 text-burgundy-700 hover:bg-burgundy-50 h-9 text-sm"
                           size="sm"
                         >
-                          <Link href={`/shops/${item.shopId}`}>
+                          <Link href={`/shops/${item.shopId}/${slugify(item.shopDetails.shopName)}`}>
                             View Shop
                           </Link>
                         </Button>

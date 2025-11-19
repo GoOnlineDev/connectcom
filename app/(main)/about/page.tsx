@@ -1,4 +1,12 @@
 import AboutUsStats from '@/components/home/homepage-stats'; // Renamed to AboutUsStats
+import { constructMetadata } from '@/lib/seo';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = constructMetadata({
+  title: "About Us - ConnectCom Uganda",
+  description: "Learn about ConnectCom, Uganda's premier online marketplace. Connecting independent shops with customers worldwide since 2023.",
+  canonical: '/about',
+});
 
 export default function AboutPage() {
   return (

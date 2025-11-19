@@ -5,7 +5,7 @@ import FeaturedShops from "@/components/home/featured-shops";
 import HowItWorks from "@/components/home/how-it-works";
 import Testimonials from "@/components/home/testimonials";
 import TrendingCategories from "@/components/home/trending-categories";
-import { constructMetadata } from "@/lib/seo";
+import { constructMetadata, generateMarketplaceSchema } from "@/lib/seo";
 import { Metadata } from "next";
 
 export const metadata: Metadata = constructMetadata({
@@ -24,8 +24,15 @@ export const metadata: Metadata = constructMetadata({
 });
 
 export default function Home() {
+  const marketplaceSchema = generateMarketplaceSchema();
+
   return (
-    <div className="flex flex-col min-h-screen animate-fade-in">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(marketplaceSchema) }}
+      />
+      <div className="flex flex-col min-h-screen animate-fade-in">
       {/* Hero Section with improved mobile responsiveness */}
       <HeroSection />
       
@@ -155,5 +162,6 @@ export default function Home() {
         </div>
       </section>
     </div>
+    </>
   );
 }

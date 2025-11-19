@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useServiceWithReviews } from '@/hooks/useData';
+import { slugify } from '@/lib/utils';
 
 interface ServiceDetailContentProps {
   serviceId: Id<"services">;
@@ -431,7 +432,7 @@ export function ServiceDetailContent({
                   <Store className="w-5 h-5 text-burgundy-600" />
                   <div>
                     <Link 
-                      href={`/shops/${shopId}`}
+                      href={`/shops/${shopId}/${slugify(service.shopName)}`}
                       className="font-medium text-burgundy-900 hover:text-burgundy-700 flex items-center gap-1"
                       onClick={onClose} // Close modal on navigation
                     >

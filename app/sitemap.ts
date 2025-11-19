@@ -1,6 +1,9 @@
 import { MetadataRoute } from 'next'
+import { fetchQuery } from 'convex/nextjs'
+import { api } from '@/convex/_generated/api'
+import { slugify } from '@/lib/utils'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://connectcom.shop'
   
   // Static pages
@@ -49,16 +52,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  // Note: In a production app, you would fetch dynamic shop pages here
-  // For example:
-  // const shops = await fetchShops()
-  // const shopPages = shops.map(shop => ({
-  //   url: `${baseUrl}/shops/${shop._id}/${shop.slug}`,
-  //   lastModified: new Date(shop.updatedAt),
-  //   changeFrequency: 'weekly',
-  //   priority: 0.7,
-  // }))
+  // Fetch all approved shops for dynamic pages
+  let shopPages: MetadataRoute.Sitemap = []
+  try {
+    const shops = await fetchQuery(api.shops.getAllApprovedShops, {})
+    
+    shopPages = shops.map((shop) => ({
+      url: `${baseUrl}/shops/${shop._id}/${slugify(shop.shopName)}`,
+      lastModified: new Date(shop.updatedAt),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }))
+  } catch (error) {
+    console.error('Failed to fetch shops for sitemap:', error)
+    // Continue with static pages only if fetch fails
+  }
   
-  return [...staticPages]
+  return [...staticPages, ...shopPages]
 }
 

@@ -89,7 +89,7 @@ export default function HeroSection() {
           {/* Left Column - Content */}
           <div className="space-y-4 text-center lg:text-left">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-burgundy-900">
-              Connect and Create with the best online shops
+              The Best Online Marketplace for Ugandan Businesses
             </h1>
             <p className="text-base md:text-lg lg:text-xl text-burgundy-700 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               Discover products and services from independent stores all in one place. Shop with confidence and support small businesses.

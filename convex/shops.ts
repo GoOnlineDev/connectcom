@@ -95,8 +95,21 @@ export const getShopById = query({
     updatedAt: v.number(),
   })),
   handler: async (ctx, args) => {
-    const shop = await ctx.db.get(args.shopId);
-    return shop;
+    try {
+      // Validate shopId format and fetch shop
+      const shop = await ctx.db.get(args.shopId);
+      if (!shop) return null;
+      
+      // Convex handles serialization automatically, but we need to ensure
+      // v.any() fields are serializable. If they contain circular references,
+      // they need to be sanitized. For now, return as-is and let Convex handle it.
+      return shop;
+    } catch (error) {
+      // Log error and return null instead of throwing
+      // This prevents timeouts and allows graceful error handling
+      console.error("Error fetching shop by ID:", error);
+      return null;
+    }
   },
 });
 

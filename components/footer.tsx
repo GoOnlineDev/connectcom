@@ -19,8 +19,23 @@ const Footer = () => {
               <h3 className="text-lg font-bold text-burgundy">ConnectCom</h3>
             </div>
             <p className="text-sm text-burgundy/80 mb-4">
-              Connecting communities through powerful communications tools.
+              Uganda's premier online marketplace connecting local businesses with customers nationwide.
             </p>
+            {/* Physical Address */}
+            <div className="mb-4 text-sm text-burgundy/80">
+              <p className="font-semibold text-burgundy mb-2">Contact Us</p>
+              <p>Kampala, Uganda</p>
+              <p className="mt-1">
+                <a href="mailto:connectcom256@gmail.com" className="hover:text-burgundy hover:underline">
+                  connectcom256@gmail.com
+                </a>
+              </p>
+              <p className="mt-1">
+                <a href="tel:+256783618441" className="hover:text-burgundy hover:underline">
+                  +256 783 618441
+                </a>
+              </p>
+            </div>
             <div className="flex space-x-4">
               <a href="#" className="text-burgundy hover:text-burgundy-light">
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
