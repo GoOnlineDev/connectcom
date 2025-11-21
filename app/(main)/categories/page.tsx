@@ -2,6 +2,9 @@ import { constructMetadata } from '@/lib/seo';
 import { Metadata } from 'next';
 import CategoriesPageClient from './CategoriesPageClient';
 
+// Force dynamic to avoid static generation issues with metadata serialization
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = constructMetadata({
   title: "Shop Categories - ConnectCom Uganda",
   description: "Browse shops by category on ConnectCom. Find products and services organized by category - from electronics to fashion, food to services in Uganda.",
