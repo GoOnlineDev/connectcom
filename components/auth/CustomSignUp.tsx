@@ -56,28 +56,30 @@ export default function CustomSignUp() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Clerk.Field name="firstName" className="grid gap-2">
                 <Clerk.Label className="text-sm text-burgundy-900">First name</Clerk.Label>
-                <Clerk.Input className="w-full rounded-xl border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-200" />
+                <Clerk.Input className="w-full rounded-xl border border-burgundy-200 bg-white px-3 py-2 text-sm focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-200 focus:ring-offset-2 focus-visible:outline-none" />
                 <Clerk.FieldError className="text-sm text-red-600" />
               </Clerk.Field>
               <Clerk.Field name="lastName" className="grid gap-2">
                 <Clerk.Label className="text-sm text-burgundy-900">Last name</Clerk.Label>
-                <Clerk.Input className="w-full rounded-xl border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-200" />
+                <Clerk.Input className="w-full rounded-xl border border-burgundy-200 bg-white px-3 py-2 text-sm focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-200 focus:ring-offset-2 focus-visible:outline-none" />
                 <Clerk.FieldError className="text-sm text-red-600" />
               </Clerk.Field>
             </div>
             <Clerk.Field name="emailAddress" className="grid gap-2">
               <Clerk.Label className="text-sm text-burgundy-900">Email</Clerk.Label>
-              <Clerk.Input className="w-full rounded-xl border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-200" />
+              <Clerk.Input className="w-full rounded-xl border border-burgundy-200 bg-white px-3 py-2 text-sm focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-200 focus:ring-offset-2 focus-visible:outline-none" />
               <Clerk.FieldError className="text-sm text-red-600" />
             </Clerk.Field>
 
             <Clerk.Field name="password" className="grid gap-2">
               <Clerk.Label className="text-sm text-burgundy-900">Password</Clerk.Label>
-              <Clerk.Input type="password" className="w-full rounded-xl border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-200" />
+              <Clerk.Input type="password" className="w-full rounded-xl border border-burgundy-200 bg-white px-3 py-2 text-sm focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-200 focus:ring-offset-2 focus-visible:outline-none" />
               <Clerk.FieldError className="text-sm text-red-600" />
             </Clerk.Field>
           </div>
 
+          <div id="clerk-captcha" />
+          
           <SignUp.Action
             submit
             className="w-full bg-burgundy-700 hover:bg-burgundy-800 text-white rounded-xl px-4 py-3 font-semibold"
@@ -88,7 +90,34 @@ export default function CustomSignUp() {
           <Clerk.GlobalError className="text-sm text-red-600" />
         </SignUp.Step>
 
-        {/* No verification step */}
+        <SignUp.Step name="verifications">
+          <SignUp.Strategy name="email_code">
+            <div className="space-y-4">
+              <div className="flex flex-col gap-3 text-burgundy-900 mb-4">
+                <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+                  Verify your email
+                </h1>
+                <p className="text-sm text-burgundy-700">
+                  We sent a verification code to your email address.
+                </p>
+              </div>
+              <div className="grid gap-3">
+                <Clerk.Field name="code" className="grid gap-2">
+                  <Clerk.Label className="text-sm text-burgundy-900">Verification code</Clerk.Label>
+                  <Clerk.Input className="w-full rounded-xl border border-burgundy-200 bg-white px-3 py-2 text-sm focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-200 focus:ring-offset-2 focus-visible:outline-none" />
+                  <Clerk.FieldError className="text-sm text-red-600" />
+                </Clerk.Field>
+              </div>
+              <SignUp.Action
+                submit
+                className="w-full bg-burgundy-700 hover:bg-burgundy-800 text-white rounded-xl px-4 py-3 font-semibold"
+              >
+                Verify
+              </SignUp.Action>
+              <Clerk.GlobalError className="text-sm text-red-600" />
+            </div>
+          </SignUp.Strategy>
+        </SignUp.Step>
       </SignUp.Root>
 
       <p className="text-center text-sm text-burgundy-700 pt-4 border-t border-burgundy-100">

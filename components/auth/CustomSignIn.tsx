@@ -24,6 +24,38 @@ export default function CustomSignIn() {
     () => sanitizeRedirect(searchParams?.get("redirect")),
     [searchParams]
   );
+  const [showOAuthMessage, setShowOAuthMessage] = React.useState(false);
+  const errorRef = React.useRef<HTMLDivElement>(null);
+
+  // Monitor error messages to detect verification strategy errors
+  React.useEffect(() => {
+    const checkError = () => {
+      if (errorRef.current) {
+        const errorText = errorRef.current.textContent || "";
+        if (
+          errorText.includes("verification strategy") ||
+          errorText.includes("strategy_for_user_invalid") ||
+          errorText.toLowerCase().includes("not valid for this account")
+        ) {
+          setShowOAuthMessage(true);
+        }
+      }
+    };
+
+    // Check immediately and set up observer
+    checkError();
+    const observer = new MutationObserver(checkError);
+    
+    if (errorRef.current) {
+      observer.observe(errorRef.current, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="w-full">
@@ -53,20 +85,33 @@ export default function CustomSignIn() {
             <div className="h-px bg-burgundy-200 flex-1" />
           </div>
 
+          {showOAuthMessage && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
+              <p className="text-sm text-amber-900 font-medium mb-2">
+                Account created with Google
+              </p>
+              <p className="text-sm text-amber-800">
+                This account was created using Google sign-in. Please use the "Continue with Google" button above to sign in.
+              </p>
+            </div>
+          )}
+
           <div className="grid gap-3">
             <Clerk.Field name="identifier" className="grid gap-2">
               <Clerk.Label className="text-sm text-burgundy-900">Email</Clerk.Label>
-              <Clerk.Input className="w-full rounded-xl border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-200" />
+              <Clerk.Input className="w-full rounded-xl border border-burgundy-200 bg-white px-3 py-2 text-sm focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-200 focus:ring-offset-2 focus-visible:outline-none" />
               <Clerk.FieldError className="text-sm text-red-600" />
             </Clerk.Field>
 
             <Clerk.Field name="password" className="grid gap-2">
               <Clerk.Label className="text-sm text-burgundy-900">Password</Clerk.Label>
-              <Clerk.Input type="password" className="w-full rounded-xl border-burgundy-200 focus:border-burgundy-500 focus:ring-burgundy-200" />
+              <Clerk.Input type="password" className="w-full rounded-xl border border-burgundy-200 bg-white px-3 py-2 text-sm focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-200 focus:ring-offset-2 focus-visible:outline-none" />
               <Clerk.FieldError className="text-sm text-red-600" />
             </Clerk.Field>
           </div>
 
+          <div id="clerk-captcha" />
+          
           <SignIn.Action
             submit
             className="w-full bg-burgundy-700 hover:bg-burgundy-800 text-white rounded-xl px-4 py-3 font-semibold"
@@ -74,10 +119,21 @@ export default function CustomSignIn() {
             Continue
           </SignIn.Action>
 
-          <Clerk.GlobalError className="text-sm text-red-600" />
+          <div ref={errorRef}>
+            <Clerk.GlobalError className="text-sm text-red-600" />
+          </div>
+          
+          {showOAuthMessage && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mt-2">
+              <p className="text-sm text-red-900 font-medium mb-1">
+                Unable to sign in with email and password
+              </p>
+              <p className="text-sm text-red-800">
+                This account was created using Google. Please use the "Continue with Google" button above to sign in.
+              </p>
+            </div>
+          )}
         </SignIn.Step>
-
-        {/* No verification step */}
       </SignIn.Root>
 
       <p className="text-center text-sm text-burgundy-700 pt-4 border-t border-burgundy-100">
