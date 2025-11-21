@@ -2,6 +2,9 @@ import { constructMetadata } from '@/lib/seo';
 import { Metadata } from 'next';
 import TermsOfServicePageClient from './TermsOfServicePageClient';
 
+// Force dynamic to avoid static generation issues with metadata serialization
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = constructMetadata({
   title: "Terms of Service - ConnectCom Uganda",
   description: "Read ConnectCom's Terms of Service. Understand the rules and guidelines for using our marketplace platform in Uganda.",
