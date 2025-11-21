@@ -35,7 +35,7 @@ export default function CustomSignUp() {
         </p>
       </div>
 
-      <SignUp.Root routing="path" afterSignUpUrl={redirectUrl} signInUrl="/sign-in">
+      <SignUp.Root routing="path" path="/sign-up">
         <SignUp.Step name="start" className="space-y-4">
           <div className="grid gap-2">
             <Clerk.Connection
